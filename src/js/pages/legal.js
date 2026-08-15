@@ -8,6 +8,11 @@ import '../../styles/sections.css'
 import '../../styles/legal.css'
 
 import { revokeConsent, getConsent } from '../core/consent.js'
+import { initTheme } from '../ui/theme.js'
+
+// El tema ya lo aplica el <script> del <head>; esto solo pone el botón, para
+// que no haya que volver a la portada para cambiarlo.
+initTheme()
 
 const button = document.getElementById('revoke-consent')
 const status = document.getElementById('revoke-status')

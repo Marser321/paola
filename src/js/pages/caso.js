@@ -15,8 +15,10 @@ import '../../styles/caso.css'
 
 import { projects } from '../../data/projects.js'
 import { initI18n, t } from '../../i18n/index.js'
+import { initTheme } from '../ui/theme.js'
 
 initI18n()
+initTheme(() => t('theme'))
 
 const esc = (s) =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))

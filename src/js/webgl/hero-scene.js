@@ -8,10 +8,27 @@ import { shouldReduceMotion } from '../core/lenis.js'
 //
 // Colores del sistema. Excepción documentada de PLAN.md §9.2: GLSL no lee
 // custom properties, así que los hex de tokens.css se replican aquí.
-//   --gold-deep #8A6A1F · --gold #D4AF37 · --gold-soft #F2DFA6
-const HEX_A = '#8A6A1F'
-const HEX_B = '#D4AF37'
-const HEX_C = '#F2DFA6'
+//
+// Una paleta por tema, y no por capricho de color:
+//   · en oscuro las partículas se mezclan en ADITIVO, que es lo que las hace
+//     brillar sobre el negro. Ese mismo aditivo sobre el papel crema del tema
+//     claro satura a blanco y la nube DESAPARECE, porque sumar luz a algo que ya
+//     está casi en blanco no da nada;
+//   · en claro se pasa a mezcla normal con los bronces del tema (tokens.css
+//     §TEMA CLARO), y la nube se lee como polvo oscuro en suspensión.
+//
+// Oscuro: --gold-deep #8A6A1F · --gold #D4AF37 · --gold-soft #F2DFA6
+// Claro:  --gold-deep #5C4512 · --gold #8A6A1F · --gold-soft #B08D2E
+const PALETTE = {
+  dark: { a: '#8A6A1F', b: '#D4AF37', c: '#F2DFA6', push: 1, alpha: 0.55 },
+  // Alfa más baja que en oscuro: sobre negro un punto claro se lee como estrella,
+  // pero sobre crema un punto oscuro se lee como mota de suciedad. A 0.28 la
+  // nube da profundidad sin ensuciar el papel.
+  light: { a: '#5C4512', b: '#8A6A1F', c: '#B08D2E', push: 0, alpha: 0.28 },
+}
+
+const currentTheme = () =>
+  document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'
 
 const COUNT = 6000
 const REPEL_RADIUS = 9
@@ -67,6 +84,8 @@ const fragmentShader = /* glsl */ `
   uniform vec3 uColorA;
   uniform vec3 uColorB;
   uniform vec3 uColorC;
+  uniform float uPushTarget;   // 1 = las empujadas van a blanco, 0 = a negro
+  uniform float uBaseAlpha;
 
   varying float vMix;
   varying float vPush;
@@ -81,10 +100,13 @@ const fragmentShader = /* glsl */ `
       ? mix(uColorA, uColorB, vMix * 2.0)
       : mix(uColorB, uColorC, (vMix - 0.5) * 2.0);
 
-    // Las partículas empujadas brillan: el feedback del ratón es luz, no color nuevo.
-    color = mix(color, vec3(1.0), vPush * 0.5);
+    // Las partículas empujadas responden con CONTRASTE contra el fondo, no con
+    // un color nuevo. Sobre negro eso es irse a blanco; sobre crema, irse a
+    // negro. Con el blanco fijo, en tema claro el empuje del ratón borraba la
+    // partícula en vez de marcarla.
+    color = mix(color, vec3(uPushTarget), vPush * 0.5);
 
-    gl_FragColor = vec4(color, alpha * (0.55 + vPush * 0.45));
+    gl_FragColor = vec4(color, alpha * (uBaseAlpha + vPush * 0.45));
   }
 `
 
@@ -105,9 +127,9 @@ export async function initHeroScene() {
 
   const THREE = await import('three')
 
-  const COLOR_A = new THREE.Color(HEX_A)
-  const COLOR_B = new THREE.Color(HEX_B)
-  const COLOR_C = new THREE.Color(HEX_C)
+  const COLOR_A = new THREE.Color()
+  const COLOR_B = new THREE.Color()
+  const COLOR_C = new THREE.Color()
 
   const sizes = { width: hero.clientWidth, height: hero.clientHeight }
 
@@ -154,8 +176,29 @@ export async function initHeroScene() {
       uColorA: { value: COLOR_A },
       uColorB: { value: COLOR_B },
       uColorC: { value: COLOR_C },
+      uPushTarget: { value: 1 },
+      uBaseAlpha: { value: 0.55 },
     },
   })
+
+  // --- Tema ---
+  // Además de los tres colores hay que cambiar el MODO DE MEZCLA, y eso no es un
+  // uniform: es una propiedad del material, así que se marca `needsUpdate` para
+  // que three recompile el estado de blending.
+  const applyTheme = (theme) => {
+    const p = PALETTE[theme] || PALETTE.dark
+    COLOR_A.set(p.a)
+    COLOR_B.set(p.b)
+    COLOR_C.set(p.c)
+    material.uniforms.uPushTarget.value = p.push
+    material.uniforms.uBaseAlpha.value = p.alpha
+    material.blending = theme === 'light' ? THREE.NormalBlending : THREE.AdditiveBlending
+    material.needsUpdate = true
+  }
+  applyTheme(currentTheme())
+
+  const onThemeChange = (e) => applyTheme(e.detail?.theme || currentTheme())
+  window.addEventListener('theme:change', onThemeChange)
 
   const points = new THREE.Points(geometry, material)
   scene.add(points)
@@ -234,6 +277,7 @@ export async function initHeroScene() {
   return {
     destroy() {
       gsap.ticker.remove(render)
+      window.removeEventListener('theme:change', onThemeChange)
       observer.disconnect()
       geometry.dispose()
       material.dispose()

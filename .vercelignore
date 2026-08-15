@@ -1,0 +1,7 @@
+# Documentación y material de trabajo: no hacen falta para el build.
+tasks
+.recovery-fragments
+src-assets
+*.md
+!README.md
+.claude

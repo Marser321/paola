@@ -157,4 +157,5 @@ export const en = {
   },
 
   langSwitch: { label: 'Change language', to: 'ES' },
+  theme: { label: 'Change theme', toLight: 'Light', toDark: 'Dark' },
 }

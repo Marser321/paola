@@ -13,7 +13,7 @@
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_ES" />
-    <meta property="og:site_name" content="PAOLA" />
+    <meta property="og:site_name" content="PAOLA PARRA" />
     <meta property="og:title" content="PAOLA — Meta Ads Specialist · Performance Marketing" />
     <meta property="og:description" content="Especialista en Meta Ads. La campaña eres tú: esta página mide tu visita y te enseña el informe, sin enviar un solo dato." />
     <!-- La imagen YA EXISTE en /og.jpg (1200×630, generada en la tarea 27), pero
@@ -44,7 +44,7 @@
         {
           "@type": "Person",
           "@id": "https://paola-ads.com/#paola",
-          "name": "Paola",
+          "name": "Paola Parra",
           "jobTitle": "Meta Ads Specialist",
           "email": "hola@paola-ads.com",
           "url": "https://paola-ads.com/",
@@ -71,12 +71,33 @@
           "@type": "WebSite",
           "@id": "https://paola-ads.com/#web",
           "url": "https://paola-ads.com/",
-          "name": "PAOLA",
+          "name": "PAOLA PARRA",
           "inLanguage": "es-ES",
           "publisher": { "@id": "https://paola-ads.com/#paola" }
         }
       ]
     }
+    </script>
+
+    <!-- TEMA — antes de la primera pintura, a propósito.
+         Tiene que ser un script EN LÍNEA y SÍNCRONO: /src/main.js va como módulo
+         y por tanto diferido, así que si el tema se aplicara allí, quien tenga el
+         claro guardado vería un fotograma en negro en cada carga. Son ocho líneas
+         duplicadas de src/js/ui/theme.js y el duplicado está justificado.
+         Sin elección previa se arranca en oscuro: es el aspecto de la marca. -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('paola:theme')
+          if (saved === 'light') {
+            document.documentElement.dataset.theme = 'light'
+            var meta = document.querySelector('meta[name="theme-color"]')
+            if (meta) meta.setAttribute('content', '#F2EEE6')
+          }
+        } catch (e) {
+          /* localStorage bloqueado: se queda el tema oscuro, que es el de serie. */
+        }
+      })()
     </script>
 
     <link rel="preload" href="/fonts/ClashDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin />
@@ -109,9 +130,21 @@
       <section id="hero" class="hero" data-stage="alcance">
         <canvas id="hero-canvas" aria-hidden="true"></canvas>
         <div class="hero__fallback" aria-hidden="true"></div>
+        <!-- La figura recortada la monta hero.js desde el manifiesto de medios.
+             Sin `figure` declarada en src/data/media.js este hueco se queda
+             vacío y el hero es el de siempre. -->
+        <div class="hero__figure" data-figure aria-hidden="true"></div>
         <div class="hero__content container">
           <p class="hero__label mono">Meta Ads Specialist — Performance Marketing</p>
-          <h1 class="hero__title" aria-label="Paola">PAOLA</h1>
+          <!-- El apellido va en SU PROPIA línea y en contorno. Puesto en la misma
+               línea, «PAOLA PARRA» obliga a bajar el cuerpo hasta perder el golpe
+               tipográfico; apilado, el nombre se lee entero y el contorno da la
+               jerarquía sin necesidad de un segundo color. Cada línea se parte en
+               caracteres por su cuenta en hero.js. -->
+          <h1 class="hero__title" aria-label="Paola Parra">
+            <span class="hero__title-line">PAOLA</span>
+            <span class="hero__title-line hero__title-line--outline">PARRA</span>
+          </h1>
           <p class="hero__subtitle" data-variant-slot="subtitle">
             Convierto presupuesto publicitario en
             <span class="accent-text">crecimiento medible</span>.
@@ -193,7 +226,10 @@
 
       <!-- ETAPA 03 · CONSIDERACIÓN — SERVICIOS -->
       <section id="servicios" class="services section-pad" data-stage="consideracion">
-        <div class="container">
+        <!-- Dos columnas: la cabecera sticky necesita una para ella sola, o los
+             renglones le pasan por debajo y se imprimen encima. Ver sections.css
+             §SERVICIOS. -->
+        <div class="container services__grid">
           <div class="services__header">
             <p class="section-label mono">
               <span class="section-label__stage">Etapa 03 · Consideración</span>

@@ -38,6 +38,24 @@ juntas y descubrir que algo se rompió no dice cuál fue.
 > la vez el tracker, el HUD, la cola de toasts, el reloj del footer y el informe, y puede
 > que sin un solo error en consola.
 
+## 2.0 Herramientas de medios (fuera del build)
+
+`scripts/media/` **no** forma parte de `npm run build` y por eso no aparece en
+`package.json`. Solo hace falta cuando llegan fotos nuevas:
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install Pillow numpy
+swiftc -O -o scripts/media/cutout scripts/media/cutout.swift
+.venv/bin/python scripts/media/build-media.py
+```
+
+El recorte del hero usa **Vision** (framework de macOS), así que ese paso solo
+corre en un Mac. Si algún día hay que hacerlo en otro sitio, lo que se necesita es
+cualquier herramienta que dé una alfa de sujeto decente; el resto del script es
+Pillow puro y da igual dónde se ejecute.
+
+No hay que revisarlo cada trimestre. Se toca cuando cambian las fotos.
+
 ## 2.1 Revisión trimestral del concepto (además de las dependencias)
 
 El tracker es la parte del sitio que puede envejecer mal en silencio. Cada trimestre:

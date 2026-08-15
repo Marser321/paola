@@ -9,6 +9,20 @@
     <meta name="robots" content="noindex, follow" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="theme-color" content="#0E0E0E" />
+    <!-- TEMA — ver el bloque equivalente de index.html. Se repite aquí porque
+         estas páginas son entradas propias del build: sin él, quien tenga el tema
+         claro guardado saltaría a negro al abrir un aviso legal o un caso. -->
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem('paola:theme') === 'light') {
+            document.documentElement.dataset.theme = 'light'
+            var m = document.querySelector('meta[name="theme-color"]')
+            if (m) m.setAttribute('content', '#F2EEE6')
+          }
+        } catch (e) {}
+      })()
+    </script>
     <link rel="preload" href="/fonts/ClashDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/JetBrainsMono-latin.woff2" as="font" type="font/woff2" crossorigin />

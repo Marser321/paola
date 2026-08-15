@@ -16,7 +16,7 @@ import { dirname, join, resolve } from 'node:path'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const IMG = join(root, 'public', 'img')
 
-const { portraits, backdrops, sequences, galleries, budgets } = await import(
+const { portraits, figure, backdrops, sequences, galleries, budgets } = await import(
   pathToFileURL(join(root, 'src', 'data', 'media.js')).href
 )
 
@@ -61,6 +61,21 @@ for (const [slot, portrait] of Object.entries(portraits || {})) {
   else checkBudget('portraits', size)
   if (!portrait.alt) problems.push(`Retrato «${slot}»: falta el texto alternativo (alt)`)
   if (portrait.placeholder) pending.push(`retrato «${slot}» (${portrait.src})`)
+}
+
+// --- Figura del hero ---
+// Va aparte de los retratos porque su exigencia es distinta: necesita CANAL ALFA.
+// Un AVIF opaco aquí se vería como un rectángulo negro flotando sobre el hero, y
+// es un fallo que a simple vista se confunde con «la imagen no ha cargado».
+if (figure?.src) {
+  const { size, missing } = assetSize(figure.src)
+  if (size == null) problems.push(`Figura del hero: falta /img/${figure.src}.(avif|webp)`)
+  else checkBudget('figure', size)
+  if (missing.length) warnings.push(`Figura del hero: sin .${missing.join(', .')} — se servirá el otro`)
+  if (!figure.alt && figure.alt !== '') problems.push('Figura del hero: falta `alt` (usa "" si es decorativa)')
+  if (!figure.width || !figure.height) {
+    warnings.push('Figura del hero: sin `width`/`height` declarados — el <img> no reservará su caja y habrá salto de layout')
+  }
 }
 
 // --- Fondos ---

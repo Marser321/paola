@@ -158,4 +158,6 @@ export const es = {
   },
 
   langSwitch: { label: 'Cambiar idioma', to: 'EN' },
+  // Igual que el de idioma, el botón anuncia a DÓNDE se va, no dónde estás.
+  theme: { label: 'Cambiar tema', toLight: 'Claro', toDark: 'Oscuro' },
 }

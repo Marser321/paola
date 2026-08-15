@@ -5,9 +5,10 @@ import './styles/tracker.css'
 import './styles/media.css'
 import './styles/neon.css'
 
-import { initI18n, getLang } from './i18n/index.js'
+import { initI18n, getLang, t } from './i18n/index.js'
 import { applyStaticTranslations } from './i18n/apply-dom.js'
 import { initLangSwitch } from './js/ui/lang-switch.js'
+import { initTheme } from './js/ui/theme.js'
 
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -71,6 +72,10 @@ initTestimonials()
 initReport()       // (c) ANTES de initContact(): reserva su altura antes de medir
 initContact()
 initLangSwitch()
+// Los rótulos entran por parámetro para que theme.js no importe i18n: lo comparte
+// con las páginas legales, que no deben cargar los diccionarios (ver theme.js).
+initTheme(() => t('theme'))  // después del de idioma: los dos se cuelgan de
+                             // .site-nav y este va el último de la fila
 initConsent()      // t.24 — banner; NO pide permiso para el panel de sesión
 initContactForm()  // t.24
 

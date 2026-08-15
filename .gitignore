@@ -26,3 +26,17 @@ dist-ssr
 # Originales sin optimizar (tarea 23): no se versionan ni se publican
 src-assets/*
 !src-assets/README.md
+
+# Vercel
+.vercel
+.env*
+
+# Herramientas de medios (scripts/media/): binario compilado y entorno de Python.
+# El .swift y el .py SÍ se versionan; lo que sale de compilarlos, no.
+scripts/media/cutout
+.venv
+
+# Originales de la sesión de fotos. Misma regla que src-assets/: 25 MB de PNG sin
+# optimizar que no se publican y que el sitio no necesita — de aquí sale
+# public/img/ vía scripts/media/build-media.py, y eso sí se versiona.
+Selección/

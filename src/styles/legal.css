@@ -41,7 +41,7 @@
 }
 /* Los huecos por rellenar se ven como huecos, no como texto. */
 .legal mark {
-  background: rgba(245, 115, 39, 0.14);
+  background: var(--glow-warm-soft);
   color: var(--accent-orange);
   font-family: var(--font-mono); font-size: 0.85em;
   padding: 0.1rem 0.35rem;

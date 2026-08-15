@@ -36,7 +36,10 @@
   position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-header);
   display: flex; justify-content: space-between; align-items: center;
   padding: 1.25rem 4vw;
-  mix-blend-mode: difference;
+  /* `difference` sobre el hero negro es lo que mantiene el header legible pase
+     lo que pase por debajo. Sobre el papel crema del tema claro esa misma
+     inversión escupe cian y magenta, así que allí el token la apaga. */
+  mix-blend-mode: var(--chrome-blend);
 }
 .site-header__logo {
   font-family: var(--font-display); font-weight: 700;
@@ -61,19 +64,34 @@
 #hero-canvas, .hero__fallback {
   position: absolute; inset: 0; width: 100%; height: 100%;
 }
+/* El fallback ya no lleva violeta: el hero es dorado desde que el oro es el
+   acento del sitio, y dos radiales malva eran el último resto del gradiente
+   Meta fuera del informe. Los tokens hacen que también valga en tema claro. */
 .hero__fallback {
   background:
-    radial-gradient(60% 50% at 20% 30%, rgba(123, 25, 200, 0.25), transparent 70%),
-    radial-gradient(50% 40% at 80% 70%, rgba(245, 115, 39, 0.18), transparent 70%),
+    radial-gradient(60% 50% at 22% 28%, var(--glow-warm), transparent 70%),
+    radial-gradient(50% 40% at 78% 72%, var(--glow-warm-soft), transparent 70%),
     var(--bg);
   display: none; /* visible solo si WebGL no se inicializa (tarea 08) */
 }
 .hero.no-webgl .hero__fallback { display: block; }
-.hero__content { position: relative; z-index: 1; }
+/* z-index 2: por encima de la figura (1), que es escenografía. Con la figura a
+   la derecha el texto se queda en poco más de media pantalla; se le pone tope
+   para que nunca llegue a pisarla. */
+.hero__content { position: relative; z-index: 2; }
 .hero__label { margin-bottom: 1.5rem; }
 .hero__title {
-  font-size: var(--fs-hero); font-weight: 700;
+  /* Dos líneas piden menos cuerpo que una: con el clamp del token, «PAOLA» y
+     «PARRA» apiladas se comían la altura entera del hero. */
+  font-size: clamp(3.25rem, 11vw, 10rem); font-weight: 700;
   margin-left: -0.04em; /* compensación óptica */
+}
+.hero__title-line { display: block; }
+/* El apellido en contorno. Mismo recurso que el marquee, para que se lea como
+   parte del sistema y no como un efecto suelto. */
+.hero__title-line--outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--text-outline);
 }
 .hero__title .char { display: inline-block; will-change: transform; }
 .hero__subtitle {
@@ -84,6 +102,13 @@
 .hero__meta {
   display: flex; gap: 2.5rem; margin-top: 3rem;
   padding-top: 1.25rem; border-top: 1px solid var(--line);
+}
+/* Con la figura en pantalla, el texto del hero se reserva la mitad izquierda.
+   El breakpoint es el mismo que oculta la figura en media.css: por debajo de
+   1200px el hero vuelve a ocupar el ancho entero. */
+@media (min-width: 1200px) {
+  .hero__content { max-width: 58%; }
+  .hero__meta { flex-wrap: wrap; gap: 1.25rem 2.5rem; }
 }
 .hero__scroll {
   position: absolute; right: 4vw; bottom: 8vh; z-index: 1;
@@ -182,14 +207,47 @@
 .project-card__desc { margin-top: 1.25rem; color: var(--muted); font-size: 0.95rem; }
 
 /* ===== SERVICIOS ===== */
+/* La cabecera va en STICKY, y para que eso signifique algo necesita columna
+   propia. Cuando cabecera y lista compartían la única columna a sangre, el
+   `position: sticky` hacía exactamente lo que se le pedía —quedarse clavada a
+   15vh— y los renglones le pasaban por debajo: «LO QUE HAGO» y «PAID SOCIAL»
+   impresos uno encima del otro durante media sección. El fallo no era el sticky,
+   era no haberle dado sitio donde quedarse.
+
+   Es la misma rejilla de dos columnas que ya usa `.about__grid`, que tiene el
+   mismo problema resuelto desde el principio (retrato sticky + texto que corre).
+   La proporción 1:3 deja la cabecera holgada y la lista casi tan ancha como
+   antes: los renglones no se rehacen, solo se estrechan. */
+.services__grid {
+  display: grid;
+  grid-template-columns: minmax(13rem, 1fr) 3fr;
+  gap: 4vw;
+  align-items: start;
+}
 .services__header { position: sticky; top: 15vh; }
-.services__list { margin-top: 4rem; }
+.services__list { margin-top: 0; }
+/* «Lo que hago» a --fs-h2 (6vw ≈ 86px a 1440) en una columna de ~316px se parte
+   en tres líneas y, al estar en sticky, se queda partido toda la sección. El
+   titular de esta sección concreta baja de escalón; el resto de la página sigue
+   con el token. */
+.services__header .section-title { font-size: clamp(2rem, 3.4vw, 3.5rem); }
+
 .service {
-  display: grid; grid-template-columns: 4rem 1fr 1.2fr auto;
-  align-items: baseline; gap: 2rem;
+  display: grid; grid-template-columns: 3rem 1fr auto;
+  align-items: baseline; gap: 0.5rem 2rem;
   padding-block: 2.5rem; border-top: 1px solid var(--line);
   transition: padding-left var(--dur-med) var(--ease-out);
 }
+/* Las cuatro celdas van COLOCADAS A MANO. Con autocolocación, `desc` reclamaba
+   `2 / -1` y empujaba a `tags` a la primera celda libre que quedaba, que era la
+   columna del número: las etiquetas acababan bajo el índice, en una columna de
+   50px, partidas en tres renglones. */
+.service__index { grid-column: 1; grid-row: 1; }
+.service__title { grid-column: 2; grid-row: 1; }
+.service__tags  { grid-column: 3; grid-row: 1; justify-self: end; white-space: nowrap; }
+/* La descripción baja a su propia línea: en la columna estrecha, compartir fila
+   con título y etiquetas dejaba las tres cajas por debajo de su ancho legible. */
+.service__desc  { grid-column: 2 / -1; grid-row: 2; }
 .service:last-child { border-bottom: 1px solid var(--line); }
 .service:hover { padding-left: 1.5rem; }
 .service__title { font-size: var(--fs-h3); }
@@ -282,7 +340,8 @@
 .about__img {
   aspect-ratio: 4 / 5; border-radius: var(--radius);
   border: 1px solid var(--line); overflow: hidden; position: relative;
-  background: linear-gradient(160deg, #2B0A4A, var(--bg));
+  /* Sin violeta: era el ultimo malva del sitio fuera del informe. */
+  background: linear-gradient(160deg, var(--gold-deep), var(--bg));
 }
 .about__img-label { position: absolute; bottom: 1rem; left: 1rem; }
 .about__text { margin-top: 1.5rem; max-width: 52ch; }
@@ -356,7 +415,7 @@
 .cursor-ring {
   width: 40px; height: 40px;
   border: 1px solid var(--muted);
-  mix-blend-mode: difference;
+  mix-blend-mode: var(--chrome-blend);
   display: flex; align-items: center; justify-content: center;
   transition: background-color var(--dur-fast) var(--ease-out),
               border-color var(--dur-fast) var(--ease-out);
@@ -392,7 +451,7 @@
 .project-card__sector {
   position: absolute; top: 1rem; left: 1rem; z-index: 1;
   color: var(--text);
-  background: rgba(14, 14, 14, 0.55);
+  background: var(--overlay);
   backdrop-filter: blur(6px);
   padding: 0.4rem 0.75rem; border-radius: 999px;
 }
@@ -424,9 +483,14 @@
   .metric { padding-bottom: 2rem; border-bottom: 1px solid var(--line); }
   .metric:nth-child(3), .metric:nth-child(4) { border-bottom: 0; }
 
-  .service { grid-template-columns: 3rem 1fr; grid-template-rows: auto auto auto; }
-  .service__desc { grid-column: 2; }
-  .service__tags { grid-column: 2; }
+  /* Una sola columna de contenido: el renglón se apila. Se reescriben las
+     colocaciones explícitas del escritorio, incluida la fila, o el título y las
+     etiquetas seguirían compartiendo la primera. */
+  .service { grid-template-columns: 3rem 1fr; }
+  .service__index { grid-column: 1; grid-row: 1; }
+  .service__title { grid-column: 2; grid-row: 1; }
+  .service__desc  { grid-column: 2; grid-row: 2; }
+  .service__tags  { grid-column: 2; grid-row: 3; justify-self: start; white-space: normal; }
 
   .step { grid-template-columns: 3.5rem 1fr; }
   .step__desc { grid-column: 2; }
@@ -434,7 +498,11 @@
   .about__grid { grid-template-columns: 1fr; }
   .about__media { position: relative; top: 0; max-width: 420px; }
 
+  /* Sin dos columnas no hay dónde quedarse clavada, así que la cabecera deja de
+     ser sticky: es la misma pareja de reglas que .about__grid/.about__media. */
+  .services__grid { grid-template-columns: 1fr; gap: 0; }
   .services__header { position: relative; top: 0; }
+  .services__list { margin-top: 3rem; }
 }
 
 /* --- Móvil (<768px) --- */
@@ -507,8 +575,11 @@
 }
 .project-card:hover .project-card__picture { transform: scale(1.06); }
 
-/* ===== CONMUTADOR DE IDIOMA (tarea 28) ===== */
-.lang-switch {
+/* ===== CONMUTADORES DEL HEADER (idioma t.28 · tema) ===== */
+/* Los dos son el mismo objeto: una píldora mono con borde. Comparten regla a
+   propósito, para que no se separen visualmente con el tiempo. */
+.lang-switch,
+.theme-switch {
   font-family: var(--font-mono); font-size: var(--fs-label);
   text-transform: uppercase; letter-spacing: 0.08em;
   opacity: 0.8;
@@ -516,7 +587,8 @@
   transition: opacity var(--dur-fast) var(--ease-out),
               border-color var(--dur-fast) var(--ease-out);
 }
-.lang-switch:hover { opacity: 1; border-color: var(--muted); }
+.lang-switch:hover,
+.theme-switch:hover { opacity: 1; border-color: var(--muted); }
 
 /* ===== FORMULARIO DE CONTACTO (tarea 24) ===== */
 .contact-form {

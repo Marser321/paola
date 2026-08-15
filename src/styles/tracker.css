@@ -152,7 +152,7 @@
 .ad-chrome__format {
   position: absolute; top: 1rem; right: 1rem; z-index: 2;
   color: var(--text);
-  background: rgba(14, 14, 14, 0.6);
+  background: var(--overlay);
   border: 1px solid var(--line);
   padding: 0.3rem 0.6rem;
 }

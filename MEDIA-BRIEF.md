@@ -6,6 +6,27 @@
 
 ---
 
+## ⚠ ACTUALIZACIÓN 2026-08-15 — leer antes que nada
+
+Este documento describía un sistema de fondos que **ya no existe**. Lo que cambió:
+
+- **Los fondos de sección son fotos, no texturas.** Se retiraron las cinco texturas
+  abstractas (`bg-*-fondo`, `bg-*-frente`) y con ellas el `mix-blend-mode: screen`
+  y la capa teñida por máscara. Los §4 y §5.3 de más abajo hablan de ese sistema:
+  se conservan como registro de por qué se abandonó, no como instrucciones.
+- **Las imágenes se generan con `scripts/media/build-media.py`** a partir de los
+  originales de `Selección/`. No se editan a mano: el grado de color y los
+  desvanecidos de borde son los que hacen que las cinco parezcan del mismo sitio,
+  y están en el script.
+- **Hay dos temas.** Todo lo que se añada tiene que verse en oscuro y en claro
+  (`src/styles/tokens.css` §TEMA). Los fondos declaran su opacidad como par
+  `[oscuro, claro]`.
+- **La animación de estas imágenes tiene documento propio:** `MOTION-BRIEF.md`.
+
+El §1 (dónde vive el texto) y el §2 (dirección de arte) siguen vigentes.
+
+---
+
 ## 0. Cómo funciona esto en 30 segundos
 
 1. Generas una imagen.

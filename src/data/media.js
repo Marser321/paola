@@ -20,73 +20,94 @@
  * así que el alt es la única lectura del visual para un lector de pantalla.
  */
 export const portraits = {
-  // ⚠ La primera tanda de retratos generados (ia-paola-*) se DESCARTÓ: no da el
-  // parecido ni el tono. Se queda comentada, no borrada, y sus archivos siguen en
-  // public/img/ y src-assets/ para poder comparar con la siguiente generación.
-  // Sin `about` declarado, «Sobre mí» se queda con su gradiente placeholder y el
-  // layout es idéntico (mismo 4:5), así que descomentar no moverá nada.
+  // La primera tanda (ia-paola-*) se descartó y sus archivos se borraron. Esta es
+  // la segunda: sale de `Selección/` y la procesa scripts/media/build-media.py.
   //
-  // about: {
-  //   src: 'ia-paola-retrato-4x5',
-  //   alt: 'Retrato placeholder generado por IA de Paola Parra, especialista en Meta Ads, mirando a cámara',
-  //   placeholder: true,        // generado por IA, pendiente de foto real
-  // },
-  // og: {
-  //   src: 'ia-paola-og',
-  //   alt: 'Retrato placeholder generado por IA de Paola Parra en tres cuartos, situado a la derecha',
-  //   placeholder: true,
-  // },
-  // heroWide: {
-  //   src: 'ia-paola-hero-wide',
-  //   alt: 'Retrato placeholder generado por IA de Paola Parra mirando fuera de cuadro',
-  //   placeholder: true,
-  // },
+  // El retrato es el primer plano de las dos luces. Se le quitó el violeta en el
+  // procesado (kill_violet), así que la única luz de color que queda es el ámbar
+  // de la derecha — que ya era el oro del sitio.
+  about: {
+    src: 'paola-retrato-4x5',
+    alt: 'Retrato de Paola Parra, especialista en Meta Ads, apoyando la mano en la mejilla y mirando a cámara',
+  },
 }
 
 /**
- * FONDOS DE SECCIÓN (parallax)
+ * FIGURA DEL HERO
+ * Recorte con ALFA REAL (Vision, ver scripts/media/cutout.swift), no un PNG con
+ * fondo negro: convive con las partículas WebGL, que son transparentes, y con
+ * los dos temas. Cualquier fondo horneado se vería como un parche.
+ *
+ * Sin `figure` declarada el hero se queda exactamente como estaba: tipografía
+ * más partículas. No hay reserva de layout que deshacer.
+ */
+export const figure = {
+  src: 'paola-figura',
+  // `alt` VACÍO y a propósito: la figura es escenografía. Quien lee con lector de
+  // pantalla ya recibe el h1 «Paola Parra» justo al lado y el retrato descrito en
+  // «Sobre mí»; describir aquí otra vez a la misma persona es ruido, no acceso.
+  // Por eso el contenedor va además con aria-hidden.
+  alt: '',
+  width: 695,
+  height: 1180,
+}
+
+/**
+ * FONDOS DE SECCIÓN — «platos» fotográficos con parallax
  * Clave = id de la sección en index.html.
- * `depth`: cuánto se mueve la capa respecto al scroll. 0 = quieta,
- *          0.2 = se desplaza un 20% de su alto. Por encima de 0.35 se nota
- *          demasiado y compite con el texto.
- * `opacity`: sobre fondo #0E0E0E. Rara vez debería pasar de 0.6.
+ *
+ * ⚠ CAMBIO DE MODELO (2026-08-15). Antes esto eran texturas abstractas a sangre
+ * con `mix-blend-mode: screen` y una capa teñida por máscara. Se retiró entero.
+ * El problema no era la opacidad ni el tinte: era que cada sección enseñaba un
+ * RECTÁNGULO de imagen cortado a hacha justo en la costura con la sección
+ * siguiente, y cinco texturas generadas por separado no se parecían entre sí.
+ * Resultado: fondos que se sentían ajenos, incoherentes y sucios.
+ *
+ * El modelo nuevo:
+ *   · una sola foto por sección, todas del mismo reportaje;
+ *   · el mismo grado de color horneado en las cinco (build-media.py, warm_grade);
+ *   · la ALFA horneada en el archivo, muriendo por arriba, por abajo y hacia el
+ *     lado donde va el texto. Sin bordes que cortar y sin blend-mode que ajustar,
+ *     y el mismo archivo sirve para el tema oscuro y para el claro.
+ *
+ * `side`  · borde al que se ANCLA la foto. El contenido de la sección va al otro.
+ * `depth` · desplazamiento por scroll. 0 = quieta. Tope duro en 0.35.
+ * `opacity` · [oscuro, claro]. En claro la foto es un plato oscuro sobre crema y
+ *             necesita menos peso para no convertirse en un borrón.
  *
  * ⚠ #informe NO lleva fondo, y es deliberado (MEDIA-BRIEF §criterios).
+ * ⚠ #proyectos tampoco: la galería horizontal ya es la imagen de esa sección.
  */
 export const backdrops = {
-  // ⚠ Las capas `frente` se retiraron en su día por ser NARANJAS: sumadas al
-  // violeta de la capa de abajo reproducían el gradiente Meta a pantalla
-  // completa y competían con la barra del informe (MEDIA-BRIEF §5.3). Vuelven
-  // con `tint: 'gold'`, que las repinta con el token dorado usando la textura
-  // como máscara. Misma forma, color de marca, sin regenerar el PNG.
+  // Los monitores con las gráficas. Es la única foto del set que enseña
+  // literalmente aquello de lo que habla la sección.
   metricas: {
-    placeholder: true,
-    layers: [
-      { src: 'bg-metricas-fondo', depth: 0.14, opacity: 0.62 },
-      { src: 'bg-metricas-frente', depth: 0.24, opacity: 0.3, tint: 'gold' },
-    ],
+    side: 'right',
+    layers: [{ src: 'bg-metricas', depth: 0.12, opacity: [0.34, 0.24] }],
   },
+  // La cabecera de servicios va en sticky arriba a la izquierda: el hueco tiene
+  // que caer a la izquierda y Paola entra por la derecha.
   servicios: {
-    placeholder: true,
-    layers: [{ src: 'bg-servicios', depth: 0.06, opacity: 0.58 }],
+    side: 'right',
+    layers: [{ src: 'bg-servicios', depth: 0.08, opacity: [0.42, 0.3] }],
   },
+  // El pasillo. Un método es un recorrido, y es la única foto con dirección de
+  // marcha.
   proceso: {
-    placeholder: true,
-    layers: [
-      { src: 'bg-proceso-fondo', depth: 0.14, opacity: 0.55 },
-      { src: 'bg-proceso-frente', depth: 0.22, opacity: 0.26, tint: 'gold' },
-    ],
+    side: 'right',
+    layers: [{ src: 'bg-proceso', depth: 0.14, opacity: [0.42, 0.3] }],
   },
+  // El sillón: registro conversado, que es el de un testimonio.
   testimonios: {
-    placeholder: true,
-    layers: [{ src: 'bg-testimonios', depth: 0.04, opacity: 0.55 }],
+    side: 'right',
+    layers: [{ src: 'bg-testimonios', depth: 0.06, opacity: [0.26, 0.18] }],
   },
+  // La ventana. La sección que cierra el sitio mira afuera. Va la más baja de
+  // las cinco: el CTA de contacto es tipografía enorme y centrada, y no admite
+  // competencia detrás.
   contacto: {
-    placeholder: true,
-    // Bajó a 0.32 cuando su resplandor naranja competía con el gradiente Meta.
-    // Con el oro como acento del sitio ese calor está EN marca, no en contra:
-    // vuelve a 0.42.
-    layers: [{ src: 'bg-contacto', depth: 0.06, opacity: 0.42 }],
+    side: 'left',
+    layers: [{ src: 'bg-contacto', depth: 0.06, opacity: [0.22, 0.16] }],
   },
   //
   // `formats` es opcional y por defecto es ['avif', 'webp']. Si solo entregas uno,
@@ -190,13 +211,14 @@ export const budgets = {
   'seq/proyectos-still': 120,
   'seq/sobre-mi': 700,
   'seq/sobre-mi-still': 100,
-  metricas: 250,
-  servicios: 180,
-  proceso: 250,
-  testimonios: 180,
-  contacto: 180,
+  metricas: 260,
+  servicios: 220,
+  proceso: 260,
+  testimonios: 220,
+  contacto: 220,
   portraits: 400,
+  figure: 320,      // recorte del hero: alfa real, y la alfa no comprime gratis
   galleries: 600,   // las 5 galerías juntas: son miniaturas, no visuales grandes
 }
 
-export const media = { portraits, backdrops, sequences, galleries, budgets }
+export const media = { portraits, figure, backdrops, sequences, galleries, budgets }

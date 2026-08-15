@@ -53,6 +53,23 @@
     U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
+/* ============================================================
+   TEMA
+   El sitio es OSCURO por definición: el concepto es una consola de campaña, y
+   ese es el aspecto canónico de la marca. Por eso el tema oscuro vive en `:root`
+   pelado y el claro es una CAPA DE ANULACIÓN sobre `[data-theme='light']`.
+
+   Consecuencia deliberada: no se sigue `prefers-color-scheme`. Quien entra ve
+   la marca; quien prefiera claro lo pide con el botón del header y su elección
+   se recuerda (src/js/ui/theme.js). Un sitio de portfolio que se presenta en
+   dos aspectos distintos según el sistema operativo del visitante no presenta
+   nada.
+
+   REGLA para añadir color: si un valor cambia entre temas, es un token y se
+   define en LOS DOS bloques. Nada de hex sueltos en los CSS de sección — el
+   único hex fuera de aquí que sobrevive es el de los shaders, que no pueden
+   leer custom properties.
+   ============================================================ */
 :root {
   /* Color */
   --bg: #0E0E0E;
@@ -60,6 +77,15 @@
   --line: rgba(243, 242, 242, 0.08);
   --text: #F3F2F2;
   --muted: #8A8A8A;
+  /* Contorno tipográfico (apellido del hero, marquee). Separado de --muted
+     porque en claro necesita más cuerpo del que tiene el gris de texto menor. */
+  --text-outline: #8A8A8A;
+  /* Superficie translúcida sobre la que se leen etiquetas encima de imagen. */
+  --overlay: rgba(14, 14, 14, 0.55);
+  --scrollbar: #2A2A2A;
+  --selection-bg: #8A6A1F;
+  --selection-fg: #F3F2F2;
+
   /* Acento Meta. Desde el sistema dorado su ÚNICO uso vivo es la barra de
      probabilidad del informe (tracker.css) — que es lo que PLAN.md §11.4 y
      DESIGN.md §12 exigían desde el principio. Los tres --accent-* siguen
@@ -77,6 +103,17 @@
   --gradient-gold: linear-gradient(90deg, #8A6A1F, #D4AF37, #F2DFA6);
   --line-gold: rgba(212, 175, 55, 0.22);
   --glow-gold: 0 0 12px rgba(212, 175, 55, 0.45);
+  /* Resplandores atmosféricos (fallback del hero, halos de sección). */
+  --glow-warm: rgba(212, 175, 55, 0.22);
+  --glow-warm-soft: rgba(245, 115, 39, 0.14);
+
+  /* Grano: sobre negro es textura de película; sobre crema, suciedad. Cambia
+     de mezcla y de fuerza con el tema. */
+  --grain-opacity: 0.05;
+  --grain-blend: normal;
+  /* El header y el cursor se invierten contra el fondo con `difference`. Sobre
+     crema esa inversión escupe colores chillones, así que en claro se apaga. */
+  --chrome-blend: difference;
 
   /* Tipografía */
   --font-display: 'Clash Display', sans-serif;
@@ -115,4 +152,60 @@
   /* UI del concepto (DESIGN.md §10) */
   --fs-hud: 0.6875rem;     /* 11px — --fs-label es demasiado grande para el rail */
   --hud-w: 13rem;
+}
+
+/* ============================================================
+   TEMA CLARO
+   No es «el oscuro con los colores dados la vuelta»: es papel. Fondo hueso
+   cálido en vez de blanco puro, porque el blanco puro junto al oro lo apaga y
+   deja la página con aspecto de documento sin terminar.
+
+   El oro es el único token que NO se puede reutilizar tal cual: #D4AF37 sobre
+   crema da 1.9:1 de contraste y es ilegible. En claro todo el eje dorado baja
+   dos escalones y pasa a ser bronce, que sobre hueso sigue leyéndose como oro.
+   ============================================================ */
+[data-theme='light'] {
+  --bg: #F2EEE6;
+  --surface: #FBF8F2;
+  --line: rgba(26, 22, 15, 0.14);
+  --text: #17140F;
+  --muted: #6A6154;
+  --text-outline: rgba(23, 20, 15, 0.42);
+  --overlay: rgba(251, 248, 242, 0.78);
+  --scrollbar: rgba(23, 20, 15, 0.22);
+  --selection-bg: #E6D9B4;
+  --selection-fg: #17140F;
+
+  --gold: #8A6A1F;
+  --gold-soft: #B08D2E;
+  --gold-deep: #5C4512;
+  --gradient-gold: linear-gradient(90deg, #5C4512, #8A6A1F, #B08D2E);
+  --line-gold: rgba(138, 106, 31, 0.34);
+  --glow-gold: 0 0 10px rgba(138, 106, 31, 0.28);
+  --glow-warm: rgba(212, 175, 55, 0.3);
+  --glow-warm-soft: rgba(245, 115, 39, 0.16);
+
+  /* `multiply` en vez de la superposición normal: así el grano oscurece el
+     papel en lugar de blanquearlo, que es lo que hace el ruido claro sobre
+     crema. Y va más flojo: sobre fondo claro se nota el triple. */
+  --grain-opacity: 0.035;
+  --grain-blend: multiply;
+  --chrome-blend: normal;
+}
+
+/* La transición del cambio de tema. Sin ella el salto de negro a crema es un
+   fogonazo. Se limita a color, fondo y opacidad: animar `all` arrastraría los
+   transforms, y de los transforms es dueño GSAP.
+
+   El parpadeo de la PRIMERA pintura no se arregla aquí sino en el <head>: un
+   script en línea fija `data-theme` antes de que el navegador pinte nada
+   (index.html). Si dependiera de este módulo, que va diferido, quien tiene el
+   tema claro guardado vería un fotograma en negro. */
+body,
+.site-header, .footer, .testimonial, .project-card, .contact-form__input,
+.services__preview, .consent, .backdrop__layer {
+  transition: background-color 0.45s var(--ease-out),
+              color 0.45s var(--ease-out),
+              border-color 0.45s var(--ease-out),
+              opacity 0.45s var(--ease-out);
 }

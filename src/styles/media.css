@@ -4,8 +4,15 @@
    ninguna de estas reglas llega a aplicarse a nada.
    ============================================================ */
 
-/* ===== FONDOS DE SECCIÓN (parallax) ===== */
-/* La clase la añade backdrops.js solo a las secciones que tienen fondo. */
+/* ===== FONDOS DE SECCIÓN — PLATOS FOTOGRÁFICOS (parallax) ===== */
+/* La clase la añade backdrops.js solo a las secciones que tienen fondo.
+
+   ⚠ Aquí ya NO hay `mix-blend-mode: screen` ni capa teñida por máscara. Los dos
+   trucos existían para que una textura abstracta más oscura que el fondo no
+   vaciara la sección. Con fotos que traen su propia alfa el problema no se da:
+   lo que no es foto es transparente de verdad, así que la capa se compone en
+   modo normal y funciona igual sobre el fondo oscuro y sobre el claro. Un
+   `screen` sobre crema habría blanqueado la sección entera. */
 .has-backdrop { position: relative; }
 
 /* El contenido tiene que quedar POR ENCIMA del fondo. Se sube todo lo que sea
@@ -17,52 +24,78 @@
   overflow: clip;
   pointer-events: none;
 }
+
 .backdrop__layer {
   position: absolute;
   /* Se sobredimensiona en vertical para que el parallax nunca descubra el borde:
      la capa se mueve dentro de este margen y no deja huecos. */
-  top: -20%; left: 0; right: 0; height: 140%;
+  top: -20%; height: 140%;
+  left: 0; right: 0;
+
+  /* ⚠ `background-size: cover` AQUÍ NO. Es lo primero que uno escribe y es lo que
+     rompe el sistema: `cover` recorta la imagen hasta llenar la caja, y como la
+     caja de una sección alta es casi cuadrada mientras la foto es 16:7, se comía
+     justo los bordes — o sea, los desvanecidos que build-media.py hornea en la
+     alfa. El resultado era una costura vertical dura a media sección, que es el
+     defecto que todo esto venía a arreglar.
+
+     Con `100% auto` la foto se escala al ANCHO y conserva su proporción: entra
+     entera, con sus cuatro bordes intactos, y se lee como una banda fotográfica
+     centrada en la sección. Lo que sobra por arriba y por abajo es transparente,
+     y ahí es donde la sección se suelda con la siguiente. */
+  background-size: 100% auto;
   background-position: center;
-  background-size: cover;
   background-repeat: no-repeat;
   will-change: transform;
-  /* Las capas SUMAN luz, no la restan.
-     Con alfa normal, una textura más oscura que #0E0E0E oscurece la sección: es
-     lo que pasaba antes, y por eso subir la opacidad la vaciaba todavía más
-     (medido: opacity 0.45 → 0.62 dejaba el pico central en 11,2, por debajo del
-     propio fondo, que es 14). Con `screen` el negro de la textura es neutro y
-     solo se suma lo que tiene luz, que es justo lo que es un fondo atmosférico.
-     Medido con `screen`: pico central de 16,7 a 19,6 en las cinco secciones. */
-  mix-blend-mode: screen;
+  opacity: var(--layer-opacity-dark, 0.45);
 }
 
-/* Capa teñida (`tint` en media.js): la textura entra por `mask`, no por
-   `background`, así que necesita el mismo encuadre que tendría de fondo.
+/* El anclaje a un lado NO se hace aquí: va horneado en la alfa de cada archivo
+   (`side` en media.js documenta hacia dónde muere). Una máscara CSS encima
+   volvería a cortar en recto lo que la foto ya resuelve en degradado. */
 
-   ⚠ `mask-mode: luminance` NO es opcional, es lo que hace que esto funcione.
-   Por defecto la máscara es `match-source`, que para una imagen significa ALFA —
-   y estas texturas son AVIF/WebP opacos, sin canal alfa. Con el valor por
-   defecto la máscara no recorta nada y la capa se renderiza como una lámina de
-   oro sólido sobre la sección entera. Con `luminance` recorta por brillo, que es
-   lo que se quiere: el negro de la textura desaparece y solo se tiñe su luz. */
-.backdrop__layer--tint {
-  mask-mode: luminance;
-  mask-position: center;
-  mask-size: cover;
-  mask-repeat: no-repeat;
-  -webkit-mask-source-type: luminance; /* WebKit antiguo, antes de mask-mode */
-  -webkit-mask-position: center;
-  -webkit-mask-size: cover;
-  -webkit-mask-repeat: no-repeat;
+/* En pantallas estrechas el texto cae encima de la foto en vez de al lado: la
+   banda baja de peso para no discutir con él. */
+@media (max-width: 1023px) {
+  .backdrop__layer { opacity: calc(var(--layer-opacity-dark, 0.45) * 0.55); }
 }
 
-/* Red de seguridad. Sin `mask-mode` el navegador cae a alfa y la capa vuelve a
-   ser una lámina de oro sobre la sección: un fallo mucho peor que no tener la
-   capa. Si no hay soporte, no se pinta y la sección se queda con su capa de
-   fondo, que es autosuficiente. */
-@supports not (mask-mode: luminance) {
-  .backdrop__layer--tint { display: none; }
+/* En claro el plato es una foto oscura sobre crema: pesa mucho más a igualdad de
+   opacidad, así que cada capa trae su propio valor para este tema. */
+[data-theme='light'] .backdrop__layer { opacity: var(--layer-opacity-light, 0.32); }
+@media (max-width: 1023px) {
+  [data-theme='light'] .backdrop__layer { opacity: calc(var(--layer-opacity-light, 0.32) * 0.55); }
 }
+
+/* ===== FIGURA DEL HERO ===== */
+/* Recorte con alfa real, así que no lleva ni caja ni fondo: se apoya sobre las
+   partículas sin marco. Va anclada abajo a la derecha y el texto del hero
+   ocupa la izquierda. */
+.hero__figure {
+  position: absolute;
+  right: 2vw; bottom: 0;
+  z-index: 1;                    /* sobre el canvas, bajo nada más */
+  height: min(88svh, 860px);
+  width: auto;
+  pointer-events: none;
+  /* La foto se hizo con luz cálida y el hero es casi negro: un pelo de contraste
+     y de calor la asienta en la escena en vez de dejarla pegada encima. */
+  filter: saturate(1.04) contrast(1.03);
+  will-change: transform, opacity;
+}
+.hero__figure img { height: 100%; width: auto; object-fit: contain; }
+
+/* En claro la figura queda recortada sobre crema y el pie, que se disuelve en
+   transparencia, se lee como un degradado sucio. Se acorta el recorrido visible
+   subiendo el punto de fuga con una máscara propia del tema. */
+[data-theme='light'] .hero__figure {
+  filter: saturate(1) contrast(1.02);
+  mask-image: linear-gradient(to bottom, #000 62%, transparent 96%);
+}
+
+/* El texto del hero manda: por debajo de 1200px la figura estorba antes que
+   aporta, y en móvil ni se descarga (el <img> se monta solo si hay sitio). */
+@media (max-width: 1199px) { .hero__figure { display: none; } }
 
 /* ===== SECUENCIAS (canvas 2D) ===== */
 .sequence {
