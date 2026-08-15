@@ -1,0 +1,111 @@
+/* ============================================================
+   MEDIA.CSS — capas de imagen: fondos de sección y secuencias (tarea 38).
+   Todo lo de aquí es ADITIVO: sin nada declarado en src/data/media.js
+   ninguna de estas reglas llega a aplicarse a nada.
+   ============================================================ */
+
+/* ===== FONDOS DE SECCIÓN (parallax) ===== */
+/* La clase la añade backdrops.js solo a las secciones que tienen fondo. */
+.has-backdrop { position: relative; }
+
+/* El contenido tiene que quedar POR ENCIMA del fondo. Se sube todo lo que sea
+   hijo directo salvo la propia capa. */
+.has-backdrop > *:not(.backdrop) { position: relative; z-index: 1; }
+
+.backdrop {
+  position: absolute; inset: 0; z-index: 0;
+  overflow: clip;
+  pointer-events: none;
+}
+.backdrop__layer {
+  position: absolute;
+  /* Se sobredimensiona en vertical para que el parallax nunca descubra el borde:
+     la capa se mueve dentro de este margen y no deja huecos. */
+  top: -20%; left: 0; right: 0; height: 140%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  will-change: transform;
+  /* Las capas SUMAN luz, no la restan.
+     Con alfa normal, una textura más oscura que #0E0E0E oscurece la sección: es
+     lo que pasaba antes, y por eso subir la opacidad la vaciaba todavía más
+     (medido: opacity 0.45 → 0.62 dejaba el pico central en 11,2, por debajo del
+     propio fondo, que es 14). Con `screen` el negro de la textura es neutro y
+     solo se suma lo que tiene luz, que es justo lo que es un fondo atmosférico.
+     Medido con `screen`: pico central de 16,7 a 19,6 en las cinco secciones. */
+  mix-blend-mode: screen;
+}
+
+/* Capa teñida (`tint` en media.js): la textura entra por `mask`, no por
+   `background`, así que necesita el mismo encuadre que tendría de fondo.
+
+   ⚠ `mask-mode: luminance` NO es opcional, es lo que hace que esto funcione.
+   Por defecto la máscara es `match-source`, que para una imagen significa ALFA —
+   y estas texturas son AVIF/WebP opacos, sin canal alfa. Con el valor por
+   defecto la máscara no recorta nada y la capa se renderiza como una lámina de
+   oro sólido sobre la sección entera. Con `luminance` recorta por brillo, que es
+   lo que se quiere: el negro de la textura desaparece y solo se tiñe su luz. */
+.backdrop__layer--tint {
+  mask-mode: luminance;
+  mask-position: center;
+  mask-size: cover;
+  mask-repeat: no-repeat;
+  -webkit-mask-source-type: luminance; /* WebKit antiguo, antes de mask-mode */
+  -webkit-mask-position: center;
+  -webkit-mask-size: cover;
+  -webkit-mask-repeat: no-repeat;
+}
+
+/* Red de seguridad. Sin `mask-mode` el navegador cae a alfa y la capa vuelve a
+   ser una lámina de oro sobre la sección: un fallo mucho peor que no tener la
+   capa. Si no hay soporte, no se pinta y la sección se queda con su capa de
+   fondo, que es autosuficiente. */
+@supports not (mask-mode: luminance) {
+  .backdrop__layer--tint { display: none; }
+}
+
+/* ===== SECUENCIAS (canvas 2D) ===== */
+.sequence {
+  position: absolute; inset: 0; z-index: 0;
+  overflow: clip;
+  pointer-events: none;
+  /* El still se pinta como fondo CSS y se ve al instante, mientras el canvas
+     todavía no tiene frames. Es lo que evita el hueco negro inicial. */
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.sequence__canvas {
+  width: 100%; height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity var(--dur-med) var(--ease-out);
+}
+/* El canvas solo se revela cuando ya hay frames que pintar: si no, taparía el
+   still con un rectángulo transparente y se vería el fondo pelado. */
+.sequence.is-ready .sequence__canvas { opacity: 1; }
+
+/* En el hero la secuencia va DEBAJO de las partículas WebGL, que son
+   transparentes y se superponen. El orden lo da el DOM: la secuencia se
+   inserta como primer hijo. */
+.hero .sequence { z-index: 0; }
+
+/* ===== RETRATO REAL EN "SOBRE MÍ" ===== */
+/* Sustituye al gradiente cuando hay retrato declarado. Mismo encuadre 4:5 y
+   mismo sticky, así que el layout no se mueve al llegar la foto. */
+.about__picture { position: absolute; inset: 0; display: block; }
+.about__picture img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  /* El hover-parallax de la t.13 mueve .about__img; la foto va dentro y le sigue. */
+}
+.about__img.has-photo { background: var(--surface); }
+.about__img.has-photo .about__img-label { display: none; }
+
+/* ===== REDUCED MOTION ===== */
+/* Las capas se quedan quietas y la secuencia se queda en su frame fijo.
+   No desaparecen: son imagen, no movimiento. */
+@media (prefers-reduced-motion: reduce) {
+  .backdrop__layer { transform: none !important; }
+  .sequence__canvas { transition: none; }
+}

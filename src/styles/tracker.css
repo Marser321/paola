@@ -1,0 +1,302 @@
+/* ============================================================
+   TRACKER.CSS — UI del concepto "LA CAMPAÑA ERES TÚ".
+   Hoja aparte a propósito: sections.css ya recibe bloques de 9 tareas
+   y es el archivo más frágil del proyecto.
+   Bloques: HUD (t.32) · Toasts (t.33) · Chrome de anuncio (t.34) · Informe (t.35)
+   ============================================================ */
+
+/* ===== HUD (tarea 32) ===== */
+.hud {
+  position: fixed; right: 1.25rem; top: 50%;
+  transform: translateY(-50%);
+  z-index: var(--z-hud);
+  width: var(--hud-w);
+  padding: 0.75rem;
+  border-left: 1px solid var(--line);
+  /* Velo del propio fondo. Desviación mínima de DESIGN.md §10, necesaria: en la
+     galería pinneada pasan creatividades a pantalla completa bajo el rail y el
+     texto --muted sobre un gradiente naranja deja de cumplir contraste. */
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(4px);
+  font-size: var(--fs-hud);
+  opacity: 0;
+  transition: opacity var(--dur-med) var(--ease-out);
+}
+.hud.is-in { opacity: 1; }
+
+.hud__title {
+  font-size: var(--fs-hud);
+  opacity: 0.6;
+  margin-bottom: 0.75rem;
+}
+.hud__row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 0.5rem;
+  padding-block: 0.2rem;
+}
+.hud__row dt { color: var(--muted); }
+.hud__row dd { color: var(--text); font-variant-numeric: tabular-nums; }
+
+/* Barra de profundidad: --muted, NUNCA gradiente (DESIGN.md §1). */
+.hud__depth {
+  height: 1px; background: var(--line);
+  margin-block: 0.4rem 0.6rem; overflow: hidden;
+}
+.hud__depth span {
+  display: block; height: 100%; width: 100%;
+  background: var(--muted);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform var(--dur-fast) linear;
+}
+
+.hud__link, .hud__off {
+  font-family: var(--font-mono); font-size: var(--fs-hud);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--muted);
+  border-bottom: 1px solid transparent;
+  transition: color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+.hud__link { margin-left: 0.5rem; }
+.hud__link:hover, .hud__off:hover { color: var(--text); border-color: var(--muted); }
+.hud__off { margin-top: 1rem; display: block; }
+
+/* Conversión: la fila ETAPA parpadea una vez y se queda en --text.
+   Se selecciona por [data-hud], no por nth-of-type: entre las filas hay un div
+   .hud__depth, así que el índice de tipo no coincide con el de fila. */
+.hud.is-converted [data-hud="stage"] {
+  animation: hud-convert 0.9s var(--ease-out) 1;
+}
+.hud.is-converted .hud__row:has([data-hud="stage"]) dt {
+  color: var(--text);
+}
+@keyframes hud-convert {
+  0%, 100% { opacity: 1; }
+  40% { opacity: 0.25; }
+}
+
+/* Tablet: una sola línea BAJO EL HEADER.
+   Nunca abajo: ahí colisiona con el banner de consentimiento (tarea 24). */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hud {
+    top: 4.5rem; right: 4vw; left: 4vw;
+    width: auto; transform: none;
+    padding-left: 0; padding-top: 0.5rem;
+    border-left: 0; border-top: 1px solid var(--line);
+  }
+  .hud__title, .hud__depth, .hud__off { display: none; }
+  .hud__rows { display: flex; flex-wrap: wrap; gap: 1.25rem; }
+  .hud__row { padding-block: 0; }
+  .hud__row dt::after { content: ':'; }
+}
+
+/* Móvil: oculto por defecto. Se reactiva desde el footer. */
+@media (max-width: 767px) {
+  .hud { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud { transition: none; }
+  .hud__depth span { transition: none; }
+  .hud.is-converted [data-hud="stage"] { animation: none; }
+}
+
+/* ===== TOASTS DE SEÑAL (tarea 33) ===== */
+/* Anclados al HUD: encima del rail en desktop, bajo la línea en tablet. */
+.signal-layer {
+  position: fixed; right: 1.25rem; bottom: 1.5rem;
+  z-index: var(--z-toast);
+  pointer-events: none;
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.signal-toast {
+  font-size: var(--fs-hud);
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 0.5rem 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(8px); /* SHIFT — el máximo permitido */
+  transition: opacity var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+.signal-toast.is-in { opacity: 1; transform: translateY(0); }
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .signal-layer { top: 7.5rem; bottom: auto; right: 4vw; }
+}
+@media (max-width: 767px) {
+  .signal-layer { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .signal-layer { display: none; }
+}
+
+/* ===== CHROME DE ANUNCIO + BACKSTAGE (tarea 34) ===== */
+.ad-chrome {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+}
+.ad-chrome__avatar {
+  width: 24px; height: 24px; border-radius: 4px; flex-shrink: 0;
+}
+.ad-chrome__brand {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 0.85rem; letter-spacing: -0.02em;
+}
+.ad-chrome__brand sup { font-size: 0.5em; }
+.ad-chrome__meta { margin-left: auto; }
+
+.ad-chrome__format {
+  position: absolute; top: 1rem; right: 1rem; z-index: 2;
+  color: var(--text);
+  background: rgba(14, 14, 14, 0.6);
+  border: 1px solid var(--line);
+  padding: 0.3rem 0.6rem;
+}
+.ad-chrome__cta {
+  padding: 0.85rem 1.1rem; text-align: center;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+}
+
+/* Backstage: overlay que sube sobre la creatividad. Altura de la card intacta. */
+.backstage {
+  position: absolute; inset: 0; z-index: 3;
+  background: var(--bg);
+  padding: 1.25rem;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 0.6rem;
+  transform: translateY(100%);
+  transition: transform var(--dur-med) var(--ease-out);
+}
+.backstage:not([hidden]) { transform: translateY(0); }
+/* [hidden] con display:none rompería la transición: se anula y se usa el transform. */
+.backstage[hidden] { display: flex; visibility: hidden; }
+.backstage:not([hidden]) { visibility: visible; }
+
+.backstage__title, .backstage__test-title { color: var(--text); }
+.backstage__rows div {
+  display: flex; justify-content: space-between; gap: 1rem;
+  padding-block: 0.35rem; border-bottom: 1px solid var(--line);
+}
+.backstage__rows dt { color: var(--muted); }
+.backstage__rows dd { color: var(--text); text-align: right; }
+
+.backstage__variants { display: grid; gap: 0.5rem; }
+.backstage__variant {
+  position: relative;
+  border: 1px solid var(--line); padding: 0.6rem 0.75rem;
+  display: flex; align-items: baseline; gap: 0.6rem;
+  opacity: 0.45;
+}
+.backstage__variant.is-winner { opacity: 1; border-color: var(--muted); }
+.backstage__variant-key { color: var(--muted); }
+.backstage__variant-text { font-size: 0.9rem; }
+.backstage__badge {
+  margin-left: auto;
+  background: var(--text); color: var(--bg);
+  padding: 0.15rem 0.45rem;
+}
+.backstage__result { color: var(--text); margin-top: auto; }
+
+.project-card__more {
+  margin-top: 1.5rem;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  transition: color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+.project-card__more:hover { color: var(--text); border-color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .backstage { transition: none; }
+}
+
+/* ===== INFORME DE SESIÓN (tarea 35) ===== */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+.report__panel {
+  margin-top: 3rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  /* Reserva de altura: si el panel creciera al compilarse, desplazaría #contacto
+     y descuadraría los ScrollTriggers ya calculados. */
+  min-height: 30rem;
+}
+.report__head {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.report__dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--muted); flex-shrink: 0;
+}
+.report__title { color: var(--text); }
+.report__status { margin-left: auto; }
+
+.report__grid { padding: 0.5rem 1.5rem; }
+.report__row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 1rem; padding-block: 0.85rem;
+  border-bottom: 1px solid var(--line);
+}
+.report__row dt { color: var(--muted); }
+.report__row dd { color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+
+.report__score { padding: 1.5rem; }
+.report__score-head { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; color: var(--text); }
+.report__score-tag { color: var(--muted); }
+.report__formula-btn {
+  color: var(--muted); border-bottom: 1px solid var(--line);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.report__formula-btn:hover { color: var(--text); }
+.report__score-value {
+  font-family: var(--font-mono); font-weight: 500;
+  font-size: var(--fs-metric); line-height: 1; letter-spacing: -0.04em;
+  margin-top: 0.75rem; font-variant-numeric: tabular-nums;
+}
+/* ÚNICA aplicación del gradiente en todo el concepto (PLAN.md §11.4).
+   Literalmente: `grep -rn "gradient-meta" src/` devuelve solo esta regla. Lo era
+   sobre el papel y no en el código — el gradiente se había extendido a siete
+   sitios — hasta que el dorado pasó a ser el acento del sitio y lo replegó aquí.
+   Si vuelve a aparecer en otro archivo, el informe pierde su golpe de efecto. */
+.report__score-bar {
+  height: 2px; background: var(--line);
+  margin-top: 1rem; overflow: hidden;
+}
+.report__score-bar span {
+  display: block; height: 100%; width: 100%;
+  background: var(--gradient-meta);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform var(--dur-med) var(--ease-out);
+}
+.report__formula { margin-top: 1rem; max-width: 60ch; line-height: 1.7; }
+.report__off { padding: 0 1.5rem 1.5rem; color: var(--muted); }
+
+@media (max-width: 767px) {
+  .report__panel { min-height: 34rem; }
+  .report__row { flex-direction: column; gap: 0.2rem; }
+  .report__row dd { text-align: left; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .report__score-bar span { transition: none; }
+}
+
+/* El rail del HUD es fixed a la derecha y el informe alinea sus valores a la
+   derecha: en desktop se solapaban y tapaba la fila "Variante servida".
+   El informe cede el ancho del rail. Detectado en ejecución (tarea 35). */
+@media (min-width: 1024px) {
+  .report > .container { padding-right: calc(var(--hud-w) + 2.5rem); }
+}

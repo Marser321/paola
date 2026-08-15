@@ -1,0 +1,139 @@
+/* ============================================================
+   BORDES DE NEÓN DORADO
+
+   Tres reacciones sobre la misma superficie:
+     · reposo — la luz gira despacio por el borde
+     · hover  — la luz se concentra donde está el cursor
+     · scroll — el trazo se dibuja al entrar la sección
+
+   Coste: CERO JavaScript por fotograma. Todo el movimiento de reposo es una
+   custom property registrada animada por CSS, así que corre en el compositor.
+   El JS (js/fx/neon.js) solo escribe variables en eventos discretos.
+   ============================================================ */
+
+/* Registrar el ángulo es lo que hace animable un conic-gradient: sin @property
+   el navegador no sabe interpolar entre dos <angle> y el borde daría saltos. */
+@property --neon-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+/* 0 = trazo apagado, 1 = borde completo. Lo escribe el scrub de ScrollTrigger. */
+@property --neon-progress {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+/* ===== SUPERFICIE ===== */
+
+.neon {
+  position: relative;
+  /* Posición del cursor DENTRO de la superficie, en %. La escribe neon.js
+     suscrito al mousemove de cursor.js; en reposo apunta al centro. */
+  --neon-x: 50%;
+  --neon-y: 50%;
+}
+
+/* El borde: un conic-gradient recortado a 1px con la técnica de doble máscara.
+   `exclude` deja fuera todo el interior, así que solo sobrevive el marco. */
+.neon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--neon-angle),
+    transparent 0deg 200deg,
+    var(--gold-deep) 268deg,
+    var(--gold) 310deg,
+    var(--gold-soft) 336deg,
+    var(--gold) 348deg,
+    transparent 360deg
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  opacity: var(--neon-progress);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* El resplandor que sigue al cursor. Va aparte del borde porque es un radial
+   centrado en el puntero, no un recorrido por el perímetro. */
+.neon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    18rem circle at var(--neon-x) var(--neon-y),
+    rgba(212, 175, 55, 0.13),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity var(--dur-med) var(--ease-out);
+  pointer-events: none;
+}
+.neon:hover::after,
+.neon:focus-within::after { opacity: 1; }
+
+/* El giro de reposo SOLO corre con .is-live, que ScrollTrigger pone y quita al
+   entrar y salir del viewport. Sin este gate tendríamos ~15 conic-gradients
+   animándose a la vez, la mayoría fuera de pantalla. */
+.neon.is-live::before {
+  animation: neon-rotate 6s linear infinite;
+}
+/* En hover la luz da una vuelta más rápida: el borde «responde» al puntero. */
+.neon.is-live:hover::before {
+  animation-duration: 2.4s;
+}
+
+@keyframes neon-rotate {
+  to { --neon-angle: 360deg; }
+}
+
+/* ===== MARCO PERIMETRAL GLOBAL ===== */
+
+/* Lo monta neon.js. Su ángulo NO gira en bucle: lo escribe el scroll, así que
+   la luz recorre el perímetro al bajar y se detiene cuando el scroll se detiene. */
+.neon-frame {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-neon);
+  pointer-events: none;
+  padding: 1px;
+  opacity: 0.5;
+  background: conic-gradient(
+    from var(--neon-angle),
+    transparent 0deg 210deg,
+    var(--gold-deep) 280deg,
+    var(--gold) 322deg,
+    var(--gold-soft) 342deg,
+    transparent 360deg
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+}
+
+/* ===== REDUCED MOTION =====
+   Los bordes se quedan VISIBLES pero quietos: son color de marca, no
+   movimiento. El marco global no se monta (neon.js sale antes de crearlo). */
+@media (prefers-reduced-motion: reduce) {
+  .neon::before {
+    background: none;
+    border: 1px solid var(--line-gold);
+    padding: 0;
+    mask: none;
+    -webkit-mask-composite: source-over;
+    opacity: 1;
+    animation: none;
+  }
+  .neon::after { display: none; }
+}

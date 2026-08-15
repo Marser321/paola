@@ -1,0 +1,584 @@
+/* ============================================================
+   SECTIONS.CSS — estilos por sección. Sin animaciones JS aquí
+   (cada tarea de animación solo añade clases/estados si las necesita).
+   La UI del tracker (HUD, toasts, informe, chrome de anuncio) NO va aquí:
+   vive en tracker.css (tarea 32).
+   ============================================================ */
+
+/* ===== LABEL DE ETAPA (sobrescribe el display:block de base.css) ===== */
+.section-label {
+  display: flex; flex-wrap: wrap; gap: 0.75rem;
+}
+.section-label__stage { color: var(--text); }
+.section-label__name { color: var(--muted); }
+
+/* ===== PRELOADER ===== */
+#preloader {
+  position: fixed; inset: 0; z-index: var(--z-preloader);
+  background: var(--bg);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 4vw; gap: 1rem;
+}
+.preloader__status { opacity: 0.5; }
+.preloader__counter {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--fs-hero); line-height: 0.9; letter-spacing: -0.02em;
+}
+.preloader__bar { height: 2px; background: var(--line); overflow: hidden; }
+.preloader__bar-fill {
+  display: block; height: 100%; width: 100%;
+  background: var(--gradient-gold);
+  transform: scaleX(0); transform-origin: left;
+}
+
+/* ===== HEADER ===== */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-header);
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 4vw;
+  mix-blend-mode: difference;
+}
+.site-header__logo {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 1.25rem; letter-spacing: -0.02em;
+}
+.site-header__logo sup { font-size: 0.5em; }
+.site-nav { display: flex; gap: 2rem; }
+.site-nav a {
+  font-family: var(--font-mono); font-size: var(--fs-label);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  opacity: 0.8; transition: opacity var(--dur-fast) var(--ease-out);
+}
+.site-nav a:hover { opacity: 1; }
+.site-nav__cta { border-bottom: 1px solid var(--gold); }
+
+/* ===== HERO ===== */
+.hero {
+  position: relative; min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding-bottom: 8vh; overflow: clip;
+}
+#hero-canvas, .hero__fallback {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+}
+.hero__fallback {
+  background:
+    radial-gradient(60% 50% at 20% 30%, rgba(123, 25, 200, 0.25), transparent 70%),
+    radial-gradient(50% 40% at 80% 70%, rgba(245, 115, 39, 0.18), transparent 70%),
+    var(--bg);
+  display: none; /* visible solo si WebGL no se inicializa (tarea 08) */
+}
+.hero.no-webgl .hero__fallback { display: block; }
+.hero__content { position: relative; z-index: 1; }
+.hero__label { margin-bottom: 1.5rem; }
+.hero__title {
+  font-size: var(--fs-hero); font-weight: 700;
+  margin-left: -0.04em; /* compensación óptica */
+}
+.hero__title .char { display: inline-block; will-change: transform; }
+.hero__subtitle {
+  max-width: 34ch; margin-top: 2rem;
+  min-height: 2.6em; /* reserva para la variante más larga (tarea 36) */
+  font-size: clamp(1.25rem, 2.4vw, 2rem); line-height: 1.3;
+}
+.hero__meta {
+  display: flex; gap: 2.5rem; margin-top: 3rem;
+  padding-top: 1.25rem; border-top: 1px solid var(--line);
+}
+.hero__scroll {
+  position: absolute; right: 4vw; bottom: 8vh; z-index: 1;
+  display: flex; align-items: center; gap: 0.75rem;
+  writing-mode: vertical-rl;
+}
+.hero__scroll-line {
+  width: 1px; height: 48px; background: var(--muted);
+  transform-origin: top; animation: scroll-hint 1.8s var(--ease-out) infinite;
+}
+@keyframes scroll-hint {
+  0% { transform: scaleY(0); } 50% { transform: scaleY(1); }
+  100% { transform: scaleY(1); opacity: 0; }
+}
+
+/* ===== MARQUEE ===== */
+.marquee {
+  border-block: 1px solid var(--line);
+  padding-block: 1.5rem; overflow: clip; white-space: nowrap;
+}
+.marquee__track { display: flex; width: max-content; will-change: transform; }
+.marquee__inner {
+  display: flex; align-items: center; gap: 3rem; padding-right: 3rem;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(2.5rem, 6vw, 5rem); text-transform: uppercase;
+  line-height: 1; letter-spacing: -0.02em;
+}
+.marquee__inner i { font-style: normal; font-size: 0.4em; color: var(--gold); }
+.marquee__inner .is-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--muted);
+}
+
+/* ===== MÉTRICAS ===== */
+.metrics__grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line);
+}
+.metric { padding: 2.5rem 2rem 2rem 0; border-right: 1px solid var(--line); }
+.metric:last-child { border-right: 0; }
+.metric__value {
+  font-family: var(--font-mono); font-weight: 500;
+  font-size: var(--fs-metric); line-height: 1; letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.metric__spark {
+  display: block; height: 24px; margin-top: 0.75rem;
+  color: var(--muted); /* el path del sparkline usa currentColor */
+  /* el <svg> lo inyecta la tarea 10 */
+}
+.metric__label { margin-top: 1rem; }
+
+/* ===== PROYECTOS ===== */
+.projects { overflow: clip; }
+.projects__header { padding-top: var(--section-pad); position: relative; }
+.projects__hint { margin-top: 2rem; }
+.projects__progress {
+  height: 2px; background: var(--line); margin-top: 2rem; overflow: hidden;
+}
+.projects__progress-fill {
+  display: block; height: 100%; width: 100%;
+  background: var(--gradient-gold);
+  transform: scaleX(0); transform-origin: left;
+}
+.projects__viewport { padding-block: 4rem var(--section-pad); }
+.projects__track {
+  display: flex; gap: 4vw; padding-inline: 4vw; width: max-content;
+}
+.project-card {
+  position: relative; flex-shrink: 0;
+  width: min(70vw, 560px);
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); overflow: hidden;
+  transform-style: preserve-3d; will-change: transform;
+}
+.project-card__visual {
+  aspect-ratio: 16 / 10; position: relative; overflow: hidden;
+}
+.project-card__gradient {
+  position: absolute; inset: -10%;
+  transition: transform var(--dur-med) var(--ease-out);
+}
+.project-card:hover .project-card__gradient { transform: scale(1.06); }
+.project-card__body { padding: 1.75rem; }
+.project-card__index { color: var(--muted); }
+.project-card__title { font-size: var(--fs-h3); margin-top: 0.5rem; }
+.project-card__tags { margin-top: 0.75rem; }
+.project-card__kpis {
+  display: flex; gap: 2.5rem; margin-top: 1.5rem;
+  padding-top: 1.25rem; border-top: 1px solid var(--line);
+}
+.project-card__kpi-value {
+  font-family: var(--font-mono); font-size: 1.5rem; font-weight: 500;
+}
+.project-card__kpi-label { color: var(--muted); font-size: 0.65rem; }
+.project-card__desc { margin-top: 1.25rem; color: var(--muted); font-size: 0.95rem; }
+
+/* ===== SERVICIOS ===== */
+.services__header { position: sticky; top: 15vh; }
+.services__list { margin-top: 4rem; }
+.service {
+  display: grid; grid-template-columns: 4rem 1fr 1.2fr auto;
+  align-items: baseline; gap: 2rem;
+  padding-block: 2.5rem; border-top: 1px solid var(--line);
+  transition: padding-left var(--dur-med) var(--ease-out);
+}
+.service:last-child { border-bottom: 1px solid var(--line); }
+.service:hover { padding-left: 1.5rem; }
+.service__title { font-size: var(--fs-h3); }
+.service__desc { color: var(--muted); max-width: 48ch; }
+
+/* --- Galería de muestras (services.js) --- */
+
+/* El botón cierra la rejilla del renglón: ocupa la fila entera por debajo. */
+.service__toggle {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 1.25rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 2rem;
+  color: var(--muted);
+  transition: color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+.service__toggle:hover { color: var(--text); border-color: var(--line-gold); }
+.service__toggle[aria-expanded='true'] { color: var(--gold); border-color: var(--line-gold); }
+
+.service__strip {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* La muestra: proporción reservada SIEMPRE, tenga imagen o gradiente. Es lo que
+   evita que la tira dé un salto de layout cuando lleguen las imágenes reales. */
+.sample { display: flex; flex-direction: column; gap: 0.75rem; }
+.sample__gradient,
+.sample picture,
+.sample img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: calc(var(--radius) * 0.6);
+  object-fit: cover;
+}
+.sample__caption { color: var(--muted); text-transform: none; letter-spacing: 0; }
+
+/* Panel flotante de escritorio. `fixed` porque sigue al cursor por la ventana;
+   GSAP es el dueño de su transform, así que el centrado no va en CSS. */
+.services__preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: min(34rem, 40vw);
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; /* jamás debe robarle el hover al renglón */
+  z-index: var(--z-hud);
+  transition: opacity var(--dur-fast) var(--ease-out),
+              visibility var(--dur-fast) var(--ease-out);
+}
+.services__preview.is-visible { opacity: 1; visibility: visible; }
+.services__preview-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+.services__preview .sample__caption { font-size: 0.625rem; line-height: 1.4; }
+
+/* ===== PROCESO ===== */
+.process__timeline { position: relative; margin-top: 4rem; padding-left: 3rem; }
+.process__line {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 1px;
+  background: var(--gradient-gold);
+  transform: scaleY(0); transform-origin: top;
+}
+.step {
+  display: grid; grid-template-columns: 5rem 1fr 1.5fr; gap: 2rem;
+  align-items: baseline; padding-block: 2rem;
+  border-top: 1px solid var(--line);
+}
+.step__desc { color: var(--muted); }
+
+/* ===== SOBRE MÍ ===== */
+.about__grid {
+  display: grid; grid-template-columns: 1fr 1.4fr; gap: 6vw; align-items: start;
+}
+.about__media { position: sticky; top: 15vh; }
+.about__img {
+  aspect-ratio: 4 / 5; border-radius: var(--radius);
+  border: 1px solid var(--line); overflow: hidden; position: relative;
+  background: linear-gradient(160deg, #2B0A4A, var(--bg));
+}
+.about__img-label { position: absolute; bottom: 1rem; left: 1rem; }
+.about__text { margin-top: 1.5rem; max-width: 52ch; }
+.about__cv { margin-top: 2.5rem; border-top: 1px solid var(--line); }
+.about__cv li { padding-block: 0.9rem; border-bottom: 1px solid var(--line); }
+
+/* ===== TESTIMONIOS ===== */
+.testimonials__stack { display: grid; gap: 2rem; margin-top: 2rem; }
+.testimonial {
+  position: sticky; top: 20vh;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: clamp(2rem, 5vw, 4rem);
+}
+.testimonial:nth-child(2) { top: 23vh; }
+.testimonial:nth-child(3) { top: 26vh; }
+.testimonial__quote {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--fs-h3); line-height: 1.15; letter-spacing: -0.02em;
+}
+.testimonial__author { margin-top: 2rem; }
+
+/* ===== INFORME (estructura mínima; el detalle va en tracker.css, tarea 32) ===== */
+.report__intro { max-width: 52ch; margin-top: 1.5rem; color: var(--muted); }
+.report__note { max-width: 52ch; margin-top: 1.5rem; color: var(--muted); }
+.report__note strong { color: var(--text); font-weight: 500; }
+
+/* ===== CONTACTO ===== */
+.contact { text-align: center; }
+.contact .section-label { text-align: left; }
+.contact__pre { margin-bottom: 2rem; }
+.contact__cta { display: inline-block; }
+.contact__cta-text {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: var(--fs-cta); line-height: 0.95; letter-spacing: -0.02em;
+  text-transform: uppercase;
+  background: var(--gradient-gold);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.contact__email {
+  display: inline-block; margin-top: 3rem;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  border-bottom: 1px solid var(--muted);
+  padding-bottom: 0.25rem;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.contact__email:hover { border-color: var(--gold); }
+.contact__time { margin-top: 2rem; }
+
+/* ===== FOOTER ===== */
+.footer { border-top: 1px solid var(--line); }
+.footer__marquee { border-block: 0; border-bottom: 1px solid var(--line); }
+.footer__bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 2rem; padding-block: 1.5rem; flex-wrap: wrap;
+}
+.footer__social { display: flex; gap: 1.5rem; }
+.footer__social a { transition: color var(--dur-fast) var(--ease-out); }
+.footer__social a:hover { color: var(--gold); }
+#hud-toggle, #back-to-top { text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* ===== CURSOR CUSTOM (tarea 05) ===== */
+.cursor-dot,
+.cursor-ring {
+  position: fixed; top: 0; left: 0; z-index: var(--z-cursor);
+  pointer-events: none; border-radius: 50%;
+  /* El centrado (xPercent/yPercent), la posición y la escala las pone GSAP:
+     al escribir `transform` limpia translate/rotate/scale inline. */
+}
+.cursor-dot { width: 8px; height: 8px; background: var(--text); }
+.cursor-ring {
+  width: 40px; height: 40px;
+  border: 1px solid var(--muted);
+  mix-blend-mode: difference;
+  display: flex; align-items: center; justify-content: center;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+.cursor-ring.is-hover { border-color: var(--gold); }
+
+/* Píldora de audiencia: la única variación de FORMA del ring.
+   Se escala con scale:1 y crece por padding, no por scale, para que
+   el texto no se deforme. */
+.cursor-ring.is-audience {
+  width: auto; height: auto;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: var(--text); border-color: var(--text);
+  mix-blend-mode: normal;
+  white-space: nowrap;
+}
+.cursor-ring__label {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--bg);
+  opacity: 0; transition: opacity var(--dur-fast);
+}
+.cursor-ring.is-audience .cursor-ring__label { opacity: 1; }
+.has-custom-cursor, .has-custom-cursor a, .has-custom-cursor button {
+  cursor: none;
+}
+
+/* ===== HERO — split de letras (tarea 07) ===== */
+.hero__title { overflow: clip; } /* máscara del yPercent:110 de cada .char */
+
+/* ===== PROYECTOS — 3D / RESPONSIVE (tarea 11) ===== */
+.projects__viewport { perspective: 1000px; }
+.project-card__sector {
+  position: absolute; top: 1rem; left: 1rem; z-index: 1;
+  color: var(--text);
+  background: rgba(14, 14, 14, 0.55);
+  backdrop-filter: blur(6px);
+  padding: 0.4rem 0.75rem; border-radius: 999px;
+}
+/* Capas con profundidad (el tilt las separa visualmente) */
+.project-card__visual { transform: translateZ(0); }
+.project-card__body { transform: translateZ(30px); }
+
+@media (max-width: 1023px) {
+  .projects__track {
+    flex-direction: column; width: auto;
+    padding-inline: 0; gap: 2rem;
+  }
+  .project-card { width: 100%; }
+  .projects__hint { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .projects__track { flex-wrap: wrap; width: auto; }
+}
+
+/* ============================================================
+   RESPONSIVE GLOBAL (tarea 15) — breakpoints de DESIGN.md §8
+   ============================================================ */
+
+/* --- Tablet (<1024px) --- */
+@media (max-width: 1023px) {
+  .metrics__grid { grid-template-columns: repeat(2, 1fr); }
+  .metric:nth-child(2n) { border-right: 0; }
+  .metric { padding-bottom: 2rem; border-bottom: 1px solid var(--line); }
+  .metric:nth-child(3), .metric:nth-child(4) { border-bottom: 0; }
+
+  .service { grid-template-columns: 3rem 1fr; grid-template-rows: auto auto auto; }
+  .service__desc { grid-column: 2; }
+  .service__tags { grid-column: 2; }
+
+  .step { grid-template-columns: 3.5rem 1fr; }
+  .step__desc { grid-column: 2; }
+
+  .about__grid { grid-template-columns: 1fr; }
+  .about__media { position: relative; top: 0; max-width: 420px; }
+
+  .services__header { position: relative; top: 0; }
+}
+
+/* --- Móvil (<768px) --- */
+@media (max-width: 767px) {
+  .site-nav { gap: 1rem; }
+  .site-nav a:not(.site-nav__cta) { display: none; } /* nav esencial: logo + contacto */
+  .hero__meta { flex-direction: column; gap: 0.75rem; }
+  .hero__scroll { display: none; }
+  .marquee__inner { font-size: clamp(2rem, 9vw, 3rem); gap: 1.5rem; padding-right: 1.5rem; }
+  .testimonial:nth-child(2) { top: 21vh; }
+  .testimonial:nth-child(3) { top: 22vh; }
+  /* Tres muestras en 375px salen a ~100px: ilegibles. En móvil la tira se lee
+     deslizando, que es el gesto que ya se usa en la galería de proyectos. */
+  .service__strip {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin-inline: -4vw;
+    padding-inline: 4vw;
+  }
+  .sample { flex: 0 0 62%; scroll-snap-align: start; }
+  .footer__bottom { flex-direction: column; align-items: flex-start; gap: 1rem; }
+}
+
+/* --- Seguridad anti-overflow global --- */
+.hero, .marquee, .projects, .contact { overflow-x: clip; }
+
+/* ===== RENDER DIFERIDO DE SECCIONES LARGAS (tarea 17) — ELIMINADO ==========
+   El bloque `content-visibility: auto` + `contain-intrinsic-size: auto 100vh`
+   sobre #servicios, #proceso, #sobre-mi, #testimonios y #contacto se probó y se
+   RETIRÓ el 2026-08-15. Medido: la altura del documento saltaba de 13545 px a
+   12632 px durante el scroll (913 px) según se sustituían los tamaños estimados
+   por los reales. Eso descuadra los offsets del pin horizontal y arruina el
+   budget de CLS (<0.05).
+   La propia tarea 17 §4 autoriza esta retirada. Anotado en tasks/BLOCKERS.md.
+   No volver a añadirlo sin resolver antes la interacción con ScrollTrigger.
+   ========================================================================= */
+
+/* ===== CANVAS DE DISTORSIÓN EN CARDS (tarea 20) ===== */
+/* z-index 0: por debajo del badge de formato (2) y del backstage (3) de la t.34. */
+.project-card__canvas {
+  position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%;
+}
+
+/* ===== SPLIT DE H2 POR PALABRAS (tarea 21) ===== */
+.word-mask { display: inline-block; overflow: clip; vertical-align: bottom; }
+.word { display: inline-block; will-change: transform; }
+
+/* .accent-text pinta el gradiente sobre SU caja y hace transparente el relleno
+   del texto. Al partir en palabras (t.21), la .word hereda el relleno
+   transparente pero no el fondo, y desaparecía. Se le re-aplica el gradiente. */
+.accent-text .word {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+
+/* ===== IMAGEN REAL DE LA CREATIVIDAD (tarea 23) ===== */
+/* Mismo encuadre y mismo hover que el gradiente al que sustituye. */
+.project-card__picture {
+  position: absolute; inset: -10%;
+  display: block;
+  transition: transform var(--dur-med) var(--ease-out);
+}
+.project-card__picture img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.project-card:hover .project-card__picture { transform: scale(1.06); }
+
+/* ===== CONMUTADOR DE IDIOMA (tarea 28) ===== */
+.lang-switch {
+  font-family: var(--font-mono); font-size: var(--fs-label);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  opacity: 0.8;
+  border: 1px solid var(--line); padding: 0.15rem 0.5rem;
+  transition: opacity var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+.lang-switch:hover { opacity: 1; border-color: var(--muted); }
+
+/* ===== FORMULARIO DE CONTACTO (tarea 24) ===== */
+.contact-form {
+  max-width: 34rem; margin: 4rem auto 0; text-align: left;
+  display: flex; flex-direction: column; gap: 1.25rem;
+  /* Radio y aire para que el borde de neón tenga un marco que recorrer: sin
+     ellos la luz iría pegada a los campos. */
+  border-radius: var(--radius);
+  padding: 2rem;
+}
+.contact-form__hp { position: absolute; left: -9999px; }
+.contact-form__row { display: flex; flex-direction: column; gap: 0.5rem; }
+.contact-form__label { color: var(--muted); }
+.contact-form__input {
+  font-family: var(--font-body); font-size: 1rem;
+  color: var(--text); background: var(--surface);
+  border: 1px solid var(--line); padding: 0.85rem 1rem;
+  border-radius: 0;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.contact-form__input:focus { border-color: var(--muted); }
+.contact-form__consent {
+  display: flex; gap: 0.75rem; align-items: flex-start;
+  color: var(--muted); text-transform: none; letter-spacing: 0;
+}
+.contact-form__consent a { border-bottom: 1px solid var(--muted); }
+.contact-form__submit {
+  align-self: flex-start;
+  color: var(--text);
+  border: 1px solid var(--line); padding: 0.85rem 1.5rem;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.contact-form__submit:hover { border-color: var(--muted); }
+.contact-form__submit:disabled { opacity: 0.5; cursor: default; }
+.contact-form__status { min-height: 1.4em; color: var(--muted); }
+.contact-form__status[data-state='ok'] { color: var(--text); }
+.contact-form__status[data-state='error'] { color: var(--accent-orange); }
+
+/* ===== BANNER DE CONSENTIMIENTO (tarea 24) ===== */
+/* z-index --z-cursor (300): muy por encima del HUD (90), que además en tablet
+   va bajo el header. Nunca compiten (DESIGN.md §7). */
+.consent {
+  position: fixed; left: 1.25rem; right: 1.25rem; bottom: 1.25rem;
+  z-index: var(--z-cursor);
+  background: var(--surface); border: 1px solid var(--line);
+  padding: 1.25rem 1.5rem;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem;
+}
+.consent__text { color: var(--muted); text-transform: none; letter-spacing: 0; flex: 1 1 28rem; line-height: 1.6; }
+.consent__actions { display: flex; gap: 0.75rem; }
+.consent button {
+  color: var(--muted); border: 1px solid var(--line); padding: 0.6rem 1.25rem;
+  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.consent button:hover { color: var(--text); border-color: var(--muted); }
+.consent__accept { color: var(--text); border-color: var(--muted); }
+.consent > a { color: var(--muted); border-bottom: 1px solid var(--line); }
+.consent > a:hover { color: var(--text); }
+
+@media (max-width: 767px) {
+  .consent { left: 0; right: 0; bottom: 0; border-inline: 0; border-bottom: 0; }
+}
+.footer__legal { display: flex; gap: 1.5rem; }
+.footer__legal a { transition: color var(--dur-fast) var(--ease-out); }
+.footer__legal a:hover { color: var(--gold); }

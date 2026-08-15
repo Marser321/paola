@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PAOLA — Meta Ads Specialist · Performance Marketing</title>
+    <meta name="description" content="Especialista en Meta Ads (Facebook e Instagram). Escala tu e-commerce o negocio digital con campañas de performance medibles: ROAS medio 4.2x, +2M€ gestionados." />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./site.webmanifest" />
+    <meta name="theme-color" content="#0E0E0E" />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content="PAOLA" />
+    <meta property="og:title" content="PAOLA — Meta Ads Specialist · Performance Marketing" />
+    <meta property="og:description" content="Especialista en Meta Ads. La campaña eres tú: esta página mide tu visita y te enseña el informe, sin enviar un solo dato." />
+    <!-- La imagen YA EXISTE en /og.jpg (1200×630, generada en la tarea 27), pero
+         og:image y og:url exigen URL absoluta: se activan en la tarea 26, cuando
+         haya dominio. Sustituir el placeholder por el dominio real y descomentar.
+    <meta property="og:url" content="https://DOMINIO/" />
+    <meta property="og:image" content="https://DOMINIO/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="PAOLA — La campaña eres tú" />
+    <meta name="twitter:image" content="https://DOMINIO/og.jpg" />
+    -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PAOLA — Meta Ads Specialist" />
+    <meta name="twitter:description" content="La campaña eres tú. Un portfolio que mide tu visita y te la enseña, sin enviar nada." />
+
+    <!-- Fuentes self-hosted (tarea 17 §5). Los <link> a api.fontshare.com y a
+         fonts.googleapis.com se eliminaron a propósito: mientras existieran, la
+         frase del informe "nada de esto ha salido de tu navegador" era falsa.
+         Los @font-face están en src/styles/tokens.css. -->
+    <!-- JSON-LD (tarea 18). Datos de CONTENT.md; el dominio de "url" y "sameAs" es
+         PROVISIONAL hasta la tarea 26. Solo se declara lo que el sitio afirma de verdad:
+         nada de reseñas, ratings ni cifras inventadas, que además Google penaliza. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://paola-ads.com/#paola",
+          "name": "Paola",
+          "jobTitle": "Meta Ads Specialist",
+          "email": "hola@paola-ads.com",
+          "url": "https://paola-ads.com/",
+          "knowsAbout": [
+            "Meta Ads", "Paid Social", "Performance Marketing",
+            "Media Buying", "CRO", "Facebook Ads", "Instagram Ads"
+          ]
+        },
+        {
+          "@type": "ProfessionalService",
+          "@id": "https://paola-ads.com/#servicio",
+          "name": "PAOLA — Meta Ads Specialist",
+          "description": "Gestión de campañas de performance en Facebook e Instagram: estrategia full-funnel, creatividades, tracking y escala.",
+          "url": "https://paola-ads.com/",
+          "provider": { "@id": "https://paola-ads.com/#paola" },
+          "areaServed": "ES",
+          "availableLanguage": "es",
+          "serviceType": [
+            "Meta Ads", "Paid Social", "Funnels y CRO",
+            "UGC y creatividades", "Auditorías y consultoría"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://paola-ads.com/#web",
+          "url": "https://paola-ads.com/",
+          "name": "PAOLA",
+          "inLanguage": "es-ES",
+          "publisher": { "@id": "https://paola-ads.com/#paola" }
+        }
+      ]
+    }
+    </script>
+
+    <link rel="preload" href="/fonts/ClashDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/JetBrainsMono-latin.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body>
+    <!-- PRELOADER — arranque de campaña (CONTENT.md §1) -->
+    <div id="preloader" aria-hidden="true">
+      <p class="preloader__label mono">Iniciando campaña</p>
+      <p class="preloader__status mono">PAOLA_2026 · Objetivo: conversión</p>
+      <p class="preloader__counter">0%</p>
+      <div class="preloader__bar"><span class="preloader__bar-fill"></span></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="site-header">
+      <a href="#hero" class="site-header__logo" data-scroll data-hover>PAOLA<sup>®</sup></a>
+      <nav class="site-nav" aria-label="Navegación principal">
+        <a href="#proyectos" data-scroll data-hover>Proyectos</a>
+        <a href="#servicios" data-scroll data-hover>Servicios</a>
+        <a href="#proceso" data-scroll data-hover>Proceso</a>
+        <a href="#sobre-mi" data-scroll data-hover>Sobre mí</a>
+        <a href="#contacto" class="site-nav__cta" data-scroll data-hover>Contacto</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- ETAPA 01 · ALCANCE — HERO -->
+      <section id="hero" class="hero" data-stage="alcance">
+        <canvas id="hero-canvas" aria-hidden="true"></canvas>
+        <div class="hero__fallback" aria-hidden="true"></div>
+        <div class="hero__content container">
+          <p class="hero__label mono">Meta Ads Specialist — Performance Marketing</p>
+          <h1 class="hero__title" aria-label="Paola">PAOLA</h1>
+          <p class="hero__subtitle" data-variant-slot="subtitle">
+            Convierto presupuesto publicitario en
+            <span class="accent-text">crecimiento medible</span>.
+          </p>
+          <div class="hero__meta mono">
+            <span>ROAS medio 4.2x</span>
+            <span>+2M€ gestionados</span>
+            <span>FB · IG</span>
+          </div>
+        </div>
+        <p class="hero__scroll mono" aria-hidden="true">
+          Scroll<span class="hero__scroll-line"></span>
+        </p>
+      </section>
+
+      <!-- ETAPA 01 · ALCANCE — MARQUEE -->
+      <section class="marquee" aria-hidden="true" data-stage="alcance">
+        <div class="marquee__track">
+          <div class="marquee__inner">
+            <span>Meta Ads</span><i>✦</i><span class="is-outline">Paid Social</span><i>✦</i>
+            <span>Funnels</span><i>✦</i><span class="is-outline">CRO</span><i>✦</i>
+            <span>UGC Strategy</span><i>✦</i><span class="is-outline">Media Buying</span><i>✦</i>
+          </div>
+          <div class="marquee__inner">
+            <span>Meta Ads</span><i>✦</i><span class="is-outline">Paid Social</span><i>✦</i>
+            <span>Funnels</span><i>✦</i><span class="is-outline">CRO</span><i>✦</i>
+            <span>UGC Strategy</span><i>✦</i><span class="is-outline">Media Buying</span><i>✦</i>
+          </div>
+        </div>
+      </section>
+
+      <!-- ETAPA 01 · ALCANCE — MÉTRICAS -->
+      <section id="metricas" class="metrics section-pad" data-stage="alcance">
+        <div class="container">
+          <p class="section-label mono">
+            <span class="section-label__stage">Etapa 01 · Alcance</span>
+            <span class="section-label__name">Resultados</span>
+          </p>
+          <div class="metrics__grid">
+            <div class="metric">
+              <p class="metric__value" data-count="4.2" data-decimals="1" data-suffix="x">0</p>
+              <span class="metric__spark" data-spark="2.1,2.8,3.3,3.6,4.0,4.2" aria-hidden="true"></span>
+              <p class="metric__label mono">ROAS medio</p>
+            </div>
+            <div class="metric">
+              <p class="metric__value" data-count="2" data-prefix="+" data-suffix="M€">0</p>
+              <span class="metric__spark" data-spark="0.3,0.7,1.0,1.4,1.7,2.0" aria-hidden="true"></span>
+              <p class="metric__label mono">Ad spend gestionado</p>
+            </div>
+            <div class="metric">
+              <p class="metric__value" data-count="98" data-suffix="%">0</p>
+              <span class="metric__spark" data-spark="88,91,93,95,97,98" aria-hidden="true"></span>
+              <p class="metric__label mono">Retención de clientes</p>
+            </div>
+            <div class="metric">
+              <p class="metric__value" data-count="120" data-suffix="+">0</p>
+              <span class="metric__spark" data-spark="20,45,68,84,103,120" aria-hidden="true"></span>
+              <p class="metric__label mono">Campañas lanzadas</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ETAPA 02 · INTERÉS — PROYECTOS / CREATIVIDADES -->
+      <section id="proyectos" class="projects" data-stage="interes">
+        <div class="projects__header container">
+          <p class="section-label mono">
+            <span class="section-label__stage">Etapa 02 · Interés</span>
+            <span class="section-label__name">Creatividades</span>
+          </p>
+          <h2 class="section-title">Proyectos que <span class="accent-text">escalan</span></h2>
+          <p class="projects__hint mono">Arrastra el scroll →</p>
+          <div class="projects__progress"><span class="projects__progress-fill"></span></div>
+        </div>
+        <div class="projects__viewport">
+          <div class="projects__track"><!-- Las cards se renderizan por JS (tarea 11) desde src/data/projects.js --></div>
+        </div>
+      </section>
+
+      <!-- ETAPA 03 · CONSIDERACIÓN — SERVICIOS -->
+      <section id="servicios" class="services section-pad" data-stage="consideracion">
+        <div class="container">
+          <div class="services__header">
+            <p class="section-label mono">
+              <span class="section-label__stage">Etapa 03 · Consideración</span>
+              <span class="section-label__name">Servicios</span>
+            </p>
+            <h2 class="section-title">Lo que hago</h2>
+          </div>
+          <ul class="services__list">
+            <li class="service" data-hover data-service="meta-ads">
+              <span class="service__index mono">01</span>
+              <h3 class="service__title">Meta Ads</h3>
+              <p class="service__desc">Campañas de conversión en Facebook e Instagram: estructura, segmentación, pujas y escala horizontal y vertical.</p>
+              <span class="service__tags mono">FB · IG · Advantage+</span>
+            </li>
+            <li class="service" data-hover data-service="paid-social">
+              <span class="service__index mono">02</span>
+              <h3 class="service__title">Paid Social</h3>
+              <p class="service__desc">Expansión multicanal cuando el funnel lo justifica, con creatividades nativas por plataforma.</p>
+              <span class="service__tags mono">TikTok · Pinterest · LinkedIn</span>
+            </li>
+            <li class="service" data-hover data-service="funnels-cro">
+              <span class="service__index mono">03</span>
+              <h3 class="service__title">Funnels &amp; CRO</h3>
+              <p class="service__desc">Páginas y flujos que convierten: CAPI, píxel, eventos, tests A/B y análisis de drop-off.</p>
+              <span class="service__tags mono">Landings · A/B · Tracking</span>
+            </li>
+            <li class="service" data-hover data-service="ugc">
+              <span class="service__index mono">04</span>
+              <h3 class="service__title">UGC &amp; Creatividades</h3>
+              <p class="service__desc">Sistema de producción y testing creativo: hooks, ángulos y iteración semanal basada en datos.</p>
+              <span class="service__tags mono">Guiones · Hooks · Testing</span>
+            </li>
+            <li class="service" data-hover data-service="auditorias">
+              <span class="service__index mono">05</span>
+              <h3 class="service__title">Auditorías &amp; Consultoría</h3>
+              <p class="service__desc">Auditoría completa de la cuenta publicitaria con roadmap accionable a 90 días.</p>
+              <span class="service__tags mono">Audit · Roadmap · Mentoring</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ETAPA 03 · CONSIDERACIÓN — PROCESO -->
+      <section id="proceso" class="process section-pad" data-stage="consideracion">
+        <div class="container">
+          <p class="section-label mono">
+            <span class="section-label__stage">Etapa 03 · Consideración</span>
+            <span class="section-label__name">Proceso</span>
+          </p>
+          <h2 class="section-title">Método de trabajo</h2>
+          <div class="process__timeline">
+            <span class="process__line" aria-hidden="true"></span>
+            <ol class="process__steps">
+              <li class="step">
+                <span class="step__number mono">01</span>
+                <h3 class="step__title">Auditoría</h3>
+                <p class="step__desc">Análisis de cuenta, tracking y competencia. Detectamos fugas de presupuesto y oportunidades rápidas.</p>
+              </li>
+              <li class="step">
+                <span class="step__number mono">02</span>
+                <h3 class="step__title">Estrategia</h3>
+                <p class="step__desc">Hipótesis, ángulos, estructura de campañas y presupuesto por fase del funnel.</p>
+              </li>
+              <li class="step">
+                <span class="step__number mono">03</span>
+                <h3 class="step__title">Creatividades</h3>
+                <p class="step__desc">Producción de anuncios (UGC, estáticos, vídeo) orientados a hook + prueba social + CTA.</p>
+              </li>
+              <li class="step">
+                <span class="step__number mono">04</span>
+                <h3 class="step__title">Lanzamiento</h3>
+                <p class="step__desc">Setup técnico impecable: CAPI, eventos, catálogos y estructura de testing.</p>
+              </li>
+              <li class="step">
+                <span class="step__number mono">05</span>
+                <h3 class="step__title">Optimización</h3>
+                <p class="step__desc">Iteración semanal: kill de perdedores, escala de ganadores, refresco creativo.</p>
+              </li>
+              <li class="step">
+                <span class="step__number mono">06</span>
+                <h3 class="step__title">Escala</h3>
+                <p class="step__desc">Crecimiento sostenible protegiendo el ROAS: más presupuesto, más canales, más mercados.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- ETAPA 04 · INTENCIÓN — SOBRE MÍ -->
+      <section id="sobre-mi" class="about section-pad" data-stage="intencion">
+        <div class="container about__grid">
+          <div class="about__media" data-hover>
+            <div class="about__img" role="img" aria-label="Retrato de Paola">
+              <span class="about__img-label mono">Foto — 4:5</span>
+            </div>
+          </div>
+          <div class="about__content">
+            <p class="section-label mono">
+              <span class="section-label__stage">Etapa 04 · Intención</span>
+              <span class="section-label__name">Quién lo opera</span>
+            </p>
+            <h2 class="section-title">Hola, soy Paola</h2>
+            <p class="about__text">Llevo más de 6 años gestionando campañas de paid social para marcas que quieren crecer con datos, no con intuición. Mi obsesión: que cada euro invertido tenga un retorno medible.</p>
+            <p class="about__text">Trabajo con un número reducido de clientes para estar dentro de cada cuenta, cada semana. Sin humo: reporting claro, testing constante y decisiones basadas en números.</p>
+            <ul class="about__cv mono">
+              <li>2019 — Media Buyer · Agencia Performance (BCN)</li>
+              <li>2021 — Senior Media Buyer · E-commerce Group</li>
+              <li>2023 — Freelance · Meta Ads Specialist</li>
+              <li>2026 — +40 marcas acompañadas</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ETAPA 04 · INTENCIÓN — TESTIMONIOS -->
+      <section id="testimonios" class="testimonials section-pad" data-stage="intencion">
+        <div class="container">
+          <p class="section-label mono">
+            <span class="section-label__stage">Etapa 04 · Intención</span>
+            <span class="section-label__name">Prueba social</span>
+          </p>
+          <div class="testimonials__stack">
+            <blockquote class="testimonial">
+              <p class="testimonial__quote">«Paola duplicó nuestro ROAS en 90 días y por fin entendimos qué campañas funcionaban y por qué.»</p>
+              <footer class="testimonial__author mono">Marta G. — CEO · Atelier Nord</footer>
+            </blockquote>
+            <blockquote class="testimonial">
+              <p class="testimonial__quote">«Reporting impecable y una velocidad de testing que no habíamos visto en ninguna agencia.»</p>
+              <footer class="testimonial__author mono">Daniel R. — CMO · Flowstack</footer>
+            </blockquote>
+            <blockquote class="testimonial">
+              <p class="testimonial__quote">«Pasamos de quemar presupuesto a escalar con control total. La mejor inversión del año.»</p>
+              <footer class="testimonial__author mono">Lucía P. — Fundadora · Glow Skin</footer>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- ETAPA 05 · CONVERSIÓN — INFORME DE SESIÓN (CONTENT.md §14) -->
+      <!-- El panel debe ser legible SIN JS: los valores arrancan en "—". -->
+      <section id="informe" class="report section-pad" data-stage="conversion">
+        <div class="container">
+          <p class="section-label mono">
+            <span class="section-label__stage">Etapa 05 · Conversión</span>
+            <span class="section-label__name">Tu informe</span>
+          </p>
+          <h2 class="section-title">La campaña <span class="accent-text">eres tú</span></h2>
+          <p class="report__intro">Mientras leías, esta página hacía lo mismo que hago cada día con las cuentas que gestiono: medir. Este es el informe de tu visita.</p>
+
+          <div class="report__panel" aria-describedby="report-note">
+            <header class="report__head mono">
+              <span class="report__dot" aria-hidden="true"></span>
+              <span class="report__title">Informe de sesión</span>
+              <span class="report__status" data-report="status">En espera</span>
+            </header>
+
+            <dl class="report__grid">
+              <div class="report__row"><dt class="mono">Tiempo en sesión</dt><dd class="mono" data-report="elapsed">—</dd></div>
+              <div class="report__row"><dt class="mono">Profundidad</dt><dd class="mono" data-report="depth">—</dd></div>
+              <div class="report__row"><dt class="mono">Señales emitidas</dt><dd class="mono" data-report="signals">—</dd></div>
+              <div class="report__row"><dt class="mono">Etapa alcanzada</dt><dd class="mono" data-report="stage">—</dd></div>
+              <div class="report__row"><dt class="mono">Creatividades vistas</dt><dd class="mono" data-report="cases">—</dd></div>
+              <div class="report__row"><dt class="mono">Más atención</dt><dd class="mono" data-report="topcase">—</dd></div>
+              <div class="report__row"><dt class="mono">Variante servida</dt><dd class="mono" data-report="variant">—</dd></div>
+            </dl>
+
+            <div class="report__score">
+              <p class="report__score-head mono">
+                Probabilidad de conversión
+                <span class="report__score-tag">Estimación heurística</span>
+                <button type="button" class="report__formula-btn mono" aria-expanded="false" aria-controls="report-formula">ver fórmula</button>
+              </p>
+              <p class="report__score-value" data-report="score">—</p>
+              <div class="report__score-bar"><span data-report="scorebar"></span></div>
+              <p class="report__formula mono" id="report-formula" hidden>Heurística local: profundidad ×30 + permanencia ×20 + creatividades ×20 + señales ×15 + conversión ×15. Máximo 99: ninguna estimación honesta dice 100%.</p>
+            </div>
+          </div>
+
+          <p id="report-note" class="report__note">
+            <strong>Nada de esto ha salido de tu navegador.</strong> Sin cookies, sin píxel y sin servidor: se ha calculado aquí y desaparece cuando cierres la pestaña.
+          </p>
+          <p class="report__note">
+            Medir bien no es recoger más datos. Es recoger los justos y saber leerlos. Eso es exactamente lo que hago con las cuentas que gestiono.
+          </p>
+        </div>
+      </section>
+
+      <!-- ETAPA 05 · CONVERSIÓN — CONTACTO -->
+      <section id="contacto" class="contact section-pad" data-stage="conversion">
+        <div class="container">
+          <p class="section-label mono">
+            <span class="section-label__stage">Etapa 05 · Conversión</span>
+            <span class="section-label__name">Contacto</span>
+          </p>
+          <p class="contact__pre mono">¿Tienes un proyecto entre manos?</p>
+          <a href="mailto:hola@paola-ads.com" class="contact__cta" data-hover data-magnetic>
+            <span class="contact__cta-text">¿Escalamos?</span>
+          </a>
+          <a class="contact__email" href="mailto:hola@paola-ads.com" data-hover>hola@paola-ads.com</a>
+
+          <!-- Formulario (tarea 24). Netlify Forms: `data-netlify` + el input oculto
+               `form-name` + honeypot. Hasta el deploy (t.26) el envío falla y el JS
+               muestra el aviso de fallback con el mailto: nunca se pierde el mensaje. -->
+          <form
+            class="contact-form"
+            name="contacto"
+            method="POST"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
+          >
+            <input type="hidden" name="form-name" value="contacto" />
+            <p class="contact-form__hp">
+              <label>No rellenar: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+            </p>
+
+            <div class="contact-form__row">
+              <label class="contact-form__label mono" for="cf-nombre">Nombre</label>
+              <input class="contact-form__input" id="cf-nombre" name="nombre" type="text" required autocomplete="name" />
+            </div>
+            <div class="contact-form__row">
+              <label class="contact-form__label mono" for="cf-email">Email</label>
+              <input class="contact-form__input" id="cf-email" name="email" type="email" required autocomplete="email" />
+            </div>
+            <div class="contact-form__row">
+              <label class="contact-form__label mono" for="cf-mensaje">Cuéntame el proyecto</label>
+              <textarea class="contact-form__input" id="cf-mensaje" name="mensaje" rows="4" required></textarea>
+            </div>
+
+            <label class="contact-form__consent mono">
+              <input type="checkbox" name="privacidad" required />
+              <span>He leído y acepto la <a href="./legal/privacidad.html" data-hover>política de privacidad</a>.</span>
+            </label>
+
+            <button type="submit" class="contact-form__submit mono" data-hover>Enviar mensaje</button>
+            <p class="contact-form__status mono" role="status" aria-live="polite"></p>
+          </form>
+
+          <p class="contact__time mono">Hora local — <span id="local-time">00:00:00</span></p>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer__marquee marquee marquee--reverse" aria-hidden="true">
+        <div class="marquee__track">
+          <div class="marquee__inner">
+            <span>Trabajemos juntos</span><i>✦</i><span class="is-outline">Let's work together</span><i>✦</i>
+          </div>
+          <div class="marquee__inner">
+            <span>Trabajemos juntos</span><i>✦</i><span class="is-outline">Let's work together</span><i>✦</i>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom container mono">
+        <span>© 2026 Paola — Todos los derechos reservados</span>
+        <div class="footer__social">
+          <a href="#" data-hover>LinkedIn</a>
+          <a href="#" data-hover>Instagram</a>
+          <a href="#" data-hover>X</a>
+        </div>
+        <div class="footer__legal">
+          <a href="./legal/aviso-legal.html" data-hover>Aviso legal</a>
+          <a href="./legal/privacidad.html" data-hover>Privacidad</a>
+          <a href="./legal/cookies.html" data-hover>Cookies</a>
+        </div>
+        <button id="hud-toggle" data-hover hidden>Reactivar panel de sesión</button>
+        <button id="back-to-top" data-hover>Volver arriba ↑</button>
+      </div>
+    </footer>
+
+    <!-- Banner de consentimiento (tarea 24). El copy separa a propósito la medición
+         local de la externa: no es un trámite, es el primer enunciado del concepto. -->
+    <div id="consent-banner" class="consent" hidden>
+      <p class="consent__text mono">Esta página mide tu visita en tu propio navegador y te
+        enseña el resultado al final. Eso no sale de aquí y no necesita tu permiso.<br />
+        Lo que sí lo necesita: Google Analytics y Meta Pixel, que envían datos fuera.</p>
+      <div class="consent__actions">
+        <button id="consent-reject" class="mono" data-hover>Rechazar</button>
+        <button id="consent-accept" class="consent__accept mono" data-hover>Aceptar</button>
+      </div>
+      <a href="./legal/cookies.html" class="mono" data-hover>Más información</a>
+    </div>
+
+    <div class="grain" aria-hidden="true"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

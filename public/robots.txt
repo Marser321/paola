@@ -1,0 +1,7 @@
+# PAOLA — Meta Ads Specialist
+# El dominio de Sitemap es PROVISIONAL: lo confirma la tarea 26 (deploy).
+
+User-agent: *
+Allow: /
+
+Sitemap: https://paola-ads.com/sitemap.xml

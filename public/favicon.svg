@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Colores del sistema (tokens.css): fondo #0E0E0E y gradiente Meta violeta→rosa→naranja.
+       Excepción documentada de PLAN.md §9.2: un SVG estático no lee custom properties.
+       Ojo: nada de dobles guiones en este comentario, romperían el XML. -->
+  <defs>
+    <linearGradient id="meta" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7B19C8"/>
+      <stop offset="50%" stop-color="#C559C4"/>
+      <stop offset="100%" stop-color="#F57327"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="#0E0E0E"/>
+  <path d="M20 48V16h13.5c6.9 0 11.5 4.2 11.5 10.6S40.4 37.4 33.5 37.4H27V48h-7Zm7-16.8h5.8c3.2 0 5.2-1.8 5.2-4.6s-2-4.6-5.2-4.6H27v9.2Z" fill="url(#meta)"/>
+</svg>

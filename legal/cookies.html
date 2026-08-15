@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Política de cookies — PAOLA</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="theme-color" content="#0E0E0E" />
+    <link rel="preload" href="/fonts/ClashDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/JetBrainsMono-latin.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body class="legal-page">
+    <header class="site-header">
+      <a href="../index.html" class="site-header__logo" data-hover>PAOLA<sup>&reg;</sup></a>
+      <nav class="site-nav" aria-label="Navegación">
+        <a href="../index.html" data-hover>Inicio</a>
+        <a href="../index.html#contacto" class="site-nav__cta" data-hover>Contacto</a>
+      </nav>
+    </header>
+
+    <main class="container legal">
+      <div class="legal__draft">
+        <p class="legal__draft-tag">Borrador · pendiente de revisión jurídica</p>
+        <p>Este texto es una <strong>plantilla con datos de ejemplo</strong>. Todo lo
+        marcado en naranja está sin rellenar, y el conjunto <strong>no ha sido revisado
+        por un profesional del derecho</strong>. No publicar el sitio con esta página
+        tal cual.</p>
+      </div>
+
+      <h1>Política de cookies</h1>
+
+      <h2>1. Qué es esto</h2>
+      <p>Una cookie —y, en general, cualquier almacenamiento en tu equipo, incluidos
+      <code>localStorage</code> y <code>sessionStorage</code>— es información que la web
+      guarda en tu navegador. La ley exige pedir permiso para todo aquello que no sea
+      estrictamente necesario para prestar el servicio que has pedido.</p>
+
+      <h2>2. Qué guarda esta web</h2>
+      <table class="legal__table">
+        <thead>
+          <tr><th>Almacenamiento</th><th>Para qué</th><th>¿Se envía a alguien?</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>paola-consent</code> (localStorage)</td><td>Recordar tu decisión sobre analítica</td><td>No</td></tr>
+          <tr><td><code>paola-session</code> (sessionStorage)</td><td>Datos del panel de sesión; se borra al cerrar la pestaña</td><td>No</td></tr>
+          <tr><td><code>paola-hud</code> (localStorage)</td><td>Recordar si has desactivado el panel</td><td>No</td></tr>
+          <tr><td><code>paola-variant</code> (sessionStorage)</td><td>Mantener estable la variante de texto que se te ha servido durante la visita</td><td>No</td></tr>
+          <tr><td><code>paola-lang</code> (localStorage)</td><td>Recordar el idioma que has elegido</td><td>No</td></tr>
+          <tr><td>Google Analytics / Meta Pixel</td><td>Analítica y medición publicitaria</td><td><strong>Sí</strong> — solo si aceptas</td></tr>
+        </tbody>
+      </table>
+      <p>Las cinco primeras filas no requieren consentimiento: o son preferencias que has
+      fijado tú, o son datos técnicos que no salen de tu navegador. Se listan igualmente
+      por transparencia.</p>
+
+      <h2>3. Retirar el consentimiento</h2>
+      <p>Puedes borrar tu decisión sobre la analítica externa en cualquier momento. La
+      próxima vez que abras la página principal se te volverá a preguntar.</p>
+      <button type="button" id="revoke-consent" class="legal__revoke">Borrar mi decisión sobre analítica</button>
+      <p class="legal__revoke-status mono" id="revoke-status" role="status" aria-live="polite"></p>
+      <p>Para desactivar el <strong>panel de sesión</strong> —que es otra cosa y no envía
+      nada— usa el botón <em>Desactivar panel</em> del propio panel, o el enlace del pie de
+      la página principal.</p>
+
+      <h2>Última actualización</h2>
+      <p><mark>[PENDIENTE: fecha de publicación real]</mark> · Borrador generado el 15 de agosto de 2026.</p>
+
+      <p style="margin-top:3rem"><a href="../index.html">← Volver al inicio</a></p>
+    </main>
+
+    <div class="grain" aria-hidden="true"></div>
+    <script type="module" src="/src/js/pages/legal.js"></script>
+  </body>
+</html>

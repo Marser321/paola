@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Caso — PAOLA</title>
+    <meta name="description" content="Detalle de un caso de Meta Ads: reto, enfoque, creatividades y resultados." />
+    <!-- Página de detalle: no se indexa por sí sola hasta tener contenido real. -->
+    <meta name="robots" content="noindex, follow" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="theme-color" content="#0E0E0E" />
+    <link rel="preload" href="/fonts/ClashDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/JetBrainsMono-latin.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body class="caso-page">
+    <header class="site-header">
+      <a href="index.html" class="site-header__logo" data-hover>PAOLA<sup>®</sup></a>
+      <nav class="site-nav" aria-label="Navegación principal">
+        <a href="index.html#proyectos" data-hover>Todos los casos</a>
+        <a href="index.html#contacto" class="site-nav__cta" data-hover>Contacto</a>
+      </nav>
+    </header>
+
+    <main class="caso" id="caso">
+      <!-- Lo rellena src/js/pages/caso.js a partir de ?id=. Sin JS o con un id
+           desconocido se ve el aviso de abajo, que es contenido real, no un hueco. -->
+      <div class="container caso__fallback" id="caso-fallback">
+        <p class="section-label mono"><span class="section-label__stage">Caso</span></p>
+        <h1 class="section-title">Caso no encontrado</h1>
+        <p class="caso__lead">
+          Este enlace no apunta a ningún caso. Puedes verlos todos en la
+          <a class="caso__inline-link" href="index.html#proyectos">página principal</a>.
+        </p>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__bottom container mono">
+        <span>© 2026 Paola — Todos los derechos reservados</span>
+        <a href="index.html" data-hover>← Volver al inicio</a>
+      </div>
+    </footer>
+
+    <div class="grain" aria-hidden="true"></div>
+    <script type="module" src="/src/js/pages/caso.js"></script>
+  </body>
+</html>

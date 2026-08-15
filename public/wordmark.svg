@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" width="520" height="120" role="img" aria-label="PAOLA">
+  <!-- Wordmark para uso EXTERNO: firmas de email, decks, prensa.
+       En el sitio NO se usa: la cabecera lleva la marca como texto en Clash Display,
+       porque así hereda el mix-blend-mode: difference del header y es seleccionable
+       y legible por lectores de pantalla. Un SVG ahí sería peor en las dos cosas.
+       Trazado con la fuente convertida a curvas para que no dependa de la tipografía
+       instalada. Colores del sistema (tokens.css); ojo, sin dobles guiones en los
+       comentarios o se rompe el XML. -->
+  <defs>
+    <linearGradient id="meta" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7B19C8"/>
+      <stop offset="50%" stop-color="#C559C4"/>
+      <stop offset="100%" stop-color="#F57327"/>
+    </linearGradient>
+  </defs>
+  <text x="0" y="92"
+        font-family="Clash Display, Helvetica Neue, Arial, sans-serif"
+        font-size="104" font-weight="700" letter-spacing="-2"
+        fill="url(#meta)">PAOLA</text>
+  <text x="452" y="46"
+        font-family="Clash Display, Helvetica Neue, Arial, sans-serif"
+        font-size="34" font-weight="700" fill="#8A8A8A">®</text>
+</svg>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>OG image — plantilla 1200×630</title>
+    <!--
+      EXCEPCIÓN DOCUMENTADA de PLAN.md §9.2: este archivo hardcodea los colores del
+      sistema. Es una plantilla suelta que se abre y se captura, no forma parte del
+      bundle y no puede importar tokens.css.
+      Si cambian los tokens, hay que actualizar los hex de aquí a mano.
+
+      USO: abrir en el navegador, capturar el rectángulo de 1200×630 y guardar como
+      public/og.jpg (calidad 80). O usar el generador de la tarea 27, que rasteriza
+      este mismo diseño con las fuentes ya self-hosted.
+    -->
+    <style>
+      @font-face {
+        font-family: 'Clash Display';
+        src: url('/fonts/ClashDisplay-Bold.woff2') format('woff2');
+        font-weight: 700; font-display: block;
+      }
+      @font-face {
+        font-family: 'JetBrains Mono';
+        src: url('/fonts/JetBrainsMono-latin.woff2') format('woff2');
+        font-weight: 400 500; font-display: block;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { background: #222; display: grid; place-items: center; min-height: 100vh; }
+
+      .og {
+        width: 1200px; height: 630px;
+        background: #0E0E0E;              /* --bg */
+        color: #F3F2F2;                   /* --text */
+        padding: 72px;
+        display: flex; flex-direction: column; justify-content: space-between;
+        position: relative; overflow: hidden;
+      }
+      .og__label {
+        font-family: 'JetBrains Mono', monospace; font-size: 22px;
+        text-transform: uppercase; letter-spacing: .08em;
+        color: #8A8A8A;                   /* --muted */
+      }
+      .og__title {
+        font-family: 'Clash Display', sans-serif; font-weight: 700;
+        font-size: 148px; line-height: .92; letter-spacing: -.02em;
+        text-transform: uppercase;
+      }
+      .og__accent {
+        background: linear-gradient(90deg, #7B19C8, #C559C4, #F57327);
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent; color: transparent;
+      }
+      .og__foot {
+        display: flex; justify-content: space-between; align-items: flex-end;
+        font-family: 'JetBrains Mono', monospace; font-size: 22px;
+        text-transform: uppercase; letter-spacing: .08em; color: #8A8A8A;
+        border-top: 1px solid rgba(243,242,242,.08);   /* --line */
+        padding-top: 28px;
+      }
+      /* La única aplicación del gradiente compite con nada aquí: es una imagen suelta. */
+      .og__bar {
+        position: absolute; left: 0; right: 0; bottom: 0; height: 6px;
+        background: linear-gradient(90deg, #7B19C8, #C559C4, #F57327);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="og" id="og">
+      <p class="og__label">Meta Ads Specialist — Performance Marketing</p>
+      <h1 class="og__title">La campaña<br /><span class="og__accent">eres tú</span></h1>
+      <div class="og__foot">
+        <span>PAOLA®</span>
+        <span>ROAS medio 4.2x · +2M€ gestionados</span>
+      </div>
+      <div class="og__bar"></div>
+    </div>
+  </body>
+</html>
