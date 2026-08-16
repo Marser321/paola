@@ -254,22 +254,17 @@ function spatialPositions(count) {
   })
 }
 
-export async function initProjectsGallery() {
-  const container = document.querySelector('.projects__gallery')
-  const canvas = document.getElementById('projects-gallery-canvas')
-  if (!container || !canvas) return null
-
-  // Guards de PLAN.md §9.7 + el de desktop de card-distortion.js. Van ANTES del
-  // import(): en móvil y con reduced-motion el chunk no se descarga jamás.
-  // El CSS oculta .projects__gallery en esos mismos casos, así que la sección
-  // no se queda con un hueco vacío (sections.css §PROYECTOS — GALERÍA 3D).
-  if (shouldReduceMotion()) return null
-  if (window.innerWidth < 1024) return null
-  if (!document.createElement('canvas').getContext('webgl2')) return null
-  if (!projects.length) return null
-
+/**
+ * Monta la galería. Los guards ya los ha pasado initProjectsGallery(), que es
+ * quien decide — y quien vuelve a decidir al cruzar el breakpoint.
+ *
+ * `signal` aborta la espera al viewport: si la ventana se estrecha mientras la
+ * galería todavía no ha entrado en pantalla, esta promesa se quedaría colgada
+ * para siempre con su IntersectionObserver vivo.
+ */
+async function mountProjectsGallery(container, canvas, signal) {
   // Nada se monta hasta que la galería se acerca: el hero manda en el arranque.
-  await new Promise((resolve) => {
+  await new Promise((resolve, reject) => {
     const io = new IntersectionObserver(
       (entries) => {
         if (!entries[0].isIntersecting) return
@@ -279,9 +274,18 @@ export async function initProjectsGallery() {
       { rootMargin: '100% 0px' }
     )
     io.observe(container)
+    signal.addEventListener(
+      'abort',
+      () => {
+        io.disconnect()
+        reject(signal.reason)
+      },
+      { once: true }
+    )
   })
 
   const THREE = await import('three') // chunk ya en caché: lo trajo el hero
+  if (signal.aborted) return null
 
   const width = container.clientWidth || 1
   const height = container.clientHeight || 1
@@ -476,9 +480,71 @@ export async function initProjectsGallery() {
     // Lo que de verdad libera el contexto. Quitar el <canvas> del DOM no lo
     // hace, y creer lo contrario fue lo que despistó el diagnóstico de B-02.
     renderer.dispose()
+    window.removeEventListener('pagehide', dispose)
   }
 
-  window.addEventListener('pagehide', dispose, { once: true })
+  window.addEventListener('pagehide', dispose)
 
   return { dispose }
+}
+
+/**
+ * Guards de PLAN.md §9.7 + el de escritorio de card-distortion.js. En móvil y con
+ * reduced-motion el chunk de `three` no se descarga jamás, porque el import()
+ * vive dentro de mountProjectsGallery. El CSS oculta .projects__gallery en esos
+ * mismos casos, así que la sección no se queda con un hueco vacío
+ * (sections.css §PROYECTOS — GALERÍA 3D).
+ *
+ * ⚠ El ancho se REEVALÚA. Se leía una vez con `window.innerWidth` en la carga: una
+ * ventana abierta estrecha y ensanchada después se quedaba sin galería para
+ * siempre, y una ensanchada y luego estrechada seguía renderizando doce planos
+ * WebGL detrás de un contenedor con `display: none`.
+ */
+export async function initProjectsGallery() {
+  const container = document.querySelector('.projects__gallery')
+  const canvas = document.getElementById('projects-gallery-canvas')
+  if (!container || !canvas) return null
+  if (!projects.length) return null
+  if (!document.createElement('canvas').getContext('webgl2')) return null
+
+  const mm = window.matchMedia('(min-width: 1024px)')
+  const puedeMontar = () => mm.matches && !shouldReduceMotion()
+
+  let galeria = null
+  let abort = null
+
+  const sync = async () => {
+    if (puedeMontar()) {
+      if (galeria || abort) return
+      abort = new AbortController()
+      const mio = abort
+      try {
+        const montada = await mountProjectsGallery(container, canvas, mio.signal)
+        if (mio.signal.aborted) montada?.dispose()
+        else galeria = montada
+      } catch {
+        // Abortada antes de entrar en pantalla: no hay nada que limpiar.
+      } finally {
+        if (abort === mio) abort = null
+      }
+    } else {
+      abort?.abort(new DOMException('breakpoint', 'AbortError'))
+      abort = null
+      galeria?.dispose()
+      galeria = null
+    }
+  }
+
+  mm.addEventListener('change', sync)
+  await sync()
+
+  return {
+    dispose() {
+      mm.removeEventListener('change', sync)
+      abort?.abort(new DOMException('dispose', 'AbortError'))
+      abort = null
+      galeria?.dispose()
+      galeria = null
+    },
+  }
 }

@@ -114,4 +114,8 @@ initScramble()
 // que las cards ya estén renderizadas y las secciones ya tengan su fondo.
 initNeon()
 
-console.log(`[paola] ${projects.length} proyectos cargados · todas las secciones ok`)
+// Solo en desarrollo: Vite lo elimina del bundle de producción por eliminación de
+// código muerto, así que la consola del sitio publicado queda limpia.
+if (import.meta.env.DEV) {
+  console.log(`[paola] ${projects.length} proyectos cargados · todas las secciones ok`)
+}

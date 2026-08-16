@@ -446,9 +446,17 @@
             <span class="section-label__name">Contacto</span>
           </p>
           <p class="contact__pre mono">¿Tienes un proyecto entre manos?</p>
-          <a href="mailto:hola@paola-ads.com" class="contact__cta" data-hover data-magnetic>
-            <span class="contact__cta-text">¿Escalamos?</span>
-          </a>
+          <!-- Va en <h2> porque ES el titular de la sección: es el texto más grande
+               de la página y hasta ahora era un <span>, así que quien navega por
+               encabezados saltaba del informe al pie sin pasar por contacto.
+               SIN la clase .section-title a propósito: esa clase la usa
+               fx/split-titles.js para partir los H2 en palabras, y este lleva su
+               propio cuerpo (--fs-cta) y su gradiente. -->
+          <h2 class="contact__cta-heading">
+            <a href="mailto:hola@paola-ads.com" class="contact__cta" data-hover data-magnetic>
+              <span class="contact__cta-text">¿Escalamos?</span>
+            </a>
+          </h2>
           <a class="contact__email" href="mailto:hola@paola-ads.com" data-hover>hola@paola-ads.com</a>
 
           <!-- Formulario (tarea 24). Netlify Forms: `data-netlify` + el input oculto
@@ -521,9 +529,6 @@
         <button id="back-to-top" data-hover>Volver arriba ↑</button>
       </div>
     </footer>
-
-      <a href="./legal/cookies.html" class="mono" data-hover>Más información</a>
-    </div>
 
     <div class="grain" aria-hidden="true"></div>
     <script type="module" src="/src/main.js"></script>

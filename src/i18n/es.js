@@ -20,7 +20,7 @@ export const es = {
   // Las dos variantes del test A/B (CONTENT.md §3.1), traducidas ambas.
   variants: {
     A: 'Convierto presupuesto publicitario en <span class="accent-text">crecimiento medible</span>.',
-    B: 'Cada euro invertido tiene que <span class="accent-text">volver acompañado</span>.',
+    B: 'Cada dólar invertido tiene que <span class="accent-text">volver acompañado</span>.',
   },
 
   // Etapas del embudo (CONTENT.md §5). Se traduce el NOMBRE de la etapa;
@@ -87,7 +87,7 @@ export const es = {
     title: 'Hola, soy Paola',
     imgAlt: 'Retrato de Paola',
     imgLabel: 'Foto — 4:5',
-    p1: 'Llevo más de 6 años gestionando campañas de paid social para marcas que quieren crecer con datos, no con intuición. Mi obsesión: que cada euro invertido tenga un retorno medible.',
+    p1: 'Llevo más de 6 años gestionando campañas de paid social para marcas que quieren crecer con datos, no con intuición. Mi obsesión: que cada dólar invertido tenga un retorno medible.',
     p2: 'Trabajo con un número reducido de clientes para estar dentro de cada cuenta, cada semana. Sin humo: reporting claro, testing constante y decisiones basadas en números.',
     cv: [
       '2019 — Media Buyer · Agencia Performance (BCN)',

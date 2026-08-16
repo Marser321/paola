@@ -50,14 +50,56 @@
   opacity: var(--layer-opacity-dark, 0.45);
 }
 
-/* El anclaje a un lado NO se hace aquí: va horneado en la alfa de cada archivo
-   (`side` en media.js documenta hacia dónde muere). Una máscara CSS encima
-   volvería a cortar en recto lo que la foto ya resuelve en degradado. */
+/* Mientras el plato escala al ANCHO, el anclaje a un lado no se hace aquí: va
+   horneado en la alfa de cada archivo (`side` en media.js documenta hacia dónde
+   muere). Una máscara CSS encima volvería a cortar en recto lo que la foto ya
+   resuelve en degradado. En móvil sí manda `side`, porque allí la foto se recorta
+   a lo ancho y hay que elegir qué mitad se ve — ver el bloque de abajo. */
 
 /* En pantallas estrechas el texto cae encima de la foto en vez de al lado: la
    banda baja de peso para no discutir con él. */
 @media (max-width: 1023px) {
   .backdrop__layer { opacity: calc(var(--layer-opacity-dark, 0.45) * 0.55); }
+}
+
+/* ===== MÓVIL: EL PLATO DEJA DE ESCALARSE AL ANCHO =====
+   Aquí estaba el fallo real de los fondos, y no era la opacidad.
+
+   Las cinco fotos son 1600×700 (2,29:1) y `background-size: 100% auto` las escala
+   al ANCHO del contenedor. En un móvil de 375px eso deja una franja de 164px
+   flotando dentro de una caja de 4972px en #servicios: no es un fondo sutil, es
+   un fondo que no está. Medido — la banda cubría el 9% del alto de la sección
+   frente al 40% que cubre en escritorio.
+
+   La opacidad NO es la salida. Medido componiendo cada foto sobre --bg: para que
+   el texto --muted mantenga 4,5:1 sobre el 1% de píxeles más claros de la banda,
+   el techo va de 0,13 (contacto) a 0,28 (métricas) — por debajo de lo que ya hay
+   declarado en varias secciones. Subir opacidad compraría atmósfera pagando con
+   legibilidad. Lo que faltaba era SUPERFICIE.
+
+   Así que en móvil se escala al ALTO y se recorta a lo ancho, que es como se
+   comporta cualquier fondo fotográfico. La banda pasa de 164px a ~300px. Los
+   desvanecidos de arriba y abajo —los que sueldan una sección con la siguiente—
+   se conservan enteros, porque el recorte es horizontal. */
+@media (max-width: 767px) {
+  /* La medida va en `svh` y no en % de la sección. Se probó
+     `clamp(300px, 16%, 520px)` para que la banda creciera con secciones largas y
+     Chrome devolvía el techo en las cinco: el porcentaje dentro de un `clamp()`
+     de `background-size` no resuelve contra el área de posicionamiento como
+     debería. Con `svh` la banda es predecible y se mide igual en todas.
+
+     44svh ≈ 357px en un teléfono de 812. La foto sale entonces a 815px de ancho
+     en una pantalla de 375, así que se ve algo menos de la mitad: por eso importa
+     el encuadre por `side` de aquí abajo. */
+  .backdrop__layer { background-size: auto 44svh; }
+
+  /* Recortada a lo ancho, importa QUÉ mitad se ve. `side` dice hacia dónde muere
+     la alfa del archivo, o sea dónde está el sujeto: se encuadra ahí en vez de
+     dejarlo al centro geométrico. Este es el uso que le faltaba al atributo —
+     backdrops.js lo escribía desde el principio y no había un solo selector que
+     lo leyera. */
+  .backdrop[data-side='right'] .backdrop__layer { background-position: 72% center; }
+  .backdrop[data-side='left'] .backdrop__layer { background-position: 28% center; }
 }
 
 /* En claro el plato es una foto oscura sobre crema: pesa mucho más a igualdad de
@@ -84,12 +126,25 @@
      la deja en fantasma, que es justo lo contrario de darle protagonismo. Así
      que en vertical el hero se parte en dos pisos: ella arriba, ocupando el
      ancho, y el texto debajo (el padding-top de .hero le reserva el sitio). */
-  top: 7svh; bottom: auto;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 5svh; bottom: auto;
+  /* ⚠ NO `left: 50%` + `translateX(-50%)`. Una caja absoluta se encoge al ancho
+     DISPONIBLE, y con `left: 50%` ese disponible es la mitad derecha de la
+     pantalla: 187,5px en un móvil de 375. La figura quedaba tapiada ahí dentro
+     pasara lo que pasara con `height` — el `object-fit: contain` la metía en caja
+     con bandas transparentes arriba y abajo, así que subir el alto no la hacía
+     más grande, solo le añadía hueco vacío. Con `inset-inline: 0` el disponible
+     es la pantalla entera y `margin-inline: auto` la centra igual. */
+  inset-inline: 0;
+  margin-inline: auto;
+  width: fit-content;
+  max-width: 92vw;
   z-index: 1;                    /* sobre el canvas, bajo el texto */
-  height: 44svh;
-  width: auto;
+  /* 44svh dentro de aquel ancho tapiado dejaban a la protagonista en 188px. Ya
+     sin el tope, 50svh son 227px de ancho —el 61% de un móvil de 375— y el texto
+     sigue entrando entero en la primera pantalla, que es la otra condición. El
+     sitio para crecer sale de apretar el aire del bloque de texto, no de
+     robárselo a la lectura (ver el bloque móvil de sections.css §HERO). */
+  height: var(--figura-h, 50svh);
   pointer-events: none;
   /* La foto se hizo con luz cálida: un pelo de contraste y de calor la asienta
      en la escena en vez de dejarla pegada encima. */
@@ -123,9 +178,9 @@
 /* La tablet en vertical sigue siendo un formato alto: ahí la figura crece pero
    el hero mantiene los dos pisos. El reparto en columnas solo tiene sentido
    cuando hay ancho de verdad. */
-@media (min-width: 600px) and (max-width: 1023px) {
-  .hero__figure { height: 50svh; }
-}
+/* El alto de tablet lo pone `--figura-h` en .hero (sections.css §HERO): tiene que
+   ir emparejado con el padding-top que le reserva el sitio, así que los dos
+   valores viven juntos y aquí solo se lee la variable. */
 
 /* Desde 1024px el hero pasa a dos columnas: la figura se ancla abajo y se
    despega del centro exacto para dejar sitio al texto, pero se queda dentro

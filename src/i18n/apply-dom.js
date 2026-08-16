@@ -59,6 +59,14 @@ export function applyStaticTranslations() {
     }
     const key = SECTION_LABEL[section.id]
     if (nameEl && key) nameEl.textContent = t(`labels.${key}`)
+
+    // Nombre accesible de la sección. #metricas, #testimonios y #contacto son las
+    // tres que NO llevan encabezado —su rótulo visible es el `.section-label`, que
+    // es un <p>—, así que sin esto un <section> se anuncia sin nombre y no cuenta
+    // como región navegable. Se pone aquí y no como atributo en el HTML por lo
+    // mismo que el resto del archivo: el texto traducido vive en un solo sitio y
+    // se rehace solo al cambiar de idioma.
+    if (key) section.setAttribute('aria-label', t(`labels.${key}`))
   })
 
   // --- Métricas ---

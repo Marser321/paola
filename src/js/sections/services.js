@@ -110,8 +110,9 @@ function initElastic(strip) {
     // Con puntero fino el hover ya la abrió: el clic solo puede recogerla. En
     // táctil el clic es la única vía, así que alterna.
     abrir(strip, sample.classList.contains('is-open') ? null : sample)
-    // La tira tiene altura fija: abrir NO cambia la altura de la sección, así que
-    // aquí no hace falta ScrollTrigger.refresh(). El del botón del renglón sí.
+    // Aquí NO hace falta ScrollTrigger.refresh(): el acordeón solo reparte ancho
+    // dentro de una tira de altura fija. El que sí cambia la altura de la sección
+    // es el botón del renglón, y ese remide al terminar su transición.
   })
 
   if (!punteroFino() || shouldReduceMotion()) return
@@ -148,13 +149,38 @@ function mountToggles(rows) {
     button.setAttribute('aria-controls', id)
     button.textContent = t('services.toggle') || '+'
 
+    // El colapso envuelve a la tira. El estado vive AQUÍ, no en un `hidden` sobre
+    // la tira: `hidden` no la ocultaba —el `display: flex` de la hoja lo anulaba—
+    // y además impediría animar el despliegue. Ver sections.css §CONTENEDOR DE
+    // COLAPSO.
+    const collapse = document.createElement('div')
+    collapse.className = 'service__collapse'
+    collapse.id = id
+    // Recogida, la tira sigue en el DOM para poder animarla. `inert` es lo que la
+    // saca del tabulador y del lector de pantalla mientras tanto; se quita y se
+    // pone al instante, sin esperar a la transición.
+    collapse.inert = true
+
     const strip = document.createElement('ul')
     strip.className = 'service__strip'
-    strip.id = id
-    strip.hidden = true
 
-    li.append(button, strip)
+    collapse.append(strip)
+    li.append(button, collapse)
     initElastic(strip)
+
+    // La tira cambia la altura de la sección, y .services__header es sticky con
+    // ScrollTriggers ya medidos: hay que remedir. Pero AL TERMINAR de abrirse, no
+    // al empezar — durante la transición la altura todavía es la vieja y el
+    // refresh mediría contra ella.
+    let backstop = 0
+    const remedir = () => {
+      clearTimeout(backstop)
+      backstop = 0
+      ScrollTrigger.refresh()
+    }
+    collapse.addEventListener('transitionend', (event) => {
+      if (event.target === collapse && event.propertyName === 'height') remedir()
+    })
 
     button.addEventListener('click', () => {
       const open = button.getAttribute('aria-expanded') === 'true'
@@ -169,11 +195,16 @@ function mountToggles(rows) {
         abrir(strip, strip.querySelector('.sample'))
       }
       button.setAttribute('aria-expanded', String(!open))
-      strip.hidden = open
-      // La tira cambia la altura de la sección y .services__header es sticky con
-      // ScrollTriggers ya medidos: hay que remedir, igual que hace main.js tras
-      // el cambio de idioma.
-      ScrollTrigger.refresh()
+      collapse.classList.toggle('is-open', !open)
+      collapse.inert = open
+
+      // Red de seguridad para el remedido: `transitionend` no llega si no hay
+      // transición —reduced-motion, o un navegador que no interpole
+      // grid-template-rows— y sin él los ScrollTriggers se quedarían con la
+      // medida vieja para siempre. El listener de arriba cancela este temporizador
+      // cuando sí llega.
+      clearTimeout(backstop)
+      backstop = setTimeout(remedir, 800)
     })
   })
 }
@@ -189,7 +220,8 @@ export function refreshServices() {
     button.textContent = t('services.toggle') || '+'
   })
   document.querySelectorAll('.service__strip').forEach((strip) => {
-    if (strip.hidden) strip.innerHTML = ''
+    // El estado está en el contenedor de colapso, no en la tira.
+    if (!strip.parentElement.classList.contains('is-open')) strip.innerHTML = ''
     else {
       const li = strip.closest('.service')
       strip.innerHTML = samplesFor(li) || ''

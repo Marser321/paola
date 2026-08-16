@@ -22,7 +22,7 @@ export const en = {
 
   variants: {
     A: 'I turn ad budget into <span class="accent-text">measurable growth</span>.',
-    B: 'Every euro you invest has to <span class="accent-text">come back with company</span>.',
+    B: 'Every dollar you invest has to <span class="accent-text">come back with company</span>.',
   },
 
   stageWord: 'Stage',
@@ -87,7 +87,7 @@ export const en = {
     title: "Hi, I'm Paola",
     imgAlt: 'Portrait of Paola',
     imgLabel: 'Photo — 4:5',
-    p1: "I've spent more than 6 years running paid social for brands that want to grow on data, not intuition. My obsession: that every euro invested has a measurable return.",
+    p1: "I've spent more than 6 years running paid social for brands that want to grow on data, not intuition. My obsession: that every dollar invested has a measurable return.",
     p2: 'I work with a small number of clients so I can be inside every account, every week. No smoke: clear reporting, constant testing and decisions based on numbers.',
     cv: [
       '2019 — Media Buyer · Performance agency (Barcelona)',

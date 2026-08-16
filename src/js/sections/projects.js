@@ -95,6 +95,9 @@ export function renderProjects() {
     .join('')
 }
 
+// Mismo corte que el CSS del backstage y que el matchMedia del scroll horizontal.
+const esVertical = window.matchMedia('(max-width: 1023px)')
+
 // Un solo listener delegado para las 6 cards.
 function initBackstage() {
   const track = document.querySelector('.projects__track')
@@ -111,7 +114,14 @@ function initBackstage() {
     button.setAttribute('aria-expanded', String(!open))
     button.textContent = open ? t('projects.backstage') : t('projects.backstageHide')
     panel.hidden = open
-    // El overlay no cambia la altura de la card: no hace falta ScrollTrigger.refresh()
+
+    // En escritorio el panel es una capa sobre la creatividad y la tarjeta no
+    // cambia de alto: ahí no hay nada que remedir, y encima el track va pinneado
+    // con offsets en píxeles, así que un refresh de más lo movería.
+    // Por debajo de 1024 el panel ocupa flujo y la tarjeta CRECE (tracker.css
+    // §backstage en vertical), así que los triggers de todo lo que va debajo se
+    // quedan con la medida vieja si no se remide.
+    if (esVertical.matches) ScrollTrigger.refresh()
   })
 }
 

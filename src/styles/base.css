@@ -66,6 +66,65 @@ h1, h2, h3 {
   border-top: 1px solid var(--line);
 }
 
+/* ===== ZONA DE PULSACIÓN =====
+   Ocho controles del sitio son rótulos mono de 11-12px y miden 13-20px de alto:
+   «Ver backstage» en las seis tarjetas, «ver fórmula» del informe, los dos
+   botones del pie, los dos enlaces del HUD y los enlaces legales y sociales.
+
+   Medido, TODOS cumplen WCAG 2.5.8 AA por la excepción de separación —los
+   círculos de 24px centrados en cada uno no se tocan—, así que esto no es un
+   arreglo de conformidad. Es que 19px de alto se falla con el dedo.
+
+   Se agranda la ZONA, no la caja. Cuatro de ellos llevan un filete inferior que
+   hace de subrayado: con padding vertical el filete se despegaría del texto y se
+   perdería el recurso gráfico. El pseudoelemento no pinta nada, no ocupa flujo y
+   no mueve un píxel del diseño.
+
+   ⚠ Solo se extiende en VERTICAL (`inset-inline: 0`). A lo ancho estos controles
+   ya pasan de sobra, y estirarlos invadiría a sus vecinos de fila — los enlaces
+   del pie van a 1.5rem unos de otros.
+
+   ⚠ Usa ::after. Ninguno de estos elementos es superficie de neón; fx/neon.js
+   tiene cogidos ::before y ::after de las suyas (ver el aviso de .sample__button
+   en sections.css). Si alguno entra en esa lista, su zona pasa a ser padding. */
+.project-card__more,
+.report__formula-btn,
+.hud__link,
+.hud__off,
+.footer__social a,
+.footer__legal a,
+#hud-toggle,
+#back-to-top {
+  position: relative;
+}
+.project-card__more::after,
+.report__formula-btn::after,
+.hud__link::after,
+.hud__off::after,
+.footer__social a::after,
+.footer__legal a::after,
+#hud-toggle::after,
+#back-to-top::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: 1.75rem; /* 28px: los 24 del criterio, con holgura */
+  translate: 0 -50%;
+}
+
+/* La casilla de consentimiento sí crece de verdad: 13px de caja es pequeño
+   incluso para verla. El objetivo real nunca fue ella —el <input> vive dentro de
+   su <label>, así que toda la frase activa la casilla— pero eso no la hacía menos
+   diminuta en pantalla. */
+.contact-form__consent input[type='checkbox'] {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex-shrink: 0;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+
 /* ===== GRANO GLOBAL (DESIGN.md §5) ===== */
 .grain {
   position: fixed;

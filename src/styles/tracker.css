@@ -123,7 +123,11 @@
   background: var(--surface);
   border: 1px solid var(--line);
   padding: 0.5rem 0.75rem;
-  white-space: nowrap;
+  /* Con `white-space: nowrap` y anclaje a `right`, una señal larga solo podía
+     crecer hacia la izquierda hasta salirse de la ventana — y el desbordamiento
+     quedaba tapado por el `overflow-x: clip` del body, no resuelto. Ahora parte
+     de línea dentro de un ancho máximo alineado con el rail del HUD. */
+  max-width: min(var(--hud-w), 70vw);
   opacity: 0;
   transform: translateY(8px); /* SHIFT — el máximo permitido */
   transition: opacity var(--dur-fast) var(--ease-out),
@@ -211,6 +215,27 @@
   padding: 0.15rem 0.45rem;
 }
 .backstage__result { color: var(--text); margin-top: auto; }
+
+/* En vertical el backstage DEJA DE SER UNA CAPA y pasa a ocupar sitio.
+   En escritorio la tarjeta mide 560px y su creatividad 350px de alto: el panel
+   cabe encima sin más. En un móvil de 375 la creatividad son 233px y el panel
+   necesita 348 — medido —, así que quedaba un scroll interno dentro de una
+   tarjeta que está dentro del scroll de la página. Tres scrolls anidados en un
+   teléfono: nadie encuentra la última fila.
+
+   `position: static` lo devuelve al flujo, y entonces es él quien le da altura a
+   la creatividad; el `:has()` le quita a esta su `aspect-ratio` para que pueda
+   crecer. Sin deslizamiento: el `translateY` de la capa no tiene sentido cuando
+   el panel ya no está encima de nada. La tarjeta crece al abrir, que es lo que
+   hace que se entienda de dónde sale — y por eso projects.js remide ScrollTrigger
+   en este tramo. */
+@media (max-width: 1023px) {
+  .project-card__visual:has(.backstage:not([hidden])) { aspect-ratio: auto; }
+  .backstage:not([hidden]) {
+    position: static;
+    transform: none;
+  }
+}
 
 .project-card__more {
   margin-top: 1.5rem;
@@ -304,7 +329,25 @@
 
 /* El rail del HUD es fixed a la derecha y el informe alinea sus valores a la
    derecha: en desktop se solapaban y tapaba la fila "Variante servida".
-   El informe cede el ancho del rail. Detectado en ejecución (tarea 35). */
+   El informe cede el ancho del rail. Detectado en ejecución (tarea 35).
+
+   ⚠ Condicionado a que el HUD exista. El opt-out del pie lo desmonta de verdad
+   (ui/hud.js §destroy), y la reserva era incondicional: quien apagaba el HUD se
+   quedaba con 15,5rem de margen derecho vacío en el informe, cediendo sitio a
+   algo que ya no estaba. La clase la mantiene hud.js, no `:has(.hud)`, porque el
+   HUD se construye en diferido en el primer scroll y el selector dejaría la
+   sección sin reserva hasta entonces.
+
+   El padding no cambia la altura del panel (comprobado: `min-height: 30rem` lo
+   sostiene y el contenido cabe con y sin gutter), así que apagarlo no descuadra
+   ningún ScrollTrigger. */
 @media (min-width: 1024px) {
-  .report > .container { padding-right: calc(var(--hud-w) + 2.5rem); }
+  .report > .container {
+    padding-right: calc(var(--hud-w) + 2.5rem);
+    transition: padding-right var(--dur-med) var(--ease-out);
+  }
+  .hud-off .report > .container { padding-right: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .report > .container { transition: none; }
 }

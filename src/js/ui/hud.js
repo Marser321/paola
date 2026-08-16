@@ -119,6 +119,16 @@ export function initHud() {
     return isHudEnabled() && !mmMobile.matches
   }
 
+  // El informe reserva a su derecha el ancho del rail para no solaparse con él
+  // (tracker.css §informe). Esa reserva tiene que desaparecer cuando el HUD se
+  // apaga, o queda un margen vacío de 15,5rem cediendo sitio a nada. Va como
+  // clase en <html> y no como `:has(.hud)` porque el HUD se construye en el
+  // primer scroll: con el selector, el informe estaría sin reserva hasta ese
+  // momento y luego daría un salto.
+  function syncHudFlag() {
+    document.documentElement.classList.toggle('hud-off', !isHudEnabled())
+  }
+
   function syncFooterToggle() {
     if (!footerToggle) return
     const off = !isHudEnabled()
@@ -181,6 +191,7 @@ export function initHud() {
     } else {
       destroy()
     }
+    syncHudFlag()
     syncFooterToggle()
   })
 
@@ -198,5 +209,6 @@ export function initHud() {
     syncFooterToggle()
   })
 
+  syncHudFlag()
   syncFooterToggle()
 }

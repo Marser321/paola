@@ -95,11 +95,25 @@
    .hero__figure en media.css) y el texto debajo. Este padding es el que le
    reserva el piso de arriba — sin él, el texto va pegado abajo por el
    justify-content:flex-end y se le sube encima. */
+/* El piso de arriba NO es un valor fijo: se calcula desde el alto de la figura,
+   y el de la figura desde lo que sobra.
+
+   El motivo es que el bloque de texto cuesta lo mismo en píxeles pase lo que
+   pase —rótulo, dos líneas de nombre, subtítulo y cifras salen a unos 355px— y
+   ese coste no encoge con la pantalla. Con la figura a un 50svh pelado, en un
+   iPhone SE (375×667) las cifras del hero caían 35px por debajo de la línea de
+   flotación: justo la prueba de solvencia, justo donde no se ve.
+   Con `min()` la figura se lleva su mitad de pantalla cuando la hay y cede
+   cuando no. Las 25rem son la reserva del texto más los dos paddings, medida.
+   `--figura-h` la lee .hero__figure por herencia (media.css). */
 @media (max-width: 1023px) {
-  .hero { padding-top: 50svh; }
+  .hero {
+    --figura-h: min(50svh, 100svh - 25rem);
+    padding-top: calc(5svh + var(--figura-h) + 0.5rem);
+  }
 }
 @media (min-width: 600px) and (max-width: 1023px) {
-  .hero { padding-top: 56svh; }
+  .hero { --figura-h: min(56svh, 100svh - 25rem); }
 }
 
 /* Velo de apoyo bajo la figura. Desde tablet el texto comparte plano con ella
@@ -230,7 +244,10 @@
    creatividades — ver src/js/webgl/projects-gallery.js y BLOCKERS.md §B-02. */
 .projects__gallery {
   position: relative;
-  height: 100vh;
+  /* `svh` y no `vh`, igual que el hero: con la barra del navegador retraída, `vh`
+     deja la galería más alta que la ventana y la máscara de arriba se sale de
+     cuadro. Es la misma unidad en todo el sitio o no es un sistema. */
+  height: 100svh;
   overflow: clip;
   /* Sin la máscara, los planos se cortan a hacha contra el borde de la sección
      y se ve el rectángulo del canvas en vez de la creatividad. Mismo criterio
@@ -352,6 +369,43 @@
 .service__toggle:hover { color: var(--text); border-color: var(--line-gold); }
 .service__toggle[aria-expanded='true'] { color: var(--gold); border-color: var(--line-gold); }
 
+/* La medida de la tira, en un solo sitio. La declara el renglón porque la usan
+   DOS reglas —la tira y el contenedor que la despliega— y si se separan, el
+   colapso deja de terminar donde acaba la tira. */
+.service {
+  --strip-h: clamp(20rem, 34vw, 28rem);
+  --strip-gap: 1.5rem;
+}
+
+/* CONTENEDOR DE COLAPSO.
+   La tira NO puede ocultarse con `hidden` a secas: lleva `display: flex` en esta
+   hoja y una declaración de autor gana siempre a la regla `[hidden]{display:none}`
+   del navegador. Ese era el fallo — cada renglón reservaba sus 448px de tira
+   expandida desde la primera pintura, vacíos, antes de que nadie pulsara nada.
+
+   Lo que se anima es la altura de ESTE contenedor, no la de la tira. Se probó el
+   recurso habitual —grid de `0fr` a `1fr`— y aquí no vale: la tira tiene altura
+   explícita, así que su contribución al track es esa altura y la fila nunca baja
+   de 448px ni con `min-height: 0`. El truco solo funciona con hijos de alto
+   automático.
+
+   Animar la altura de la TIRA tampoco: las muestras van a `height: 100%` y se
+   aplastarían con ella. Creciendo el contenedor, la tira se descubre entera y con
+   su encuadre intacto.
+
+   ⚠ `overflow-y: clip` junto a `overflow-x: visible`, y no `hidden`: en móvil la
+   tira sangra a los bordes de la pantalla con `margin-inline: -4vw`, y `hidden`
+   en un eje fuerza `auto` en el otro, lo que sacaría una barra de scroll. El par
+   clip/visible sí es legal — mismo recurso que .hero__title. */
+.service__collapse {
+  grid-column: 1 / -1;
+  height: 0;
+  overflow-x: visible;
+  overflow-y: clip;
+  transition: height var(--dur-med) var(--ease-out);
+}
+.service__collapse.is-open { height: calc(var(--strip-h) + var(--strip-gap)); }
+
 /* GALERÍA ELÁSTICA. La tira es un flex de ALTURA FIJA y cada muestra reparte el
    ancho: al abrir una pasa a `flex-grow: 4` y las otras dos se quedan en 1.
 
@@ -360,11 +414,10 @@
    y la tira entera daba tumbos al abrir. Aquí manda la tira y las muestras la
    rellenan. */
 .service__strip {
-  grid-column: 1 / -1;
   display: flex;
   gap: 1rem;
-  margin-top: 1.5rem;
-  height: clamp(20rem, 34vw, 28rem);
+  margin-top: var(--strip-gap);
+  height: var(--strip-h);
 }
 
 .sample {
@@ -469,7 +522,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   /* El acordeón se queda: es un cambio de layout útil, no decoración. Lo que se
-     va es el movimiento. */
+     va es el movimiento. El colapso también se queda —es lo que oculta la tira—,
+     pero pasa a ser instantáneo. */
+  .service__collapse,
   .sample,
   .sample__caption,
   .sample__button::after,
@@ -687,17 +742,54 @@
 @media (max-width: 767px) {
   .site-nav { gap: 1rem; }
   .site-nav a:not(.site-nav__cta) { display: none; } /* nav esencial: logo + contacto */
-  .hero__meta { flex-direction: column; gap: 0.75rem; }
   .hero__scroll { display: none; }
+
+  /* --- HERO: el aire que le sobra al texto se lo queda la figura ---
+     La figura creció a 50svh (media.css) y el piso de arriba con ella. Para que
+     el bloque de texto siga entrando entero en la primera pantalla, se recortan
+     tres holguras pensadas para escritorio:
+
+     · Las tres cifras apiladas ocupaban 103px. En fila envuelta caben en dos
+       renglones y siguen leyéndose — son «ROAS 4.2x», «+$2M», «FB · IG», no
+       frases. Es la prueba de solvencia del hero: bajo la línea de flotación no
+       sirve de nada.
+     · El `padding-bottom: 8vh` del hero es aire de escritorio: en vertical la
+       sección siguiente ya está a un dedo de distancia. */
+  .hero { padding-bottom: 4vh; }
+  .hero__meta {
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-top: 1.75rem;
+    padding-top: 1rem;
+  }
+  .hero__subtitle { margin-top: 1.5rem; }
   .marquee__inner { font-size: clamp(2rem, 9vw, 3rem); gap: 1.5rem; padding-right: 1.5rem; }
-  .testimonial:nth-child(2) { top: 21vh; }
+  /* La baraja de testimonios se lee por el ASOMO: cada tarjeta tapa a la
+     anterior y deja ver su borde superior, y eso es lo que cuenta que hay tres.
+     Con 20/21/22vh el escalón eran 8px en una pantalla de 812 — no se distingue
+     de un filete y la sección parecía tener un solo testimonio. A 12/17/22vh el
+     escalón sube a 41px y la baraja se ve como baraja. Sube también el arranque,
+     que en vertical no hace falta dejar un quinto de pantalla por encima. */
+  .testimonial { top: 12vh; }
+  .testimonial:nth-child(2) { top: 17vh; }
   .testimonial:nth-child(3) { top: 22vh; }
-  /* Tres muestras en 375px salen a ~100px: ilegibles. En móvil la tira se lee
-     deslizando, que es el gesto que ya se usa en la galería de proyectos.
-     El ACORDEÓN NO SE APLICA aquí: en un contenedor con scroll horizontal no hay
-     espacio libre que repartir, así que `flex-grow` no haría nada, y encima
-     pelearía con el scroll-snap. Deslizar ya cumple la misma función —traer una
-     muestra al frente— con el gesto que el dedo espera. */
+  .footer__bottom { flex-direction: column; align-items: flex-start; gap: 1rem; }
+}
+
+/* --- Tira de muestras: carrusel por debajo de 1024px ---
+   El acordeón elástico necesita ancho: reparte el contenedor en 4:1:1 entre tres
+   muestras, así que las dos cerradas se quedan con un sexto cada una. En 375px
+   eso son ~100px, ilegibles — y ese era el motivo declarado para pasar a carrusel
+   en móvil. Lo que faltaba es que el mismo cálculo falla en TABLET: a 768px el
+   contenedor son 707px y las cerradas caen a ~112px, prácticamente lo mismo. El
+   corte estaba en 767px y dejaba toda la franja de 768 a 1023 con el acordeón
+   apretado dentro de una columna única.
+
+   El ACORDEÓN NO SE APLICA aquí: en un contenedor con scroll horizontal no hay
+   espacio libre que repartir, así que `flex-grow` no haría nada, y encima
+   pelearía con el scroll-snap. Deslizar cumple la misma función —traer una
+   muestra al frente— con el gesto que el dedo espera. */
+@media (max-width: 1023px) {
   .service__strip {
     display: flex;
     gap: 1rem;
@@ -706,7 +798,9 @@
     margin-inline: -4vw;
     padding-inline: 4vw;
   }
-  .sample { flex: 0 0 62%; scroll-snap-align: start; }
+  /* En tablet caben dos muestras y el asomo de la tercera, que es lo que enseña
+     que la tira sigue. En móvil una y pico: a dos, ninguna se leería. */
+  .sample { flex: 0 0 44%; scroll-snap-align: start; }
   /* Sin acordeón no hay estado abierto, así que el pie va SIEMPRE visible (es la
      descripción de la muestra) y el índice sobra: se ve cuál es deslizando. */
   .sample:not(.is-open) { filter: none; }
@@ -714,7 +808,9 @@
   .sample__caption { opacity: 1; transform: none; }
   .sample__button::after { opacity: 1; }
   .sample__index { display: none; }
-  .footer__bottom { flex-direction: column; align-items: flex-start; gap: 1rem; }
+}
+@media (max-width: 767px) {
+  .sample { flex: 0 0 62%; }
 }
 
 /* --- Seguridad anti-overflow global --- */
@@ -783,6 +879,11 @@
 .contact-form {
   max-width: 34rem; margin: 4rem auto 0; text-align: left;
   display: flex; flex-direction: column; gap: 1.25rem;
+  /* El honeypot de abajo es `position: absolute` y necesita este contenedor. Lo
+     tenía prestado: `.contact-form` es superficie de neón y fx/neon.js le pone
+     `position: relative` en tiempo de ejecución. Si el neón falla o se reordena,
+     el campo trampa se escapa al bloque contenedor inicial. Se declara aquí. */
+  position: relative;
   /* Radio y aire para que el borde de neón tenga un marco que recorrer: sin
      ellos la luz iría pegada a los campos. */
   border-radius: var(--radius);

@@ -135,7 +135,14 @@
 
   /* Escala tipográfica (DESIGN.md §2) */
   --fs-hero: clamp(4rem, 14vw, 13rem);
-  --fs-cta: clamp(3rem, 12vw, 11rem);
+  /* El CTA de contacto es una sola palabra que NO puede partirse: «¿ESCALAMOS?».
+     Medida en Clash Display Bold ocupa 7,89× su cuerpo, así que para caber en el
+     contenedor (92vw) el tope real es 11,7vw — con 12vw se salía a TODOS los
+     anchos, y por debajo de 414px mandaba además el suelo de 3rem y se comía 34px
+     por la derecha, invisibles gracias al `overflow-x: clip` del layout. 11vw deja
+     margen para las variaciones de la fuente y el suelo baja a 2,25rem, que es lo
+     que entra en una pantalla de 320px. Si el texto del CTA cambia, se remide. */
+  --fs-cta: clamp(2.25rem, 11vw, 11rem);
   --fs-h2: clamp(2.5rem, 6vw, 5.5rem);
   --fs-h3: clamp(1.4rem, 3vw, 2.4rem);
   --fs-body: clamp(1rem, 1.2vw, 1.125rem);

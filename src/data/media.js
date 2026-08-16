@@ -84,36 +84,50 @@ export const figure = {
  *   lleva la galería 3D en WebGL (src/js/webgl/projects-gallery.js). Una capa
  *   de foto encima sería la tercera imagen compitiendo en la misma sección.
  */
+// ⚠ SOBRE EL PAR [oscuro, claro]. Los dos números NO tienen el mismo margen.
+//
+// En OSCURO la foto ACLARA el fondo, así que compite con el texto. Medido
+// componiendo cada archivo sobre --bg y exigiendo 4,5:1 al texto --muted contra
+// el 1% de píxeles más claros de la banda, el techo por sección es:
+//   metricas 0,28 · servicios 0,18 · proceso 0,15 · testimonios 0,18 · contacto 0,13
+// Varios de los valores de abajo ya están por encima. No se suben: el fondo que
+// faltaba en móvil era superficie, no opacidad, y eso se arregló en media.css
+// (§MÓVIL: EL PLATO DEJA DE ESCALARSE AL ANCHO).
+//
+// En CLARO la foto OSCURECE el papel, así que empuja el contraste del texto hacia
+// arriba en vez de hacia abajo: ahí no hay techo de legibilidad y el límite es de
+// gusto — que no se enturbie el crema. Por eso el tema claro sí sube, del 0,72 del
+// valor oscuro al 0,85.
 export const backdrops = {
   // Los monitores con las gráficas. Es la única foto del set que enseña
   // literalmente aquello de lo que habla la sección.
   metricas: {
     side: 'right',
-    layers: [{ src: 'bg-metricas', depth: 0.12, opacity: [0.34, 0.24] }],
+    layers: [{ src: 'bg-metricas', depth: 0.12, opacity: [0.34, 0.29] }],
   },
   // La cabecera de servicios va en sticky arriba a la izquierda: el hueco tiene
   // que caer a la izquierda y Paola entra por la derecha.
   servicios: {
     side: 'right',
-    layers: [{ src: 'bg-servicios', depth: 0.08, opacity: [0.42, 0.3] }],
+    layers: [{ src: 'bg-servicios', depth: 0.08, opacity: [0.42, 0.36] }],
   },
   // El pasillo. Un método es un recorrido, y es la única foto con dirección de
   // marcha.
   proceso: {
     side: 'right',
-    layers: [{ src: 'bg-proceso', depth: 0.14, opacity: [0.42, 0.3] }],
+    layers: [{ src: 'bg-proceso', depth: 0.14, opacity: [0.42, 0.36] }],
   },
   // El sillón: registro conversado, que es el de un testimonio.
   testimonios: {
     side: 'right',
-    layers: [{ src: 'bg-testimonios', depth: 0.06, opacity: [0.26, 0.18] }],
+    layers: [{ src: 'bg-testimonios', depth: 0.06, opacity: [0.26, 0.22] }],
   },
   // La ventana. La sección que cierra el sitio mira afuera. Va la más baja de
   // las cinco: el CTA de contacto es tipografía enorme y centrada, y no admite
   // competencia detrás.
   contacto: {
     side: 'left',
-    layers: [{ src: 'bg-contacto', depth: 0.06, opacity: [0.22, 0.16] }],
+    layers: [{ src: 'bg-contacto', depth: 0.06, opacity: [0.22, 0.19] }],
   },
   //
   // `formats` es opcional y por defecto es ['avif', 'webp']. Si solo entregas uno,

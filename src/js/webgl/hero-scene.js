@@ -110,21 +110,12 @@ const fragmentShader = /* glsl */ `
   }
 `
 
-export async function initHeroScene() {
-  const hero = document.querySelector('.hero')
-  const canvas = document.getElementById('hero-canvas')
-  if (!hero || !canvas) return null
-
-  // Guards de PLAN.md §9.7: sin WebGL en móvil ni con reduced-motion.
-  // Van ANTES del import(): en móvil el chunk de three no se descarga nunca.
-  const tooNarrow = window.innerWidth < 768
-  const noContext = !document.createElement('canvas').getContext('webgl2')
-  if (tooNarrow || shouldReduceMotion() || noContext) {
-    hero.classList.add('no-webgl')
-    canvas.remove()
-    return null
-  }
-
+/**
+ * Monta la escena. Da por hecho que los guards ya han pasado: quien decide es
+ * initHeroScene(), que además vuelve a decidirlo cada vez que se cruza el
+ * breakpoint.
+ */
+async function mountHeroScene(hero, canvas) {
   const THREE = await import('three')
 
   const COLOR_A = new THREE.Color()
@@ -209,17 +200,22 @@ export async function initHeroScene() {
   const visibleHeight = 2 * Math.tan((camera.fov * Math.PI) / 360) * camera.position.z
   const visibleWidth = visibleHeight * camera.aspect
 
-  window.addEventListener('mousemove', (e) => {
+  // Los listeners van con nombre y no en línea: la escena se desmonta y se vuelve
+  // a montar al cruzar el breakpoint (ver initHeroScene), y unos listeners que no
+  // se pueden quitar se acumularían en cada vuelta.
+  const onMouseMove = (e) => {
     const rect = hero.getBoundingClientRect()
     targetMouse.x = ((e.clientX - rect.left) / rect.width - 0.5) * visibleWidth
     targetMouse.y = -((e.clientY - rect.top) / rect.height - 0.5) * visibleHeight
-  })
-  hero.addEventListener('mouseleave', () => targetMouse.set(999, 999))
+  }
+  const onMouseLeave = () => targetMouse.set(999, 999)
+  window.addEventListener('mousemove', onMouseMove)
+  hero.addEventListener('mouseleave', onMouseLeave)
 
   // --- Click burst (tarea 22) ---
   // El hero no tiene nada clicable propio; se ignoran los clicks sobre el
   // header y sobre cualquier enlace o botón que pase por encima.
-  hero.addEventListener('click', (e) => {
+  const onClick = (e) => {
     if (e.target.closest('a, button, .site-header')) return
     const rect = hero.getBoundingClientRect()
     material.uniforms.uBurstOrigin.value.set(
@@ -231,12 +227,13 @@ export async function initHeroScene() {
       { value: 0 },
       { value: 1, duration: 1.1, ease: 'power2.out', overwrite: true }
     )
-  })
+  }
+  hero.addEventListener('click', onClick)
 
   // --- Cámara ligada al scroll (tarea 22) ---
   // La cámara se aleja y sube según se abandona el hero: da profundidad a la
   // salida sin mover ni un píxel del texto. ease 'none' porque es scrub.
-  gsap.to(camera.position, {
+  const camTween = gsap.to(camera.position, {
     z: 58,
     y: 6,
     ease: 'none',
@@ -266,22 +263,85 @@ export async function initHeroScene() {
   }
   gsap.ticker.add(render)
 
-  window.addEventListener('resize', () => {
+  const onResize = () => {
     sizes.width = hero.clientWidth
     sizes.height = hero.clientHeight
     camera.aspect = sizes.width / sizes.height
     camera.updateProjectionMatrix()
     renderer.setSize(sizes.width, sizes.height)
-  })
+  }
+  window.addEventListener('resize', onResize)
 
   return {
     destroy() {
       gsap.ticker.remove(render)
       window.removeEventListener('theme:change', onThemeChange)
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('resize', onResize)
+      hero.removeEventListener('mouseleave', onMouseLeave)
+      hero.removeEventListener('click', onClick)
+      camTween.scrollTrigger?.kill()
+      camTween.kill()
       observer.disconnect()
       geometry.dispose()
       material.dispose()
       renderer.dispose()
+    },
+  }
+}
+
+/**
+ * Guards de PLAN.md §9.7: sin WebGL por debajo de 768px, sin él con
+ * reduced-motion y sin él si no hay contexto webgl2.
+ *
+ * ⚠ Se REEVALÚAN. Antes se leían una sola vez con `window.innerWidth` en la carga
+ * y el canvas se eliminaba del DOM con `canvas.remove()`, que además es
+ * irreversible: un teléfono girado a horizontal, o una ventana de escritorio
+ * estrechada y vuelta a ensanchar, se quedaba sin hero para siempre — o al revés,
+ * mantenía 6000 partículas corriendo en una ventana de móvil. Ahora manda un
+ * `matchMedia` con listener, y el canvas se oculta en vez de borrarse.
+ *
+ * El import() dinámico de `three` sigue viviendo dentro de mountHeroScene, así que
+ * en una pantalla que nunca cruza el breakpoint el chunk no se descarga jamás.
+ */
+export async function initHeroScene() {
+  const hero = document.querySelector('.hero')
+  const canvas = document.getElementById('hero-canvas')
+  if (!hero || !canvas) return null
+
+  const mm = window.matchMedia('(min-width: 768px)')
+  const noContext = !document.createElement('canvas').getContext('webgl2')
+  const puedeMontar = () => mm.matches && !shouldReduceMotion() && !noContext
+
+  let scene = null
+  let turno = 0 // el import() es asíncrono: sin este testigo, dos cambios seguidos de breakpoint pueden montar una escena que ya sobra
+
+  const sync = async () => {
+    const mio = ++turno
+    if (puedeMontar()) {
+      if (scene) return
+      hero.classList.remove('no-webgl')
+      canvas.hidden = false
+      const montada = await mountHeroScene(hero, canvas)
+      if (mio !== turno) { montada?.destroy(); return }
+      scene = montada
+    } else {
+      scene?.destroy()
+      scene = null
+      hero.classList.add('no-webgl')
+      canvas.hidden = true
+    }
+  }
+
+  mm.addEventListener('change', sync)
+  await sync()
+
+  return {
+    destroy() {
+      mm.removeEventListener('change', sync)
+      turno += 1
+      scene?.destroy()
+      scene = null
     },
   }
 }
