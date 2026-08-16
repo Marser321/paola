@@ -35,9 +35,25 @@ export function applyStaticTranslations() {
   set('.preloader__status', t('preloader.status'))
 
   // --- Nav ---
+  // ⚠ Ojo con `textContent` a secas. Con la navegación en píldoras cada enlace
+  // lleva DOS rótulos dentro —el de reposo y el que entra al pasar el puntero,
+  // ver ui/pill-nav.js— y escribir sobre el <a> se llevaría por delante esa
+  // estructura al cambiar de idioma. En el primer pase todavía no existe, porque
+  // applyStaticTranslations() corre antes que initPillNav(); en los siguientes,
+  // sí. Se escribe en los rótulos si están, y en el enlace si no.
   const nav = ['projects', 'services', 'process', 'about', 'contact']
   document.querySelectorAll('.site-nav a').forEach((a, i) => {
-    if (nav[i]) a.textContent = t(`nav.${nav[i]}`)
+    if (!nav[i]) return
+    const texto = t(`nav.${nav[i]}`)
+    const labels = a.querySelectorAll('.pill__label, .pill__label--hover')
+    if (labels.length) labels.forEach((el) => { el.textContent = texto })
+    else a.textContent = texto
+  })
+  // El desplegable de móvil es una copia de los mismos enlaces: se retraduce por
+  // href, que es lo único estable entre las dos listas.
+  document.querySelectorAll('.pill-nav__panel a').forEach((a) => {
+    const i = nav.findIndex((_, n) => document.querySelectorAll('.site-nav .pill')[n]?.getAttribute('href') === a.getAttribute('href'))
+    if (i >= 0) a.textContent = t(`nav.${nav[i]}`)
   })
 
   // --- Hero ---

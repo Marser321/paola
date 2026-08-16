@@ -1,0 +1,202 @@
+/* ============================================================
+   PILL-NAV.CSS — navegación en píldoras.
+
+   Port del componente PillNav de React Bits (reactbits.dev). El original es React
+   + react-router-dom; aquí no hay React, así que lo que se porta es el MECANISMO
+   —círculo que sube desde abajo y releva al rótulo— y no el componente. La lógica
+   vive en src/js/ui/pill-nav.js.
+
+   Del original NO se conserva la paleta. Venía con negro y blanco a pelo
+   (#000 / #fff / #120F17) y aquí eso son tokens: la regla de la casa es que no
+   haya hex sueltos fuera de tokens.css. Tampoco se conserva el cuerpo de 16px en
+   seminegrita: los rótulos de este sitio son mono de 12px en versalitas, y el
+   menú es lo último que debería salirse de ese sistema.
+
+   El markup lo construye el JS a partir de los <a> que ya hay en el header, como
+   hacen el cursor, el HUD y los dos conmutadores: el HTML se queda limpio y sin
+   JS el menú sigue siendo una lista de enlaces que funciona.
+   ============================================================ */
+
+.site-nav.is-pill {
+  /* Anula el `display:flex; gap:2rem` de la nav de siempre (sections.css). */
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* ===== CONTENEDOR DE PÍLDORAS ===== */
+/* Es el que da legibilidad al menú. Antes ese trabajo lo hacía el
+   `mix-blend-mode: difference` del header entero —invertir el chrome contra lo
+   que pasara por debajo—, y con un contenedor opaco encima ese truco se vuelve en
+   contra: el velo se invertiría también. El blend se queda SOLO en el logotipo,
+   que sigue yendo a pelo sobre el hero (sections.css §HEADER).
+
+   Mismo velo que el HUD (tracker.css): color del propio fondo con transparencia
+   y desenfoque detrás. No es decorativo — por debajo pasan las partículas del
+   hero y las creatividades de la galería. */
+.pill-nav__list {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 3px;
+  height: var(--pill-h);
+  margin: 0;
+  padding: 3px;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.pill-nav__list > li { display: flex; }
+
+/* ===== PÍLDORA ===== */
+.pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 var(--pill-pad-x);
+  border-radius: 999px;
+  /* Tipografía del sistema, no la del componente. Es la misma que tenía
+     `.site-nav a`, así que el menú cambia de forma pero no de voz. */
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.pill:hover { color: var(--text); }
+
+/* El círculo que sube. El JS le calcula diámetro, desplazamiento y origen de
+   transformación a partir del tamaño real de la píldora: es lo que hace que la
+   curva entre exactamente por las dos esquinas de abajo. */
+.pill__circle {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 1;
+  display: block;
+  border-radius: 50%;
+  background: var(--gold);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Dos rótulos apilados: el de reposo sube y sale, el de hover entra por debajo.
+   El de hover va sobre el oro, así que se pinta con el color del FONDO —en
+   oscuro casi negro sobre oro, en claro crema sobre bronce. Los dos giran con el
+   tema, como el resto del sistema. */
+.pill__stack {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  line-height: 1;
+}
+.pill__label { display: inline-block; line-height: 1; will-change: transform; }
+.pill__label--hover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  display: inline-block;
+  color: var(--bg);
+  will-change: transform, opacity;
+}
+
+/* La sección en la que estás. Un punto dorado, no un relleno: el relleno es el
+   estado de hover y si los dos pintaran igual no se distinguiría lo que miras de
+   lo que apuntas. Lo mantiene el IntersectionObserver de pill-nav.js. */
+.pill.is-active { color: var(--text); }
+.pill.is-active::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  width: 4px;
+  height: 4px;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--gold);
+  z-index: 4;
+}
+
+/* El CTA sigue destacando dentro del menú, como hacía con su filete inferior. */
+.pill.site-nav__cta {
+  border: 1px solid var(--line-gold);
+  color: var(--text);
+}
+
+/* ===== HAMBURGUESA + DESPLEGABLE (móvil) ===== */
+.pill-nav__toggle {
+  display: none;
+  width: var(--pill-h);
+  height: var(--pill-h);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.pill-nav__bar {
+  width: 15px;
+  height: 1px;
+  background: var(--text);
+  border-radius: 1px;
+  transform-origin: center;
+}
+
+.pill-nav__panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 4vw;
+  left: 4vw;
+  z-index: 1;
+  padding: 3px;
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  /* Estado de reposo. `visibility` y no solo `opacity`: oculto de verdad para el
+     tabulador y el lector de pantalla mientras está recogido. */
+  opacity: 0;
+  visibility: hidden;
+}
+.pill-nav__panel ul { display: flex; flex-direction: column; gap: 3px; }
+.pill-nav__panel a {
+  display: block;
+  padding: 0.85rem 1rem;
+  border-radius: calc(var(--radius) * 0.7);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  transition: color var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out);
+}
+.pill-nav__panel a:hover,
+.pill-nav__panel a.is-active { color: var(--bg); background: var(--gold); }
+
+/* ===== REPARTO POR ANCHO ===== */
+/* Por debajo de 768 el menú entero pasa al desplegable. Antes aquí se ESCONDÍAN
+   cuatro de los cinco enlaces (`.site-nav a:not(.site-nav__cta){display:none}`)
+   y en un teléfono solo se llegaba a Contacto: el resto del sitio no tenía
+   navegación, solo scroll. */
+@media (max-width: 767px) {
+  .pill-nav__list { display: none; }
+  .pill-nav__toggle { display: flex; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* El círculo es puro movimiento y se va; el relevo de rótulos también, que sin
+     animación son dos textos superpuestos. Queda el cambio de color, que es
+     información. La píldora sigue siendo píldora. */
+  .pill__circle,
+  .pill__label--hover { display: none; }
+}

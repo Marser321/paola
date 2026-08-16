@@ -13,12 +13,17 @@ import '../../styles/sections.css'
 import '../../styles/tracker.css'
 import '../../styles/caso.css'
 import '../../styles/neon.css' // el borde de foco del marco de la creatividad
+import '../../styles/pill-nav.css'
 
 import { projects } from '../../data/projects.js'
 import { initI18n, t } from '../../i18n/index.js'
+import { initPillNav } from '../ui/pill-nav.js'
 import { initTheme } from '../ui/theme.js'
 
 initI18n()
+// Mismo menú que la portada. Antes del conmutador de tema: los dos se cuelgan de
+// .site-nav y el orden decide si el botón entra dentro de la lista o al lado.
+initPillNav()
 initTheme(() => t('theme'))
 
 const esc = (s) =>

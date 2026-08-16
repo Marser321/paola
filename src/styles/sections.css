@@ -51,14 +51,20 @@
   position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-header);
   display: flex; justify-content: space-between; align-items: center;
   padding: 1.25rem 4vw;
-  /* `difference` sobre el hero negro es lo que mantiene el header legible pase
-     lo que pase por debajo. Sobre el papel crema del tema claro esa misma
-     inversión escupe cian y magenta, así que allí el token la apaga. */
-  mix-blend-mode: var(--chrome-blend);
 }
 .site-header__logo {
   font-family: var(--font-display); font-weight: 700;
   font-size: 1.25rem; letter-spacing: -0.02em;
+  /* `difference` sobre el hero negro es lo que mantiene el logotipo legible pase
+     lo que pase por debajo. Sobre el papel crema del tema claro esa misma
+     inversión escupe cian y magenta, así que allí el token la apaga.
+
+     ⚠ Va AQUÍ y no en .site-header, que es donde estaba. Con la navegación en
+     píldoras el menú lleva su propio velo (pill-nav.css), y un `difference`
+     aplicado al header entero se lo invertiría también: el velo dejaría de
+     proteger al texto y pasaría a pelearse con él. El logotipo es lo único que
+     sigue yendo a pelo sobre el hero, así que es lo único que necesita el truco. */
+  mix-blend-mode: var(--chrome-blend);
 }
 .site-header__logo sup { font-size: 0.5em; }
 .site-nav { display: flex; gap: 2rem; }
@@ -740,8 +746,13 @@
 
 /* --- Móvil (<768px) --- */
 @media (max-width: 767px) {
-  .site-nav { gap: 1rem; }
-  .site-nav a:not(.site-nav__cta) { display: none; } /* nav esencial: logo + contacto */
+  .site-nav { gap: 0.5rem; }
+  /* Aquí se escondían cuatro de los cinco enlaces y en un teléfono solo se
+     llegaba a Contacto. Ahora el menú entero cabe en el desplegable de la
+     hamburguesa (pill-nav.css §REPARTO POR ANCHO), así que no hay que amputar
+     nada. La regla se queda como red por si el JS del menú no llega a correr:
+     sin él no hay hamburguesa y cinco enlaces sueltos no entran en 375px. */
+  .site-nav:not(.is-pill) a:not(.site-nav__cta) { display: none; }
   .hero__scroll { display: none; }
 
   /* --- HERO: el aire que le sobra al texto se lo queda la figura ---

@@ -4,9 +4,11 @@ import './styles/sections.css'
 import './styles/tracker.css'
 import './styles/media.css'
 import './styles/neon.css'
+import './styles/pill-nav.css'
 
 import { initI18n, getLang, t } from './i18n/index.js'
 import { applyStaticTranslations } from './i18n/apply-dom.js'
+import { initPillNav } from './js/ui/pill-nav.js'
 import { initLangSwitch } from './js/ui/lang-switch.js'
 import { initTheme } from './js/ui/theme.js'
 
@@ -76,6 +78,10 @@ initAbout()
 initTestimonials()
 initReport()       // (c) ANTES de initContact(): reserva su altura antes de medir
 initContact()
+// El menú se rehace ANTES que los dos conmutadores: los tres se cuelgan de
+// .site-nav, y si el de idioma llegara primero acabaría metido dentro de la lista
+// de píldoras en vez de al lado.
+initPillNav()
 initLangSwitch()
 // Los rótulos entran por parámetro para que theme.js no importe i18n: lo comparte
 // con las páginas legales, que no deben cargar los diccionarios (ver theme.js).
