@@ -627,30 +627,12 @@
 .contact-form__status[data-state='ok'] { color: var(--text); }
 .contact-form__status[data-state='error'] { color: var(--accent-orange); }
 
-/* ===== BANNER DE CONSENTIMIENTO (tarea 24) ===== */
-/* z-index --z-cursor (300): muy por encima del HUD (90), que además en tablet
-   va bajo el header. Nunca compiten (DESIGN.md §7). */
-.consent {
-  position: fixed; left: 1.25rem; right: 1.25rem; bottom: 1.25rem;
-  z-index: var(--z-cursor);
-  background: var(--surface); border: 1px solid var(--line);
-  padding: 1.25rem 1.5rem;
-  display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem;
-}
-.consent__text { color: var(--muted); text-transform: none; letter-spacing: 0; flex: 1 1 28rem; line-height: 1.6; }
-.consent__actions { display: flex; gap: 0.75rem; }
-.consent button {
-  color: var(--muted); border: 1px solid var(--line); padding: 0.6rem 1.25rem;
-  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
-}
-.consent button:hover { color: var(--text); border-color: var(--muted); }
-.consent__accept { color: var(--text); border-color: var(--muted); }
-.consent > a { color: var(--muted); border-bottom: 1px solid var(--line); }
-.consent > a:hover { color: var(--text); }
+/* El BANNER DE CONSENTIMIENTO (tarea 24) vivía aquí y se retiró el 2026-08-15
+   junto con src/js/core/consent.js. Pedía permiso para Google Analytics y Meta
+   Pixel, y ni uno ni otro llegaron a existir en el sitio: `consent:accepted` se
+   emitía y no lo escuchaba nadie. Era un aviso de cookies para una web que no
+   pone cookies ni hace una sola petición a terceros. Ver legal/cookies.html. */
 
-@media (max-width: 767px) {
-  .consent { left: 0; right: 0; bottom: 0; border-inline: 0; border-bottom: 0; }
-}
 .footer__legal { display: flex; gap: 1.5rem; }
 .footer__legal a { transition: color var(--dur-fast) var(--ease-out); }
 .footer__legal a:hover { color: var(--gold); }

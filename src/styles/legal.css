@@ -64,17 +64,6 @@
 .legal__table td { color: var(--muted); }
 .legal__table td:last-child { white-space: nowrap; }
 
-.legal__revoke {
-  margin-top: 2rem;
-  font-family: var(--font-mono); font-size: var(--fs-label);
-  text-transform: uppercase; letter-spacing: 0.08em;
-  color: var(--muted);
-  border: 1px solid var(--line); padding: 0.6rem 1rem;
-  transition: color var(--dur-fast) var(--ease-out),
-              border-color var(--dur-fast) var(--ease-out);
-}
-.legal__revoke:hover { color: var(--text); border-color: var(--muted); }
-.legal__revoke-status { margin-top: 0.75rem; }
 
 @media (max-width: 767px) {
   .legal-page { padding-top: 6rem; }

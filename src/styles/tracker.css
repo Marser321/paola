@@ -76,7 +76,8 @@
 }
 
 /* Tablet: una sola línea BAJO EL HEADER.
-   Nunca abajo: ahí colisiona con el banner de consentimiento (tarea 24). */
+   Nunca abajo: ahí colisionaba con el banner de consentimiento, ya retirado, y
+   sigue siendo el borde donde vive el resto del chrome del navegador. */
 @media (min-width: 768px) and (max-width: 1023px) {
   .hud {
     top: 4.5rem; right: 4vw; left: 4vw;

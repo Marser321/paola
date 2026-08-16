@@ -33,7 +33,6 @@ import { initSequences } from './js/sections/sequence.js'
 import { initTestimonials } from './js/sections/testimonials.js'
 import { initReport } from './js/sections/report.js'
 import { initContact } from './js/sections/contact.js'
-import { initConsent } from './js/core/consent.js'
 import { initContactForm } from './js/core/contact-form.js'
 import { initScramble } from './js/fx/scramble.js'
 import { initSplitTitles } from './js/fx/split-titles.js'
@@ -76,7 +75,6 @@ initLangSwitch()
 // con las páginas legales, que no deben cargar los diccionarios (ver theme.js).
 initTheme(() => t('theme'))  // después del de idioma: los dos se cuelgan de
                              // .site-nav y este va el último de la fila
-initConsent()      // t.24 — banner; NO pide permiso para el panel de sesión
 initContactForm()  // t.24
 
 // El envío correcto del formulario es una conversión igual que el CTA (t.14).

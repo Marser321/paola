@@ -109,7 +109,7 @@ export function initHud() {
 
   // --- Visibilidad por breakpoint ---------------------------------------------
   // <768px el HUD está oculto por defecto (DESIGN.md §10): ahí compite con la barra
-  // del navegador, el banner de consentimiento y el pulgar.
+  // del navegador y el pulgar.
   function shouldShow() {
     return isHudEnabled() && !mmMobile.matches
   }

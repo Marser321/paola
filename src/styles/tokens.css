@@ -203,7 +203,7 @@
    tema claro guardado vería un fotograma en negro. */
 body,
 .site-header, .footer, .testimonial, .project-card, .contact-form__input,
-.services__preview, .consent, .backdrop__layer {
+.services__preview, .backdrop__layer {
   transition: background-color 0.45s var(--ease-out),
               color 0.45s var(--ease-out),
               border-color 0.45s var(--ease-out),

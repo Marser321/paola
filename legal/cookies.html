@@ -57,26 +57,30 @@
           <tr><th>Almacenamiento</th><th>Para qué</th><th>¿Se envía a alguien?</th></tr>
         </thead>
         <tbody>
-          <tr><td><code>paola-consent</code> (localStorage)</td><td>Recordar tu decisión sobre analítica</td><td>No</td></tr>
           <tr><td><code>paola-session</code> (sessionStorage)</td><td>Datos del panel de sesión; se borra al cerrar la pestaña</td><td>No</td></tr>
           <tr><td><code>paola-hud</code> (localStorage)</td><td>Recordar si has desactivado el panel</td><td>No</td></tr>
           <tr><td><code>paola-variant</code> (sessionStorage)</td><td>Mantener estable la variante de texto que se te ha servido durante la visita</td><td>No</td></tr>
           <tr><td><code>paola-lang</code> (localStorage)</td><td>Recordar el idioma que has elegido</td><td>No</td></tr>
-          <tr><td>Google Analytics / Meta Pixel</td><td>Analítica y medición publicitaria</td><td><strong>Sí</strong> — solo si aceptas</td></tr>
+          <tr><td><code>paola:theme</code> (localStorage)</td><td>Recordar si has elegido el tema claro o el oscuro</td><td>No</td></tr>
         </tbody>
       </table>
-      <p>Las cinco primeras filas no requieren consentimiento: o son preferencias que has
-      fijado tú, o son datos técnicos que no salen de tu navegador. Se listan igualmente
-      por transparencia.</p>
+      <p><strong>Esta web no usa cookies.</strong> Todo lo de la tabla es almacenamiento
+      local de tu propio navegador, y ninguna de esas filas requiere consentimiento: o son
+      preferencias que has fijado tú, o son datos técnicos que no salen de tu equipo. Se
+      listan igualmente por transparencia.</p>
+      <p>Tampoco hay analítica de terceros: ni Google Analytics, ni Meta Pixel, ni
+      ninguna otra. Esta web no hace una sola petición a un servidor ajeno —tampoco para
+      las tipografías, que se sirven desde este mismo dominio—, así que no hay nada que
+      consentir. Por eso no verás ningún aviso de cookies: pedirte permiso para algo que
+      no ocurre sería, además de molesto, falso.</p>
 
-      <h2>3. Retirar el consentimiento</h2>
-      <p>Puedes borrar tu decisión sobre la analítica externa en cualquier momento. La
-      próxima vez que abras la página principal se te volverá a preguntar.</p>
-      <button type="button" id="revoke-consent" class="legal__revoke">Borrar mi decisión sobre analítica</button>
-      <p class="legal__revoke-status mono" id="revoke-status" role="status" aria-live="polite"></p>
-      <p>Para desactivar el <strong>panel de sesión</strong> —que es otra cosa y no envía
-      nada— usa el botón <em>Desactivar panel</em> del propio panel, o el enlace del pie de
-      la página principal.</p>
+      <h2>3. Cómo borrar lo que se ha guardado</h2>
+      <p>Como todo es almacenamiento local, se borra desde tu propio navegador: en el
+      apartado de datos de sitios web, eliminando los de este dominio. No hace falta
+      pedírnoslo, porque no lo tenemos nosotros.</p>
+      <p>Para desactivar el <strong>panel de sesión</strong> usa el botón
+      <em>Desactivar panel</em> del propio panel, o el enlace del pie de la página
+      principal.</p>
 
       <h2>Última actualización</h2>
       <p><mark>[PENDIENTE: fecha de publicación real]</mark> · Borrador generado el 15 de agosto de 2026.</p>
