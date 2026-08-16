@@ -13,11 +13,11 @@ export default defineConfig({
     rollupOptions: {
       // MPA (tarea 29): index.html + caso.html. Una plantilla de caso, no seis.
       input: {
-        main: resolve(__dirname, 'index.html'),
-        caso: resolve(__dirname, 'caso.html'),
-        avisoLegal: resolve(__dirname, 'legal/aviso-legal.html'),
-        privacidad: resolve(__dirname, 'legal/privacidad.html'),
-        cookies: resolve(__dirname, 'legal/cookies.html'),
+        main: resolve(import.meta.dirname, 'index.html'),
+        caso: resolve(import.meta.dirname, 'caso.html'),
+        avisoLegal: resolve(import.meta.dirname, 'legal/aviso-legal.html'),
+        privacidad: resolve(import.meta.dirname, 'legal/privacidad.html'),
+        cookies: resolve(import.meta.dirname, 'legal/cookies.html'),
       },
       output: {
         // Vendors separados (tarea 17). `three` NO se lista aquí: sale solo en su
