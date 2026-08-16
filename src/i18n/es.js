@@ -5,7 +5,7 @@ export const es = {
   htmlLang: 'es-ES',
   title: 'PAOLA — Meta Ads Specialist · Performance Marketing',
   description:
-    'Especialista en Meta Ads (Facebook e Instagram). Escala tu e-commerce o negocio digital con campañas de performance medibles: ROAS medio 4.2x, +2M€ gestionados.',
+    'Especialista en Meta Ads (Facebook e Instagram). Escala tu e-commerce o negocio digital con campañas de performance medibles: ROAS medio 4.2x, +$2M gestionados.',
 
   preloader: { label: 'Iniciando campaña', status: 'PAOLA_2026 · Objetivo: conversión', delivering: 'Entregando impresión' },
 
@@ -13,7 +13,7 @@ export const es = {
 
   hero: {
     label: 'Meta Ads Specialist — Performance Marketing',
-    meta: ['ROAS medio 4.2x', '+2M€ gestionados', 'FB · IG'],
+    meta: ['ROAS medio 4.2x', '+$2M gestionados', 'FB · IG'],
     scroll: 'Scroll',
   },
 

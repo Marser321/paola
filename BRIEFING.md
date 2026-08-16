@@ -66,7 +66,7 @@ uno de los 6 casos hay que pedir:
 - **Formato** de la creatividad ganadora (Reels 9:16, estático 4:5, carrusel, vídeo…)
 - **Audiencia** en una línea, como se describiría en Ads Manager
 - **Audiencia corta** para el cursor: **máximo 24 caracteres**
-- **Presupuesto en RANGO** (`12-18K€/mes`), nunca la cifra exacta
+- **Presupuesto en RANGO** (`$12-18K/mes`), nunca la cifra exacta
 - **Objetivo** de campaña
 - **CTA** que llevaba el anuncio
 - **El test A/B**: las dos hipótesis, cuál ganó y con qué resultado

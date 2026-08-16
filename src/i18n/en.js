@@ -8,7 +8,7 @@ export const en = {
   htmlLang: 'en',
   title: 'PAOLA — Meta Ads Specialist · Performance Marketing',
   description:
-    'Meta Ads specialist (Facebook and Instagram). Scale your e-commerce or digital business with measurable performance campaigns: 4.2x average ROAS, €2M+ managed.',
+    'Meta Ads specialist (Facebook and Instagram). Scale your e-commerce or digital business with measurable performance campaigns: 4.2x average ROAS, $2M+ managed.',
 
   preloader: { label: 'Launching campaign', status: 'PAOLA_2026 · Objective: conversion', delivering: 'Delivering impression' },
 
@@ -16,7 +16,7 @@ export const en = {
 
   hero: {
     label: 'Meta Ads Specialist — Performance Marketing',
-    meta: ['4.2x average ROAS', '€2M+ managed', 'FB · IG'],
+    meta: ['4.2x average ROAS', '$2M+ managed', 'FB · IG'],
     scroll: 'Scroll',
   },
 

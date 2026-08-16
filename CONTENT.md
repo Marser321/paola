@@ -39,7 +39,7 @@ contador + barra + cortina; solo cambia el texto).
 - Label superior (mono): `META ADS SPECIALIST — PERFORMANCE MARKETING`
 - Título: `PAOLA` (**no entra en el test A/B**: la marca es marca)
 - Subtítulo: **dos variantes, ver §3.1**
-- Meta-fila (mono, 3 ítems): `ROAS MEDIO 4.2X` · `+2M€ GESTIONADOS` · `FB · IG`
+- Meta-fila (mono, 3 ítems): `ROAS MEDIO 4.2X` · `+$2M GESTIONADOS` · `FB · IG`
 - Indicador scroll: `SCROLL`
 
 ### 3.1 Variantes del test A/B (tarea 36)
@@ -94,7 +94,7 @@ de sección en `--muted`):
 | Valor | data-count | data-decimals | data-prefix | data-suffix | Label | data-spark |
 |---|---|---|---|---|---|---|
 | 4.2x | `4.2` | `1` | — | `x` | `ROAS MEDIO` | `2.1,2.8,3.3,3.6,4.0,4.2` |
-| +2M€ | `2` | `0` | `+` | `M€` | `AD SPEND GESTIONADO` | `0.3,0.7,1.0,1.4,1.7,2.0` |
+| +$2M | `2` | `0` | `+$` | `M` | `AD SPEND GESTIONADO` | `0.3,0.7,1.0,1.4,1.7,2.0` |
 | 98% | `98` | `0` | — | `%` | `RETENCIÓN DE CLIENTES` | `88,91,93,95,97,98` |
 | 120+ | `120` | `0` | — | `+` | `CAMPAÑAS LANZADAS` | `20,45,68,84,103,120` |
 
@@ -117,10 +117,10 @@ Los 6 casos (fuente: `src/data/projects.js`, tarea 03):
 |---|---|---|---|---|---|---|
 | 1 | ATELIER NORD | E-commerce moda | 2025 | META ADS · ESCALA | ROAS 5.8X | +212% REVENUE |
 | 2 | FLOWSTACK | SaaS B2B | 2025 | LEAD GEN · B2B | CPL −47% | 3.2X PIPELINE |
-| 3 | MASTERCLASS PRO | Infoproducto | 2024 | LAUNCH · WEBINAR | 12.400 LEADS | CPA 1.80€ |
+| 3 | MASTERCLASS PRO | Infoproducto | 2024 | LAUNCH · WEBINAR | 12.400 LEADS | CPA $1.80 |
 | 4 | CASA VERDE | Retail local | 2024 | TRÁFICO · LOCAL | +180% TRÁFICO | ROAS 3.4X |
-| 5 | ZENFIT | App móvil | 2025 | APP INSTALLS | CPI 0.90€ | 45K INSTALACIONES |
-| 6 | GLOW SKIN | DTC belleza | 2026 | DTC · UGC | ROAS 7.1X | 0→80K€/MES |
+| 5 | ZENFIT | App móvil | 2025 | APP INSTALLS | CPI $0.90 | 45K INSTALACIONES |
+| 6 | GLOW SKIN | DTC belleza | 2026 | DTC · UGC | ROAS 7.1X | 0→$80K/MES |
 
 Descripción tipo por card (1 línea, cuerpo): `Estrategia full-funnel, creatividades UGC
 y optimización semanal de campañas.` (varía levemente por proyecto en `projects.js`).
@@ -139,12 +139,12 @@ píldora, máximo ~24 caracteres. `audience` completa vive en el backstage textu
 
 | # | Cliente | Formato | Audiencia (backstage) | `audienceShort` (cursor) | Presupuesto | Objetivo | CTA |
 |---|---|---|---|---|---|---|---|
-| 1 | ATELIER NORD | `REELS 9:16` | `MUJERES 25-44 · ES · INTERESES MODA` | `MUJERES 25-44 · ES` | `12-18K€/MES` | `VENTAS CATÁLOGO` | `COMPRAR AHORA` |
-| 2 | FLOWSTACK | `ESTÁTICO 4:5` | `DECISORES IT · ES/LATAM · LOOKALIKE 1%` | `DECISORES IT · ES` | `6-9K€/MES` | `GENERACIÓN DE LEADS` | `MÁS INFORMACIÓN` |
-| 3 | MASTERCLASS PRO | `VÍDEO 1:1` | `25-55 · ES · AUDIENCIA CÁLIDA 180D` | `AUDIENCIA CÁLIDA` | `20-30K€/LANZAMIENTO` | `REGISTROS WEBINAR` | `REGISTRARSE` |
-| 4 | CASA VERDE | `CARRUSEL 1:1` | `RADIO 15KM · 30-60 · HOGAR Y JARDÍN` | `RADIO 15KM · 30-60` | `2-3K€/MES` | `TRÁFICO A TIENDA` | `CÓMO LLEGAR` |
-| 5 | ZENFIT | `REELS 9:16` | `18-34 · ES/PT/IT · FITNESS` | `18-34 · FITNESS` | `10-14K€/MES` | `INSTALACIONES DE APP` | `INSTALAR AHORA` |
-| 6 | GLOW SKIN | `REELS 9:16` | `MUJERES 20-40 · ES · SKINCARE` | `MUJERES 20-40 · ES` | `15-25K€/MES` | `VENTAS CATÁLOGO` | `COMPRAR AHORA` |
+| 1 | ATELIER NORD | `REELS 9:16` | `MUJERES 25-44 · ES · INTERESES MODA` | `MUJERES 25-44 · ES` | `$12-18K/MES` | `VENTAS CATÁLOGO` | `COMPRAR AHORA` |
+| 2 | FLOWSTACK | `ESTÁTICO 4:5` | `DECISORES IT · ES/LATAM · LOOKALIKE 1%` | `DECISORES IT · ES` | `$6-9K/MES` | `GENERACIÓN DE LEADS` | `MÁS INFORMACIÓN` |
+| 3 | MASTERCLASS PRO | `VÍDEO 1:1` | `25-55 · ES · AUDIENCIA CÁLIDA 180D` | `AUDIENCIA CÁLIDA` | `$20-30K/LANZAMIENTO` | `REGISTROS WEBINAR` | `REGISTRARSE` |
+| 4 | CASA VERDE | `CARRUSEL 1:1` | `RADIO 15KM · 30-60 · HOGAR Y JARDÍN` | `RADIO 15KM · 30-60` | `$2-3K/MES` | `TRÁFICO A TIENDA` | `CÓMO LLEGAR` |
+| 5 | ZENFIT | `REELS 9:16` | `18-34 · ES/PT/IT · FITNESS` | `18-34 · FITNESS` | `$10-14K/MES` | `INSTALACIONES DE APP` | `INSTALAR AHORA` |
+| 6 | GLOW SKIN | `REELS 9:16` | `MUJERES 20-40 · ES · SKINCARE` | `MUJERES 20-40 · ES` | `$15-25K/MES` | `VENTAS CATÁLOGO` | `COMPRAR AHORA` |
 
 ### 7.2 El test A/B de cada caso (backstage)
 
@@ -153,11 +153,11 @@ Se muestran las dos hipótesis y cuál ganó. Label de la ganadora: `GANADORA`.
 | # | Variante A | Variante B | Ganadora | Resultado | Antes → Después |
 |---|---|---|---|---|---|
 | 1 | `Producto en primer plano` | `Testimonio a cámara` | **B** | `+64% CTR` | `ROAS 2.1X → 5.8X` |
-| 2 | `Formulario nativo` | `Landing con demo en vídeo` | **B** | `−47% CPL` | `CPL 84€ → 45€` |
-| 3 | `Webinar en directo` | `Webinar automatizado` | **A** | `+31% ASISTENCIA` | `CPA 4.20€ → 1.80€` |
+| 2 | `Formulario nativo` | `Landing con demo en vídeo` | **B** | `−47% CPL` | `CPL $84 → $45` |
+| 3 | `Webinar en directo` | `Webinar automatizado` | **A** | `+31% ASISTENCIA` | `CPA $4.20 → $1.80` |
 | 4 | `Oferta de temporada` | `Producto + horario de tienda` | **A** | `+180% VISITAS` | `1.100 → 3.080 VISITAS/MES` |
-| 5 | `Demo de la app en pantalla` | `UGC de usuaria entrenando` | **B** | `−38% CPI` | `CPI 1.45€ → 0.90€` |
-| 6 | `Antes/después de piel` | `Rutina de 15 segundos` | **B** | `ROAS 7.1X` | `0 → 80K€/MES` |
+| 5 | `Demo de la app en pantalla` | `UGC de usuaria entrenando` | **B** | `−38% CPI` | `CPI $1.45 → $0.90` |
+| 6 | `Antes/después de piel` | `Rutina de 15 segundos` | **B** | `ROAS 7.1X` | `0 → $80K/MES` |
 
 ## 8. Servicios (Etapa 03 · Consideración)
 
@@ -346,7 +346,7 @@ explícitamente la medición local (que no necesita permiso) de la externa (que 
 
 - `<title>`: `PAOLA — Meta Ads Specialist · Performance Marketing`
 - Description: `Especialista en Meta Ads (Facebook e Instagram). Escala tu e-commerce
-  o negocio digital con campañas de performance medibles: ROAS medio 4.2x, +2M€
+  o negocio digital con campañas de performance medibles: ROAS medio 4.2x, +$2M
   gestionados.`
 - OG title/description: mismos textos. OG image: placeholder `public/og.jpg` (1200×630,
   se documenta cómo generarla; si no existe, se omite la etiqueta).

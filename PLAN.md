@@ -33,7 +33,7 @@ Eso hace tres cosas a la vez:
 El contraste entre:
 
 - **Editorial de lujo**: titulares gigantes (Clash Display), espacio negro, grano fílmico.
-- **Terminal de datos**: KPIs en monoespaciada (`ROAS 4.2X / +2M€ / 2026`), líneas de grid
+- **Terminal de datos**: KPIs en monoespaciada (`ROAS 4.2X / +$2M / 2026`), líneas de grid
   de 1px, etiquetas técnicas — porque esta profesional vende *resultados medibles*.
 
 ### Los 4 momentos de impacto
