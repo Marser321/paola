@@ -82,6 +82,19 @@
   --text-outline: #8A8A8A;
   /* Superficie translúcida sobre la que se leen etiquetas encima de imagen. */
   --overlay: rgba(14, 14, 14, 0.55);
+  /* Velo a pie de imagen para textos LARGOS encima (galería elástica de
+     servicios). Más opaco que --overlay porque ahí no hay una píldora corta sino
+     una frase, y va sobre un dorado luminoso. Se define en los dos temas y el
+     texto que lleva encima es --text: los dos giran juntos, como ya hacen la
+     píldora de sector y su fondo en .project-card__sector. */
+  --veil-media: rgba(14, 14, 14, 0.8);
+  /* Degradado del logo (src/assets/logo-paola-parra.svg, inlineado en el
+     preloader). Muestreados del PNG original por scripts/media/logo-svg.py. */
+  --logo-oro-1: #663805;
+  --logo-oro-2: #BC7E29;
+  --logo-oro-3: #E8B872;
+  --logo-oro-4: #FFF4A5;
+  --logo-oro-5: #FEFEDD;
   --scrollbar: #2A2A2A;
   --selection-bg: #8A6A1F;
   --selection-fg: #F3F2F2;
@@ -138,6 +151,10 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-fast: 0.3s;
   --dur-med: 0.6s;
+  /* Para lo que acompaña de fondo a un cambio de layout y no debe competir con
+     él: el zoom de la muestra bajo el acordeón de servicios. Se usaba antes de
+     existir, así que la transición era inválida y el zoom saltaba de golpe. */
+  --dur-slow: 1s;
   --dur-type: 1.1s;        /* compilación del informe (tarea 35) */
 
   /* Z-index */
@@ -172,6 +189,16 @@
   --muted: #6A6154;
   --text-outline: rgba(23, 20, 15, 0.42);
   --overlay: rgba(251, 248, 242, 0.78);
+  --veil-media: rgba(251, 248, 242, 0.88);
+  /* El logo, bajado de tono. Los dos extremos altos del degradado original
+     (#FFF4A5 y #FEFEDD) son casi blancos y sobre el papel crema desaparecían:
+     el logo se leía lavado, sin contorno. Aquí el recorrido va de bronce a oro
+     medio, que es lo que le devuelve el peso sobre fondo claro. */
+  --logo-oro-1: #4A2703;
+  --logo-oro-2: #8A5A16;
+  --logo-oro-3: #B98A32;
+  --logo-oro-4: #D8B45C;
+  --logo-oro-5: #C99A3A;
   --scrollbar: rgba(23, 20, 15, 0.22);
   --selection-bg: #E6D9B4;
   --selection-fg: #17140F;
@@ -203,7 +230,7 @@
    tema claro guardado vería un fotograma en negro. */
 body,
 .site-header, .footer, .testimonial, .project-card, .contact-form__input,
-.services__preview, .backdrop__layer {
+.backdrop__layer {
   transition: background-color 0.45s var(--ease-out),
               color 0.45s var(--ease-out),
               border-color 0.45s var(--ease-out),

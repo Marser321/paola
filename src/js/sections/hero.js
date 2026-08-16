@@ -27,16 +27,20 @@ function splitTitle() {
 /**
  * Monta la figura recortada del hero desde el manifiesto (src/data/media.js).
  *
- * El `<img>` solo se crea si hay sitio para él: por debajo de 1200px el CSS la
- * oculta, y crear el nodo igualmente descargaría 26 KB de AVIF para nada. Se
- * comprueba una vez, al arrancar; si alguien ensancha la ventana después, la
- * figura no aparece hasta la siguiente carga, que es un precio razonable por no
- * meter otro listener de resize.
+ * ⚠ Aquí había un `matchMedia('(min-width: 1200px)')` que abortaba el montaje en
+ * pantallas estrechas. Se ha quitado por dos motivos:
+ *   1. La figura ya no es escenografía de escritorio, es el sujeto del hero, y
+ *      existe en todos los anchos (ver .hero__figure en media.css).
+ *   2. Era frágil de verdad: si la página arranca con el viewport aún sin medir
+ *      —pestaña en segundo plano, panel de previsualización, restauración de
+ *      sesión— `innerWidth` vale 0, la media query da false y la figura NO se
+ *      montaba nunca, ni al volver a la pestaña. El hero se quedaba sin ella.
+ * El coste es descargar el recorte también en móvil; es el LCP de la sección y
+ * ahí es donde tiene que estar.
  */
 function mountFigure() {
   const holder = document.querySelector('[data-figure]')
   if (!holder || !figure?.src || holder.firstChild) return
-  if (!window.matchMedia('(min-width: 1200px)').matches) return
 
   holder.innerHTML =
     `<picture>
@@ -54,6 +58,11 @@ function enter() {
   const meta = document.querySelector('.hero__meta')
   const scroll = document.querySelector('.hero__scroll')
   const fig = document.querySelector('.hero__figure')
+  // El movimiento va en la IMAGEN, no en el contenedor: el contenedor lleva su
+  // propio translateX(-50%) para centrarse (móvil y ≥1600px) y una tween de
+  // transform sobre él lo descentraría de golpe al arrancar. El contenedor solo
+  // se funde en opacidad, que no toca el transform.
+  const figImg = document.querySelector('.hero__figure img')
 
   if (shouldReduceMotion()) {
     // Sin movimiento: nada que revelar, el HTML ya es visible por defecto.
@@ -62,9 +71,13 @@ function enter() {
 
   gsap.timeline()
     .from(label, { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' })
-    // La figura entra ANTES que el nombre y desde más lejos: es el fondo de la
-    // escena, y si entrara después parecería un recorte pegado encima.
-    .from(fig, { opacity: 0, xPercent: 6, scale: 1.04, duration: 1.6, ease: 'power3.out' }, 0)
+    // La figura entra ANTES que el nombre y desde más lejos: es el sujeto de la
+    // escena, y el nombre se monta sobre ella, no al revés.
+    .from(fig, { opacity: 0, duration: 1.6, ease: 'power3.out' }, 0)
+    .from(figImg, {
+      yPercent: 4, scale: 1.05, transformOrigin: 'bottom center',
+      duration: 1.8, ease: 'power3.out',
+    }, 0)
     .from(chars, {
       yPercent: 110,
       duration: 1.2,

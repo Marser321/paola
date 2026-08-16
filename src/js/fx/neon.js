@@ -16,30 +16,94 @@ import { onPointerMove } from '../core/cursor.js'
 // Selector de las superficies que llevan neón. Añadir aquí, no en el HTML de
 // cada sección, mantiene la lista de superficies en un solo sitio legible.
 //
-// Las tres son PANELES con radio propio, donde un marco de luz tiene sentido.
+// Son las CAJAS reales del sitio: fondo, filete y radio propios, donde un marco
+// de luz tiene sentido.
+//
 // `.service` se probó y se descartó: sus renglones se separan con un filete
 // superior, no son cajas, así que el neón les dibujaba un rectángulo completo y
 // convertía la lista en cinco tarjetas. Además la sección ya tiene su propia
-// interacción fuerte (la galería de muestras) y sumarle un borde animado por
-// renglón era justo la sobrecarga que se quería evitar. Para recuperarlo basta
-// con añadir `, .service` aquí y darle un `border-radius`.
-const SURFACES = '.project-card, .report__panel, .contact-form'
+// interacción fuerte (la galería de muestras). Para recuperarlo basta con
+// añadir `, .service` aquí y darle un `border-radius`.
+//
+// `.caso__visual` (caso.html) tampoco entra: es el marco de la creatividad, no
+// una tarjeta, y esa página no carga gsap ni cursor a propósito.
+// `.sample` son las muestras de la galería elástica de servicios. Nacen en el
+// primer despliegue de cada tira, así que quien las crea avisa con refreshNeon()
+// (sections/services.js).
+const SURFACES = '.project-card, .report__panel, .contact-form, .testimonial, .hud, .sample'
+
+// Observer del gate de la floración. En scope de módulo para que refreshNeon()
+// pueda observar las superficies nuevas sin montar un segundo observer.
+let haloObserver = null
 
 export function initNeon() {
-  const surfaces = [...document.querySelectorAll(SURFACES)]
-  // La clase se pone SIEMPRE, también en reduced-motion: es de ella de quien
-  // cuelga el borde dorado fijo del media query de neon.css. Si saliéramos antes
-  // de ponerla, reduced-motion se quedaría sin bordes en vez de con bordes
-  // quietos, que es lo contrario de lo que se pretende.
-  surfaces.forEach((el) => el.classList.add('neon'))
+  const surfaces = decorate()
 
   // Lo que sí se salta reduced-motion es todo lo que se mueve.
   if (shouldReduceMotion()) return
 
   mountFrame()
-  gateIdleSpin(surfaces)
+  haloObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        entry.target.classList.toggle('is-live', entry.isIntersecting)
+      }
+    },
+    { rootMargin: '10% 0px' } // encender justo antes de entrar, no al aparecer
+  )
+  surfaces.forEach((el) => haloObserver.observe(el))
   drawOnScroll(surfaces)
   followPointer()
+}
+
+/**
+ * Vuelve a decorar las superficies que se hayan recreado. Lo necesita el cambio
+ * de idioma: refreshProjects() reescribe el innerHTML de .projects__track, y con
+ * él se van la clase .neon y el halo de las seis cards — que se quedarían SIN
+ * borde y sin aviso ninguno.
+ *
+ * Solo toca lo que aún no está decorado, así que es idempotente: llamarlo de más
+ * no duplica halos, ni triggers, ni el marco perimetral.
+ */
+export function refreshNeon() {
+  const nuevas = decorate()
+  if (shouldReduceMotion() || !nuevas.length) return
+
+  nuevas.forEach((el) => haloObserver?.observe(el))
+  drawOnScroll(nuevas)
+}
+
+/**
+ * Marca y prepara las superficies todavía sin decorar. Devuelve solo esas.
+ *
+ * La clase se pone SIEMPRE, también en reduced-motion: es de ella de quien
+ * cuelga el borde dorado fijo del media query de neon.css. Si saliéramos antes
+ * de ponerla, reduced-motion se quedaría sin bordes en vez de con bordes
+ * quietos, que es lo contrario de lo que se pretende.
+ */
+function decorate() {
+  const surfaces = [...document.querySelectorAll(SURFACES)].filter(
+    (el) => !el.classList.contains('neon')
+  )
+  surfaces.forEach((el) => el.classList.add('neon'))
+  if (!shouldReduceMotion()) surfaces.forEach(mountHalo)
+  return surfaces
+}
+
+/**
+ * Capa de floración de la superficie. Es un elemento y no un pseudo porque
+ * ::before y ::after ya están ocupados por el filete y el núcleo especular, y
+ * un `filter` sobre ellos difuminaría también el núcleo.
+ *
+ * Va POSICIONADO EN ABSOLUTO, así que sale del flujo: no altera el `gap` del
+ * flex de .contact-form ni el grid de las cards. Y `aria-hidden` porque es
+ * atrezo — un lector de pantalla no tiene nada que hacer aquí.
+ */
+function mountHalo(surface) {
+  const halo = document.createElement('i')
+  halo.className = 'neon__halo'
+  halo.setAttribute('aria-hidden', 'true')
+  surface.prepend(halo)
 }
 
 /**
@@ -66,29 +130,17 @@ function mountFrame() {
   })
 }
 
-/**
- * El giro de reposo solo corre en las superficies visibles. Sin este gate
- * habría ~13 conic-gradients animándose a la vez, casi todos fuera de pantalla.
- *
- * IntersectionObserver y no ScrollTrigger: es la herramienta que PLAN.md §9.7 ya
- * prescribe para pausar el WebGL, no toca el ticker y cuesta 1 observer en vez
- * de 13 triggers.
- */
-function gateIdleSpin(surfaces) {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        entry.target.classList.toggle('is-live', entry.isIntersecting)
-      }
-    },
-    { rootMargin: '10% 0px' } // encender justo antes de entrar, no al aparecer
-  )
-  surfaces.forEach((el) => observer.observe(el))
-}
-
 /** El trazo se dibuja de 0 a 1 mientras la superficie sube por el viewport. */
 function drawOnScroll(surfaces) {
   surfaces.forEach((el) => {
+    // Una superficie `fixed` (el HUD) no sube por ningún sitio: su posición no
+    // depende del scroll, así que un ScrollTrigger ahí no mide nada. Nace
+    // encendida y punto. Sin este corte el trazo salía a 1 igualmente, pero por
+    // casualidad de dónde cae su `top`, no porque nadie lo hubiera decidido.
+    if (getComputedStyle(el).position === 'fixed') {
+      el.style.setProperty('--neon-progress', '1')
+      return
+    }
     gsap.fromTo(
       el,
       { '--neon-progress': 0 },
@@ -127,16 +179,27 @@ function followPointer() {
     rect = current ? current.getBoundingClientRect() : null
   })
 
+  // Apagar es tan importante como encender: sin esto la superficie que se
+  // acaba de abandonar se queda con `.is-lit` y el foco congelado donde salió
+  // el puntero, y a los pocos movimientos hay media página encendida.
+  const release = () => {
+    if (!current) return
+    current.classList.remove('is-lit')
+    current = null
+    rect = null
+  }
+
   onPointerMove((e) => {
     const surface = e.target.closest?.(SURFACES)
     if (!surface) {
-      current = null
-      rect = null
+      release()
       return
     }
     if (surface !== current) {
+      release()
       current = surface
       rect = surface.getBoundingClientRect()
+      surface.classList.add('is-lit')
     }
     surface.style.setProperty('--neon-x', `${((e.clientX - rect.left) / rect.width) * 100}%`)
     surface.style.setProperty('--neon-y', `${((e.clientY - rect.top) / rect.height) * 100}%`)

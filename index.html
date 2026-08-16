@@ -107,6 +107,11 @@
   <body>
     <!-- PRELOADER — arranque de campaña (CONTENT.md §1) -->
     <div id="preloader" aria-hidden="true">
+      <!-- El logo lo INYECTA preloader.js: son 37 KB de SVG que no tienen por qué
+           estar en el HTML que se descarga primero, y además hay que despiezarlo
+           con máscaras antes de animarlo. Vacío es el estado correcto en reposo
+           y con reduced-motion. -->
+      <div class="preloader__logo"></div>
       <p class="preloader__label mono">Iniciando campaña</p>
       <p class="preloader__status mono">PAOLA_2026 · Objetivo: conversión</p>
       <p class="preloader__counter">0%</p>
@@ -210,17 +215,33 @@
 
       <!-- ETAPA 02 · INTERÉS — PROYECTOS / CREATIVIDADES -->
       <section id="proyectos" class="projects" data-stage="interes">
-        <div class="projects__header container">
-          <p class="section-label mono">
-            <span class="section-label__stage">Etapa 02 · Interés</span>
-            <span class="section-label__name">Creatividades</span>
-          </p>
-          <h2 class="section-title">Proyectos que <span class="accent-text">escalan</span></h2>
-          <p class="projects__hint mono">Arrastra el scroll →</p>
-          <div class="projects__progress"><span class="projects__progress-fill"></span></div>
+        <!-- Galería 3D: DECORACIÓN, y va PRIMERO y FUERA de .projects__cases.
+             Toda la información de los casos (títulos, KPIs, backstage y enlaces
+             a caso.html) vive en las cards de abajo, así que esto va aria-hidden
+             y sin texto: ni contenido duplicado para SEO ni un segundo recorrido
+             para el lector de pantalla.
+             ⚠ No la metas dentro de .projects__cases: ese bloque lo PINEA
+             ScrollTrigger para el scroll horizontal, y ahí dentro la galería se
+             quedaría congelada y recortada bajo la cabecera.
+             Se monta en src/js/webgl/projects-gallery.js. En móvil y con
+             reduced-motion el CSS la oculta y el JS ni la monta. -->
+        <div class="projects__gallery" aria-hidden="true">
+          <canvas id="projects-gallery-canvas"></canvas>
         </div>
-        <div class="projects__viewport">
-          <div class="projects__track"><!-- Las cards se renderizan por JS (tarea 11) desde src/data/projects.js --></div>
+        <!-- Lo que se pinea: cabecera (con su barra de progreso) + track. -->
+        <div class="projects__cases">
+          <div class="projects__header container">
+            <p class="section-label mono">
+              <span class="section-label__stage">Etapa 02 · Interés</span>
+              <span class="section-label__name">Creatividades</span>
+            </p>
+            <h2 class="section-title">Proyectos que <span class="accent-text">escalan</span></h2>
+            <p class="projects__hint mono">Arrastra el scroll →</p>
+            <div class="projects__progress"><span class="projects__progress-fill"></span></div>
+          </div>
+          <div class="projects__viewport">
+            <div class="projects__track"><!-- Las cards se renderizan por JS (tarea 11) desde src/data/projects.js --></div>
+          </div>
         </div>
       </section>
 

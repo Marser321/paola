@@ -4,6 +4,7 @@
 import { on, snapshot, getState, setHud, isHudEnabled, stageName } from '../core/tracker.js'
 import { t } from '../../i18n/index.js'
 import { shouldReduceMotion } from '../core/lenis.js'
+import { refreshNeon } from '../fx/neon.js'
 
 const mmDesktop = window.matchMedia('(min-width: 1024px)')
 const mmMobile = window.matchMedia('(max-width: 767px)')
@@ -52,6 +53,10 @@ export function initHud() {
 
     // Al final del body → último en el orden de tabulación (DESIGN.md §10).
     document.body.appendChild(root)
+    // El HUD es una superficie de neón (neon.js §SURFACES), pero se construye en
+    // el primer scroll — mucho después de initNeon(). Sin este aviso nacería sin
+    // borde y sería el único panel del sitio sin él.
+    refreshNeon()
 
     out = {
       elapsed: root.querySelector('[data-hud="elapsed"]'),

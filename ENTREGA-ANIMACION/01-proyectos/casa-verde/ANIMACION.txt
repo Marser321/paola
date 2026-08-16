@@ -1,0 +1,6 @@
+PRIORITY B — 4-second seamless loop, 24 fps.
+
+The shopkeeper makes one tiny final adjustment to the terracotta planter, sliding it less than two centimetres and returning it naturally. Two plant leaves move gently from the contact and settle. In the softly focused street background, the warm practical light breathes almost imperceptibly while its colour remains unchanged. Watering vessel, folded cloth, counter and camera stay fixed. No wind across the whole plant and no dramatic light sweep.
+
+Append: ../../04-recursos-comunes/NEGATIVE-PROMPT.txt
+

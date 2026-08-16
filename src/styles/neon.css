@@ -1,99 +1,181 @@
 /* ============================================================
-   BORDES DE NEÓN DORADO
+   BORDES DE NEÓN DORADO — foco que sigue al puntero
 
    Tres reacciones sobre la misma superficie:
-     · reposo — la luz gira despacio por el borde
-     · hover  — la luz se concentra donde está el cursor
+     · reposo — el borde recibe un lavado dorado amplio y quieto
+     · hover  — el foco se estrecha y se concentra donde está el cursor,
+                con un núcleo especular blanco y una floración difuminada
      · scroll — el trazo se dibuja al entrar la sección
 
-   Coste: CERO JavaScript por fotograma. Todo el movimiento de reposo es una
-   custom property registrada animada por CSS, así que corre en el compositor.
-   El JS (js/fx/neon.js) solo escribe variables en eventos discretos.
+   Técnica: un radial-gradient recortado al marco con la doble máscara
+   (`exclude` deja fuera el interior y solo sobrevive el filete). Es el
+   port del componente React «spotlight-card», con dos desvíos deliberados:
+
+   1. NADA de `background-attachment: fixed`. El original ancla el foco al
+      viewport para que una sola fuente de luz ilumine todas las tarjetas.
+      Aquí NO puede funcionar: `.project-card` cuelga de dos ancestros con
+      `transform` (el translateX del track y el tilt 3D), y un transform crea
+      bloque contenedor para `fixed` — el fondo se anclaría a la tarjeta
+      transformada, no a la ventana, y el foco se quedaría pegado. Se usan
+      coordenadas LOCALES en %, que es lo que neon.js ya calculaba.
+   2. El tono NO rota con la X del puntero. El sitio es oro (tokens.css
+      §TEMA) y los hex sueltos están prohibidos fuera de los tokens.
+
+   Coste: CERO JavaScript por fotograma. El JS (js/fx/neon.js) solo escribe
+   variables en eventos discretos; las transiciones las corre el compositor.
    ============================================================ */
 
-/* Registrar el ángulo es lo que hace animable un conic-gradient: sin @property
-   el navegador no sabe interpolar entre dos <angle> y el borde daría saltos. */
+/* Lo sigue usando .neon-frame, que sí es un conic animado. Sin @property el
+   navegador no sabe interpolar entre dos <angle> y el marco daría saltos. */
 @property --neon-angle {
   syntax: '<angle>';
   inherits: false;
   initial-value: 0deg;
 }
-/* 0 = trazo apagado, 1 = borde completo. Lo escribe el scrub de ScrollTrigger. */
+/* 0 = trazo apagado, 1 = borde completo. Lo escribe el scrub de ScrollTrigger.
+ *
+ * ⚠ `inherits: true`, y NO es cosmético. Las dos las escribe el JS (o GSAP)
+ * sobre el ELEMENTO, pero quien las lee es ::before, ::after y .neon__halo. Una
+ * custom property registrada con `inherits: false` NO llega al pseudo-elemento:
+ * allí se resuelve a su `initial-value`, que aquí es 0. Con el `false` que traía
+ * este archivo, `opacity: var(--neon-progress)` valía 0 SIEMPRE en ::before y el
+ * borde dorado no se ha llegado a pintar nunca — sin error, sin aviso, solo
+ * ausencia. (--neon-spot y --neon-x/y no lo sufren porque no están registradas:
+ * una custom property sin @property hereda por defecto.) */
 @property --neon-progress {
   syntax: '<number>';
-  inherits: false;
+  inherits: true;
+  initial-value: 0;
+}
+/* 0 = reposo, 1 = puntero dentro. Registrada para que la transición interpole:
+   sin @property un <number> en custom property salta de 0 a 1 sin pasar por
+   los valores intermedios y el foco aparecería de golpe. */
+@property --neon-intensity {
+  syntax: '<number>';
+  inherits: true;
   initial-value: 0;
 }
 
 /* ===== SUPERFICIE ===== */
 
 .neon {
+  /* Contexto de posicionamiento para el filete y la floración, que van en
+     absoluto. Se declara aquí para que añadir una superficie a SURFACES
+     (neon.js) funcione sin tocar su CSS. */
   position: relative;
   /* Posición del cursor DENTRO de la superficie, en %. La escribe neon.js
      suscrito al mousemove de cursor.js; en reposo apunta al centro. */
   --neon-x: 50%;
   --neon-y: 50%;
+  /* Radio del foco. Ancho y difuso en reposo (lavado ambiente), estrecho y
+     concentrado con el puntero encima: eso es lo que lo hace leerse como una
+     luz que se acerca, y no como un borde que sube de brillo. */
+  --neon-spot: 26rem;
+  transition:
+    --neon-intensity var(--dur-med) var(--ease-out),
+    --neon-spot var(--dur-med) var(--ease-out);
+}
+.neon.is-lit {
+  --neon-intensity: 1;
+  --neon-spot: 13rem;
 }
 
-/* El borde: un conic-gradient recortado a 1px con la técnica de doble máscara.
-   `exclude` deja fuera todo el interior, así que solo sobrevive el marco. */
+/* ⚠ RESCATE DE POSICIONAMIENTO. neon.css se importa DESPUÉS de sections.css y
+   tracker.css, y `.neon` tiene la misma especificidad que `.testimonial` o
+   `.hud`, así que el `position: relative` de arriba GANA por orden y les roba
+   el suyo: los testimonios dejarían de ser sticky y el HUD dejaría de estar
+   fijo, cayendo al flujo. Cualquier superficie nueva que se posicione sola
+   tiene que repetirse aquí. */
+.testimonial.neon { position: sticky; }
+.hud.neon { position: fixed; }
+
+/* El filete iluminado. `padding` fija el grosor y la doble máscara recorta
+   todo el interior, así que del radial solo sobrevive el marco. */
 .neon::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: conic-gradient(
-    from var(--neon-angle),
-    transparent 0deg 200deg,
-    var(--gold-deep) 268deg,
-    var(--gold) 310deg,
-    var(--gold-soft) 336deg,
-    var(--gold) 348deg,
-    transparent 360deg
+  background: radial-gradient(
+    var(--neon-spot) circle at var(--neon-x) var(--neon-y),
+    var(--gold-soft),
+    var(--gold) 32%,
+    var(--gold-deep) 58%,
+    transparent 76%
   );
   mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   mask-composite: exclude;
   -webkit-mask-composite: xor;
-  opacity: var(--neon-progress);
+  /* El trazo de entrada (--neon-progress) MULTIPLICA: una tarjeta que aún no
+     ha entrado no se enciende aunque le pases el puntero por encima. */
+  opacity: calc(var(--neon-progress) * (0.4 + var(--neon-intensity) * 0.6));
   pointer-events: none;
   z-index: 1;
 }
 
-/* El resplandor que sigue al cursor. Va aparte del borde porque es un radial
-   centrado en el puntero, no un recorrido por el perímetro. */
+/* Núcleo especular: el punto blanco caliente donde el foco toca el filete.
+   Es lo que separa «borde dorado» de «borde iluminado por algo». */
 .neon::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
+  padding: 1px;
   background: radial-gradient(
-    18rem circle at var(--neon-x) var(--neon-y),
-    rgba(212, 175, 55, 0.13),
+    calc(var(--neon-spot) * 0.42) circle at var(--neon-x) var(--neon-y),
+    rgba(255, 255, 255, 0.85),
+    transparent 68%
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  opacity: calc(var(--neon-progress) * var(--neon-intensity));
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Floración: el mismo filete, difuminado, para que la luz «moje» la superficie.
+   Va en un elemento propio (lo inyecta neon.js) porque ::before y ::after ya
+   están ocupados y `filter` sobre ellos difuminaría también el núcleo.
+
+   ⚠ inset: 0 y no negativo a propósito: .project-card lleva `overflow: hidden`
+   (sections.css §PROYECTOS) y cualquier resplandor hacia fuera se recortaría
+   justo en la tarjeta más importante del sitio. Floración hacia dentro, que se
+   ve igual en las cinco superficies. */
+.neon__halo {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    var(--neon-spot) circle at var(--neon-x) var(--neon-y),
+    var(--gold),
     transparent 70%
   );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  filter: blur(9px);
   opacity: 0;
-  transition: opacity var(--dur-med) var(--ease-out);
   pointer-events: none;
+  /* Mismo z-index que el filete. Sin él la floración se pinta POR DEBAJO del
+     contenido: neon.js la inserta como primer hijo, y entre elementos
+     posicionados manda el orden del DOM — la creatividad de la card o la foto
+     de caso.html la taparían por completo. */
+  z-index: 1;
 }
-.neon:hover::after,
-.neon:focus-within::after { opacity: 1; }
-
-/* El giro de reposo SOLO corre con .is-live, que ScrollTrigger pone y quita al
-   entrar y salir del viewport. Sin este gate tendríamos ~15 conic-gradients
-   animándose a la vez, la mayoría fuera de pantalla. */
-.neon.is-live::before {
-  animation: neon-rotate 6s linear infinite;
-}
-/* En hover la luz da una vuelta más rápida: el borde «responde» al puntero. */
-.neon.is-live:hover::before {
-  animation-duration: 2.4s;
-}
-
-@keyframes neon-rotate {
-  to { --neon-angle: 360deg; }
+/* El blur SOLO se paga en las superficies visibles. `.is-live` lo pone y quita
+   el IntersectionObserver de neon.js: sin este gate habría ~15 capas
+   difuminadas vivas a la vez, casi todas fuera de pantalla. */
+.neon.is-live .neon__halo {
+  opacity: calc(var(--neon-progress) * var(--neon-intensity) * 0.75);
 }
 
 /* ===== MARCO PERIMETRAL GLOBAL ===== */
@@ -126,6 +208,9 @@
    Los bordes se quedan VISIBLES pero quietos: son color de marca, no
    movimiento. El marco global no se monta (neon.js sale antes de crearlo). */
 @media (prefers-reduced-motion: reduce) {
+  .neon {
+    transition: none;
+  }
   .neon::before {
     background: none;
     border: 1px solid var(--line-gold);
@@ -133,7 +218,10 @@
     mask: none;
     -webkit-mask-composite: source-over;
     opacity: 1;
-    animation: none;
   }
-  .neon::after { display: none; }
+  /* El núcleo especular y la floración son puro efecto de puntero: fuera. El
+     `filter: blur()` de la floración es además el único coste de pintado real
+     de todo el módulo, y aquí no compra nada. */
+  .neon::after,
+  .neon__halo { display: none; }
 }

@@ -19,6 +19,21 @@
   display: flex; flex-direction: column; justify-content: flex-end;
   padding: 4vw; gap: 1rem;
 }
+/* El logo ocupa el hueco de arriba; el contador y la barra siguen abajo, donde
+   estaban. `flex: 1` y no una altura fija: en móvil el alto sobrante es poco y
+   el logo tiene que encogerse con él, no empujar al contador fuera. */
+.preloader__logo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+.preloader__logo svg {
+  width: min(52rem, 78vw);
+  max-height: 100%;
+  height: auto;
+}
 .preloader__status { opacity: 0.5; }
 .preloader__counter {
   font-family: var(--font-display); font-weight: 600;
@@ -75,9 +90,33 @@
   display: none; /* visible solo si WebGL no se inicializa (tarea 08) */
 }
 .hero.no-webgl .hero__fallback { display: block; }
-/* z-index 2: por encima de la figura (1), que es escenografía. Con la figura a
-   la derecha el texto se queda en poco más de media pantalla; se le pone tope
-   para que nunca llegue a pisarla. */
+
+/* En vertical el hero son dos pisos: la figura arriba (absoluta, ver
+   .hero__figure en media.css) y el texto debajo. Este padding es el que le
+   reserva el piso de arriba — sin él, el texto va pegado abajo por el
+   justify-content:flex-end y se le sube encima. */
+@media (max-width: 1023px) {
+  .hero { padding-top: 50svh; }
+}
+@media (min-width: 600px) and (max-width: 1023px) {
+  .hero { padding-top: 56svh; }
+}
+
+/* Velo de apoyo bajo la figura. Desde tablet el texto comparte plano con ella
+   y los pies del recorte caen justo detrás del subtítulo; el degradado los
+   apaga lo justo para que se lea. Muere hacia arriba, así que la cara nunca se
+   ensucia, y usa var(--bg) para valer igual en los dos temas. */
+@media (min-width: 1024px) {
+  .hero::after {
+    content: '';
+    position: absolute; inset: auto 0 0 0; height: 34%;
+    z-index: 1;                  /* mismo plano que la figura, por encima de ella */
+    pointer-events: none;
+    background: linear-gradient(to top, var(--bg) 4%, transparent 100%);
+  }
+}
+
+/* z-index 2: por encima de la figura (1) y de su velo. */
 .hero__content { position: relative; z-index: 2; }
 .hero__label { margin-bottom: 1.5rem; }
 .hero__title {
@@ -103,12 +142,26 @@
   display: flex; gap: 2.5rem; margin-top: 3rem;
   padding-top: 1.25rem; border-top: 1px solid var(--line);
 }
-/* Con la figura en pantalla, el texto del hero se reserva la mitad izquierda.
-   El breakpoint es el mismo que oculta la figura en media.css: por debajo de
-   1200px el hero vuelve a ocupar el ancho entero. */
-@media (min-width: 1200px) {
-  .hero__content { max-width: 58%; }
+/* La figura manda el reparto: el texto se queda con la columna que le deja
+   libre y nunca invade su eje. Los topes van al hilo de los `right`/`left` de
+   .hero__figure en media.css — si se mueve uno, se mueve el otro. */
+@media (min-width: 1024px) {
+  /* ⚠ El tope NO va en .hero__content. Lleva .container, que es
+     `width: var(--container); margin-inline: auto`: al estrecharlo con un
+     max-width la caja se CENTRA en el hero en vez de quedarse en el margen
+     izquierdo, y el texto se iba justo encima de la figura — cuanto más ancha
+     la pantalla, peor. El contenedor conserva su ancho y son los hijos los que
+     se limitan, así que la columna arranca en el gutter y muere antes de ella. */
+  .hero__content > * { max-width: 56%; }
   .hero__meta { flex-wrap: wrap; gap: 1.25rem 2.5rem; }
+}
+@media (min-width: 1200px) {
+  .hero__content > * { max-width: 52%; }
+  /* El nombre cede cuerpo. Con la figura ocupando el centro, un título a 11vw
+     le pasaba por delante de la cara; a 7.5vw las dos líneas caben en su
+     columna y el contorno de «PARRA» solo roza el brazo, que es la
+     superposición que da profundidad. La protagonista es ella, no el rótulo. */
+  .hero__title { font-size: clamp(4rem, 7.5vw, 8.5rem); }
 }
 .hero__scroll {
   position: absolute; right: 4vw; bottom: 8vh; z-index: 1;
@@ -173,6 +226,35 @@
   background: var(--gradient-gold);
   transform: scaleX(0); transform-origin: left;
 }
+/* Galería 3D (cabecera inmersiva de la sección). Un solo canvas para las seis
+   creatividades — ver src/js/webgl/projects-gallery.js y BLOCKERS.md §B-02. */
+.projects__gallery {
+  position: relative;
+  height: 100vh;
+  overflow: clip;
+  /* Sin la máscara, los planos se cortan a hacha contra el borde de la sección
+     y se ve el rectángulo del canvas en vez de la creatividad. Mismo criterio
+     de costuras que las capas de imagen (src/data/media.js). */
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+}
+#projects-gallery-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* En tema claro las creatividades se atenúan, igual que hacen las capas de
+   imagen de las demás secciones (media.css: --layer-opacity-dark 0.45 →
+   --layer-opacity-light 0.32). No es cuestión de gusto: .site-header se apoya
+   en mix-blend-mode: difference para seguir legible pase lo que pase por
+   debajo, y sobre el papel crema ese blend está APAGADO (--chrome-blend). Sin
+   atenuar, un plano oscuro pasando bajo el header deja el menú negro sobre
+   negro. Aquí se atenúa menos que un fondo porque la galería es el contenido,
+   no el decorado. */
+[data-theme='light'] #projects-gallery-canvas { opacity: 0.62; }
+
 .projects__viewport { padding-block: 4rem var(--section-pad); }
 .projects__track {
   display: flex; gap: 4vw; padding-inline: 4vw; width: max-content;
@@ -270,53 +352,135 @@
 .service__toggle:hover { color: var(--text); border-color: var(--line-gold); }
 .service__toggle[aria-expanded='true'] { color: var(--gold); border-color: var(--line-gold); }
 
+/* GALERÍA ELÁSTICA. La tira es un flex de ALTURA FIJA y cada muestra reparte el
+   ancho: al abrir una pasa a `flex-grow: 4` y las otras dos se quedan en 1.
+
+   ⚠ La altura fija es la CONDICIÓN del efecto, no una preferencia. Con el
+   `aspect-ratio: 4/5` que tenía cada muestra, cambiar de ancho cambiaba el alto
+   y la tira entera daba tumbos al abrir. Aquí manda la tira y las muestras la
+   rellenan. */
 .service__strip {
   grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.5rem;
+  display: flex;
+  gap: 1rem;
   margin-top: 1.5rem;
+  height: clamp(20rem, 34vw, 28rem);
 }
 
-/* La muestra: proporción reservada SIEMPRE, tenga imagen o gradiente. Es lo que
-   evita que la tira dé un salto de layout cuando lleguen las imágenes reales. */
-.sample { display: flex; flex-direction: column; gap: 0.75rem; }
+.sample {
+  flex: 1 1 0;
+  min-width: 0;                 /* sin esto el contenido impone un ancho mínimo
+                                   y las cerradas no llegan a encogerse */
+  position: relative;
+  border-radius: calc(var(--radius) * 0.6);
+  overflow: hidden;
+  /* `filter` va en la MISMA transición que el ancho, y con la misma curva: si el
+     brillo cambia de golpe mientras la muestra crece despacio, el efecto se
+     rompe en dos y deja de leerse como una sola cosa elástica. */
+  transition:
+    flex-grow var(--dur-med) cubic-bezier(0.25, 1, 0.5, 1),
+    filter var(--dur-med) cubic-bezier(0.25, 1, 0.5, 1);
+}
+.sample.is-open { flex-grow: 4; }
+
+/* El botón ES la superficie: ocupa la muestra entera para que toda la tarjeta
+   sea zona de pulsación, con teclado incluido. */
+.sample__button {
+  display: block;
+  position: relative;   /* contiene el velo y los rótulos */
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
 .sample__gradient,
 .sample picture,
 .sample img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
-  border-radius: calc(var(--radius) * 0.6);
+  height: 100%;
   object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out);
 }
-.sample__caption { color: var(--muted); text-transform: none; letter-spacing: 0; }
+/* La cerrada va un punto ampliada y apagada; al abrirse recupera encuadre y luz.
+   Es lo que hace que la abierta se lea como la que está en foco. */
+.sample:not(.is-open) :is(.sample__gradient, .sample img) { transform: scale(1.08); }
+.sample:not(.is-open) { filter: brightness(0.55); }
+.sample:not(.is-open):hover { filter: brightness(0.8); }
 
-/* Panel flotante de escritorio. `fixed` porque sigue al cursor por la ventana;
-   GSAP es el dueño de su transform, así que el centrado no va en CSS. */
-.services__preview {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: min(34rem, 40vw);
-  padding: 1rem;
-  background: var(--surface);
-  border: 1px solid var(--line-gold);
-  border-radius: var(--radius);
+/* Velo inferior: solo existe con la muestra abierta, que es cuando hay pie que
+   leer encima.
+
+   ⚠ Va en .sample__button::after y NO en .sample::after. `.sample` es superficie
+   de neón (fx/neon.js §SURFACES) y allí ::before y ::after ya están cogidos por
+   el filete y el núcleo especular del borde de foco. Como neon.css se importa
+   DESPUÉS de esta hoja y la especificidad es la misma, un `.sample::after` aquí
+   lo gana neon.css y el velo no se pinta: el pie queda ilegible sobre el dorado.
+   El botón es hijo, así que su ::after está libre. */
+.sample__button::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, var(--veil-media), transparent 58%);
+  /* Presente también en la cerrada, aunque más flojo: ahí abajo va el índice, y
+     la cerrada está oscurecida con brightness(0.55) — sin velo, un --text que en
+     tema claro es casi negro cae sobre un dorado apagado y no se lee. Con el
+     velo, rótulo y fondo giran juntos en los dos temas. */
+  opacity: 0.7;
+  transition: opacity var(--dur-med) var(--ease-out);
+  pointer-events: none;
+}
+.sample.is-open .sample__button::after { opacity: 1; }
+
+/* El pie pasa a ir SUPERPUESTO, no debajo: a `flex: 1` una frase de 45
+   caracteres bajo la imagen quedaba ilegible. La muestra cerrada enseña solo su
+   índice. */
+.sample__caption {
+  position: absolute;
+  left: 1rem; right: 1rem; bottom: 1rem;
+  z-index: 2;
+  color: var(--text);
+  text-transform: none;
+  letter-spacing: 0;
   opacity: 0;
-  visibility: hidden;
-  pointer-events: none; /* jamás debe robarle el hover al renglón */
-  z-index: var(--z-hud);
-  transition: opacity var(--dur-fast) var(--ease-out),
-              visibility var(--dur-fast) var(--ease-out);
+  transform: translateY(0.75rem);
+  transition: opacity var(--dur-med) var(--ease-out),
+              transform var(--dur-med) var(--ease-out);
+  pointer-events: none;
 }
-.services__preview.is-visible { opacity: 1; visibility: visible; }
-.services__preview-list {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
+.sample.is-open .sample__caption {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.12s;      /* entra cuando la tarjeta ya ha crecido */
 }
-.services__preview .sample__caption { font-size: 0.625rem; line-height: 1.4; }
+.sample__index {
+  position: absolute;
+  left: 0; right: 0; bottom: 1rem;
+  z-index: 2;
+  text-align: center;
+  color: var(--text);
+  opacity: 0.85;
+  transition: opacity var(--dur-fast) var(--ease-out);
+  pointer-events: none;
+}
+.sample.is-open .sample__index { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* El acordeón se queda: es un cambio de layout útil, no decoración. Lo que se
+     va es el movimiento. */
+  .sample,
+  .sample__caption,
+  .sample__button::after,
+  .sample :is(.sample__gradient, img) { transition: none; }
+  .sample:not(.is-open) :is(.sample__gradient, .sample img) { transform: none; }
+}
+
+/* El panel flotante de escritorio (.services__preview) se RETIRÓ el 2026-08-16 al
+   convertir la tira en galería elástica. Era `aria-hidden` y duplicaba lo que el
+   botón ya expone; con una galería interactiva debajo además la tapaba justo al
+   pasar el puntero por el renglón para desplegarla. Ver services.js. */
 
 /* ===== PROCESO ===== */
 .process__timeline { position: relative; margin-top: 4rem; padding-left: 3rem; }
@@ -333,8 +497,13 @@
 .step__desc { color: var(--muted); }
 
 /* ===== SOBRE MÍ ===== */
+/* El reparto era 1fr / 1.4fr: el retrato iba en la columna PEQUEÑA y el texto
+   se llevaba el ancho. En una sección que se titula «Hola, soy Paola» eso deja
+   a la protagonista de acompañante. Se invierte: manda la foto y el texto se
+   acomoda —que además es lo cómodo de leer, porque una columna de 52ch no
+   quiere más ancho del que ya tiene. */
 .about__grid {
-  display: grid; grid-template-columns: 1fr 1.4fr; gap: 6vw; align-items: start;
+  display: grid; grid-template-columns: 1.15fr 1fr; gap: 5vw; align-items: start;
 }
 .about__media { position: sticky; top: 15vh; }
 .about__img {
@@ -444,7 +613,12 @@
 }
 
 /* ===== HERO — split de letras (tarea 07) ===== */
-.hero__title { overflow: clip; } /* máscara del yPercent:110 de cada .char */
+/* La máscara del yPercent:110 de cada .char solo hace falta en VERTICAL. Con
+   `overflow: clip` en los dos ejes, la columna de texto —ahora más estrecha,
+   porque la figura se lleva el centro— cortaba el título a media letra:
+   «PARRA» se leía «PARR». `overflow-x: visible` es legal junto a `clip` (con
+   `hidden` no lo sería: el otro eje se forzaría a auto y aparecería scroll). */
+.hero__title { overflow-x: visible; overflow-y: clip; }
 
 /* ===== PROYECTOS — 3D / RESPONSIVE (tarea 11) ===== */
 .projects__viewport { perspective: 1000px; }
@@ -466,10 +640,14 @@
   }
   .project-card { width: 100%; }
   .projects__hint { display: none; }
+  /* La galería 3D no se monta por debajo de 1024 (mismo guard que el JS). Sin
+     este display:none quedaría un hueco de 78vh en blanco. */
+  .projects__gallery { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .projects__track { flex-wrap: wrap; width: auto; }
+  .projects__gallery { display: none; }  /* ídem: el JS tampoco la monta */
 }
 
 /* ============================================================
@@ -515,7 +693,11 @@
   .testimonial:nth-child(2) { top: 21vh; }
   .testimonial:nth-child(3) { top: 22vh; }
   /* Tres muestras en 375px salen a ~100px: ilegibles. En móvil la tira se lee
-     deslizando, que es el gesto que ya se usa en la galería de proyectos. */
+     deslizando, que es el gesto que ya se usa en la galería de proyectos.
+     El ACORDEÓN NO SE APLICA aquí: en un contenedor con scroll horizontal no hay
+     espacio libre que repartir, así que `flex-grow` no haría nada, y encima
+     pelearía con el scroll-snap. Deslizar ya cumple la misma función —traer una
+     muestra al frente— con el gesto que el dedo espera. */
   .service__strip {
     display: flex;
     gap: 1rem;
@@ -525,6 +707,13 @@
     padding-inline: 4vw;
   }
   .sample { flex: 0 0 62%; scroll-snap-align: start; }
+  /* Sin acordeón no hay estado abierto, así que el pie va SIEMPRE visible (es la
+     descripción de la muestra) y el índice sobra: se ve cuál es deslizando. */
+  .sample:not(.is-open) { filter: none; }
+  .sample:not(.is-open) :is(.sample__gradient, .sample img) { transform: none; }
+  .sample__caption { opacity: 1; transform: none; }
+  .sample__button::after { opacity: 1; }
+  .sample__index { display: none; }
   .footer__bottom { flex-direction: column; align-items: flex-start; gap: 1rem; }
 }
 

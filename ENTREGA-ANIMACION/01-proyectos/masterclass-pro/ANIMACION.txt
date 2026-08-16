@@ -1,0 +1,6 @@
+PRIORITY A — 4-second seamless loop, 24 fps.
+
+The presenter makes one small, natural explanatory hand gesture toward the lesson screen. A single warm-gold connection travels from the first unlabelled block to the third and softly resets. The presenter remains in strict side profile; face, hair and body do not morph. Audience silhouettes on the laptop remain fixed. Lighting and camera are locked. The hand returns to its exact starting pose for the loop.
+
+Append: ../../04-recursos-comunes/NEGATIVE-PROMPT.txt
+

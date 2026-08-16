@@ -1,0 +1,6 @@
+PRIORITY A — 4-second seamless loop, 24 fps.
+
+The creator's hands complete one slow, elegant unfolding motion of the camel coat toward the lens. The nearest lower fold rolls once through the foreground and settles naturally; a faint movement travels through the wool and the thin violet edge reflection remains fixed in colour and intensity. The creator's torso and the charcoal garment in the background stay stable. Face remains outside the frame. End by returning the cloth naturally to the exact opening fold position. Locked camera, no zoom, no cuts.
+
+Append: ../../04-recursos-comunes/NEGATIVE-PROMPT.txt
+

@@ -1,0 +1,6 @@
+PRIORITY B — 4-second seamless loop, 24 fps.
+
+Keep the campaign visually static and professional. The abstract workflow line on the laptop advances through its connected modules once, then the ascending activity curve draws forward by a short distance. A narrow champagne highlight travels slowly along the edge of the physical glass lead card. The hand, laptop, desk and camera remain perfectly still. No interface elements appear and no screen content changes shape. Return the line and highlight invisibly to the first frame.
+
+Append: ../../04-recursos-comunes/NEGATIVE-PROMPT.txt
+

@@ -48,7 +48,11 @@ export const figure = {
   // «Sobre mí»; describir aquí otra vez a la misma persona es ruido, no acceso.
   // Por eso el contenedor va además con aria-hidden.
   alt: '',
-  width: 695,
+  // Deben coincidir con el asset real o hay salto de layout. Las genera
+  // scripts/media/build-media.py §build_figura: si cambia el encuadre ahí,
+  // cambian aquí. (2026-08-16: 695→660 al rehacer el recorte; el ancho anterior
+  // estiraba la figura ~5% respecto a sus proporciones reales.)
+  width: 660,
   height: 1180,
 }
 
@@ -76,7 +80,9 @@ export const figure = {
  *             necesita menos peso para no convertirse en un borrón.
  *
  * ⚠ #informe NO lleva fondo, y es deliberado (MEDIA-BRIEF §criterios).
- * ⚠ #proyectos tampoco: la galería horizontal ya es la imagen de esa sección.
+ * ⚠ #proyectos tampoco, y ahora con más motivo: además del track horizontal
+ *   lleva la galería 3D en WebGL (src/js/webgl/projects-gallery.js). Una capa
+ *   de foto encima sería la tercera imagen compitiendo en la misma sección.
  */
 export const backdrops = {
   // Los monitores con las gráficas. Es la única foto del set que enseña
@@ -160,41 +166,41 @@ export const galleries = {
   'meta-ads': {
     placeholder: true,
     items: [
-      { src: null, gradient: ['#8A6A1F', '#D4AF37'] },
-      { src: null, gradient: ['#6E5514', '#C9A227'] },
-      { src: null, gradient: ['#D4AF37', '#F2DFA6'] },
+      { src: 'sample-meta-ads-1', gradient: ['#8A6A1F', '#D4AF37'] },
+      { src: 'sample-meta-ads-2', gradient: ['#6E5514', '#C9A227'] },
+      { src: 'sample-meta-ads-3', gradient: ['#D4AF37', '#F2DFA6'] },
     ],
   },
   'paid-social': {
     placeholder: true,
     items: [
-      { src: null, gradient: ['#6E5514', '#D4AF37'] },
-      { src: null, gradient: ['#8A6A1F', '#F2DFA6'] },
-      { src: null, gradient: ['#A8905A', '#D4AF37'] },
+      { src: 'sample-paid-social-1', gradient: ['#6E5514', '#D4AF37'] },
+      { src: 'sample-paid-social-2', gradient: ['#8A6A1F', '#F2DFA6'] },
+      { src: 'sample-paid-social-3', gradient: ['#A8905A', '#D4AF37'] },
     ],
   },
   'funnels-cro': {
     placeholder: true,
     items: [
-      { src: null, gradient: ['#D4AF37', '#8A6A1F'] },
-      { src: null, gradient: ['#F2DFA6', '#A8905A'] },
-      { src: null, gradient: ['#8A6A1F', '#C9A227'] },
+      { src: 'sample-funnels-cro-1', gradient: ['#D4AF37', '#8A6A1F'] },
+      { src: 'sample-funnels-cro-2', gradient: ['#F2DFA6', '#A8905A'] },
+      { src: 'sample-funnels-cro-3', gradient: ['#8A6A1F', '#C9A227'] },
     ],
   },
   ugc: {
     placeholder: true,
     items: [
-      { src: null, gradient: ['#C9A227', '#F2DFA6'] },
-      { src: null, gradient: ['#8A6A1F', '#D4AF37'] },
-      { src: null, gradient: ['#A8905A', '#EBD48A'] },
+      { src: 'sample-ugc-1', gradient: ['#C9A227', '#F2DFA6'] },
+      { src: 'sample-ugc-2', gradient: ['#8A6A1F', '#D4AF37'] },
+      { src: 'sample-ugc-3', gradient: ['#A8905A', '#EBD48A'] },
     ],
   },
   auditorias: {
     placeholder: true,
     items: [
-      { src: null, gradient: ['#6E5514', '#A8905A'] },
-      { src: null, gradient: ['#D4AF37', '#6E5514'] },
-      { src: null, gradient: ['#F2DFA6', '#8A6A1F'] },
+      { src: 'sample-auditorias-1', gradient: ['#6E5514', '#A8905A'] },
+      { src: 'sample-auditorias-2', gradient: ['#D4AF37', '#6E5514'] },
+      { src: 'sample-auditorias-3', gradient: ['#F2DFA6', '#8A6A1F'] },
     ],
   },
 }
@@ -218,7 +224,14 @@ export const budgets = {
   contacto: 220,
   portraits: 400,
   figure: 320,      // recorte del hero: alfa real, y la alfa no comprime gratis
-  galleries: 600,   // las 5 galerías juntas: son miniaturas, no visuales grandes
+  // Las 5 galerías juntas (15 muestras). Eran 600 KB cuando se servían a 480×600
+  // como miniaturas en una rejilla de tres columnas. Subió a 800 el 2026-08-16 al
+  // convertir la tira en GALERÍA ELÁSTICA: la muestra abierta pasa de ~380 px a
+  // ~780 px de ancho, y a 480 px de origen se veía mascada. Ahora van a 1000×1250.
+  //
+  // Se puede permitir porque no tocan la carga inicial: van `loading="lazy"` y la
+  // tira ni siquiera se rellena hasta que alguien pulsa «Ver muestras».
+  galleries: 800,
 }
 
 export const media = { portraits, figure, backdrops, sequences, galleries, budgets }

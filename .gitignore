@@ -40,3 +40,10 @@ scripts/media/cutout
 # optimizar que no se publican y que el sitio no necesita — de aquí sale
 # public/img/ vía scripts/media/build-media.py, y eso sí se versiona.
 Selección/
+
+# Paquete de entrega para generar los vídeos. Los PROMPTS sí se versionan —son el
+# trabajo—, pero no sus PNG de referencia: son copias de material que ya está en
+# Selección/ y en public/img/, y suman 40 MB.
+ENTREGA-ANIMACION/**/*.png
+ENTREGA-ANIMACION/**/*.jpg
+ENTREGA-ANIMACION/**/*.mp4

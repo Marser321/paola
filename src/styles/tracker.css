@@ -12,7 +12,14 @@
   z-index: var(--z-hud);
   width: var(--hud-w);
   padding: 0.75rem;
-  border-left: 1px solid var(--line);
+  /* Filete COMPLETO y radio, no solo el izquierdo: el HUD entró en la lista de
+     superficies con borde de neón (js/fx/neon.js §SURFACES) y ese efecto
+     ilumina un marco. Sobre un `border-left` suelto dibujaba el rectángulo
+     entero de todas formas, así que la caja se declara aquí y no aparece por
+     accidente. Para devolverlo a rail: `border-left` y sacar `.hud` de
+     SURFACES — las dos cosas, o queda el marco sin caja. */
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   /* Velo del propio fondo. Desviación mínima de DESIGN.md §10, necesaria: en la
      galería pinneada pasan creatividades a pantalla completa bajo el rail y el
      texto --muted sobre un gradiente naranja deja de cumplir contraste. */

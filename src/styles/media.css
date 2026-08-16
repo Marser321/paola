@@ -69,33 +69,88 @@
 
 /* ===== FIGURA DEL HERO ===== */
 /* Recorte con alfa real, así que no lleva ni caja ni fondo: se apoya sobre las
-   partículas sin marco. Va anclada abajo a la derecha y el texto del hero
-   ocupa la izquierda. */
+   partículas sin marco.
+
+   ⚠ CAMBIO DE CRITERIO. Antes la figura era escenografía: 88svh anclada a la
+   esquina derecha, oculta por debajo de 1200px y con el texto quedándose la
+   mitad izquierda. Leía como un recorte arrinconado. Paola es LA protagonista
+   del sitio, así que la figura pasa a ser el sujeto del hero: ocupa el centro
+   óptico, va a toda altura y existe en todos los anchos. El texto se organiza
+   a su alrededor, no al revés. */
 .hero__figure {
   position: absolute;
-  right: 2vw; bottom: 0;
-  z-index: 1;                    /* sobre el canvas, bajo nada más */
-  height: min(88svh, 860px);
+  /* Móvil: la figura NO va detrás del texto. Se probó y no funciona — para que
+     el subtítulo se lea sobre el traje negro hace falta un velo tan denso que
+     la deja en fantasma, que es justo lo contrario de darle protagonismo. Así
+     que en vertical el hero se parte en dos pisos: ella arriba, ocupando el
+     ancho, y el texto debajo (el padding-top de .hero le reserva el sitio). */
+  top: 7svh; bottom: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;                    /* sobre el canvas, bajo el texto */
+  height: 44svh;
   width: auto;
   pointer-events: none;
-  /* La foto se hizo con luz cálida y el hero es casi negro: un pelo de contraste
-     y de calor la asienta en la escena en vez de dejarla pegada encima. */
+  /* La foto se hizo con luz cálida: un pelo de contraste y de calor la asienta
+     en la escena en vez de dejarla pegada encima. */
   filter: saturate(1.04) contrast(1.03);
   will-change: transform, opacity;
 }
 .hero__figure img { height: 100%; width: auto; object-fit: contain; }
 
-/* En claro la figura queda recortada sobre crema y el pie, que se disuelve en
-   transparencia, se lee como un degradado sucio. Se acorta el recorrido visible
-   subiendo el punto de fuga con una máscara propia del tema. */
+/* El pie del recorte se disuelve en transparencia y, sobre un fondo plano, ese
+   desvanecido se lee como una mancha sucia. La máscara acorta el recorrido
+   visible subiendo el punto de fuga. En claro hace falta antes: el plato es
+   oscuro sobre crema y el degradado canta más. */
+.hero__figure { mask-image: linear-gradient(to bottom, #000 78%, transparent 99%); }
 [data-theme='light'] .hero__figure {
   filter: saturate(1) contrast(1.02);
-  mask-image: linear-gradient(to bottom, #000 62%, transparent 96%);
+  mask-image: linear-gradient(to bottom, #000 70%, transparent 97%);
 }
 
-/* El texto del hero manda: por debajo de 1200px la figura estorba antes que
-   aporta, y en móvil ni se descarga (el <img> se monta solo si hay sitio). */
-@media (max-width: 1199px) { .hero__figure { display: none; } }
+/* Halo cálido detrás de la figura: la separa del fondo sin recortarla con una
+   sombra dura, que sobre un alfa con pelo suelto siempre se ve como un borde. */
+.hero__figure::before {
+  content: '';
+  position: absolute; z-index: -1;
+  left: 50%; top: 42%;
+  width: 130%; aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, var(--glow-warm), transparent 72%);
+  opacity: 0.85;
+}
+
+/* La tablet en vertical sigue siendo un formato alto: ahí la figura crece pero
+   el hero mantiene los dos pisos. El reparto en columnas solo tiene sentido
+   cuando hay ancho de verdad. */
+@media (min-width: 600px) and (max-width: 1023px) {
+  .hero__figure { height: 50svh; }
+}
+
+/* Desde 1024px el hero pasa a dos columnas: la figura se ancla abajo y se
+   despega del centro exacto para dejar sitio al texto, pero se queda dentro
+   del encuadre — su centro cae sobre el tercio derecho, no en la esquina. */
+@media (min-width: 1024px) {
+  .hero__figure {
+    top: auto; bottom: 0;
+    left: auto; right: 6vw; transform: none;
+    height: min(90svh, 880px);
+  }
+}
+@media (min-width: 1200px) {
+  .hero__figure {
+    right: 14vw;
+    height: min(96svh, 1060px);
+  }
+}
+/* Pantallas muy anchas: anclarla a un `right` en vw la manda otra vez al borde.
+   Se fija el centro de la figura al 62% del ancho y deja de viajar. */
+@media (min-width: 1600px) {
+  .hero__figure {
+    right: auto; left: 62%; transform: translateX(-50%);
+    height: min(96svh, 1120px);
+  }
+}
 
 /* ===== SECUENCIAS (canvas 2D) ===== */
 .sequence {

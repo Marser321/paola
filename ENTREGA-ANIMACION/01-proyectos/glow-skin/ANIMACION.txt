@@ -1,0 +1,6 @@
+PRIORITY A — 4-second seamless loop, 24 fps.
+
+The serum drop moves slowly from fingertip to cheek and is pressed into the skin with one minimal, natural gesture. A single water bead travels a short distance down the frosted bottle in the foreground. Preserve honest pores, exact facial identity and every visible feature perfectly; no blinking, lip movement or skin smoothing. The hand returns to its exact starting position and the droplet restores invisibly for a seamless loop.
+
+Append: ../../04-recursos-comunes/NEGATIVE-PROMPT.txt
+

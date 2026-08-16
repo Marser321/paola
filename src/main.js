@@ -22,6 +22,7 @@ import { initPreloader } from './js/core/preloader.js'
 import { initHero } from './js/sections/hero.js'
 import { initHeroScene } from './js/webgl/hero-scene.js'
 import { initCardDistortion } from './js/webgl/card-distortion.js'
+import { initProjectsGallery } from './js/webgl/projects-gallery.js'
 import { initMarquee } from './js/sections/marquee.js'
 import { initMetrics } from './js/sections/metrics.js'
 import { renderProjects, initProjects, refreshProjects } from './js/sections/projects.js'
@@ -36,7 +37,7 @@ import { initContact } from './js/sections/contact.js'
 import { initContactForm } from './js/core/contact-form.js'
 import { initScramble } from './js/fx/scramble.js'
 import { initSplitTitles } from './js/fx/split-titles.js'
-import { initNeon } from './js/fx/neon.js'
+import { initNeon, refreshNeon } from './js/fx/neon.js'
 import { projects } from './data/projects.js'
 
 // i18n va PRIMERO: fija el idioma antes de que nadie pinte nada. Si fuera
@@ -59,6 +60,11 @@ initMarquee()
 initMetrics()
 initProjects()
 // initCardDistortion()  // t.20 — DESACTIVADO, ver tasks/BLOCKERS.md §B-02
+// La galería 3D es la salida que el propio B-02 proponía: UN renderer para las
+// seis creatividades en vez de seis. Va después de initProjects() porque su
+// ScrollTrigger mide una sección cuyo track ya debe estar montado. Es async y
+// no se espera, igual que initHeroScene().
+initProjectsGallery()
 // Capas de imagen (t.38). Van ANTES de los reveals de sección: insertan un
 // hijo en cada sección y conviene que el DOM esté estable cuando ScrollTrigger
 // mida. Sin nada declarado en media.js, ambas salen en su primera línea.
@@ -93,6 +99,10 @@ window.addEventListener('i18n:change', () => {
   repaintVariant()
   refreshProjects()
   refreshServices()  // los pies de las muestras se leen al renderizar, no se traducen solos
+  // refreshProjects() reescribe el track entero, así que las seis cards vuelven
+  // SIN clase .neon y sin halo. Sin esto se quedan sin borde al cambiar de
+  // idioma, y en silencio.
+  refreshNeon()
   refreshTracker()
   ScrollTrigger.refresh()
 })

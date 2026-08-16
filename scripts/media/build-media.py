@@ -12,7 +12,18 @@ tiene: nada de esto viaja al navegador.
     .venv/bin/python scripts/media/build-media.py
 
 El recorte del hero lo hace `cutout.swift` con Vision (el mismo motor que el
-«Levantar sujeto» del Finder): saca una alfa real, con pelo, sin croma.
+«Levantar sujeto» del Finder): saca una alfa real, sin croma. Se invoca con
+`--mask` y el afinado del borde se hace aquí — ver build_figura(), que explica
+por qué la vía directa daba un contorno dentado y sucio en tema claro.
+
+⚠ Vision NO hace matting de mechones: la silueta del pelo sale maciza. Es el
+techo de esta herramienta. Para pelo de verdad hace falta un modelo de matting
+(rembg/BiRefNet) o un recorte a mano en Photoshop.
+
+⚠ numpy NO está instalado en esta máquina (2026-08-16), así que el módulo no se
+puede importar entero y el resto de pasos no corren. build_figura() se escribió
+solo con Pillow a propósito y se puede ejecutar aislado. Para todo lo demás hace
+falta el venv de abajo.
 
 Las decisiones de encuadre viven en SPECS, abajo. Están razonadas una a una:
 cada foto va donde su espacio negativo cae del lado del texto de esa sección.
@@ -238,33 +249,109 @@ def build_retrato():
 def build_figura():
     """HERO · figura recortada con alfa real.
 
-    Vision saca la máscara del sujeto; aquí sólo se recorta a su caja, se deja
-    aire y se disuelve el pie. Va a convivir con las partículas, así que no
-    lleva ni fondo ni sombra: lo que no es Paola es transparente de verdad.
+    Vision saca la máscara del sujeto; aquí se afina el borde y se disuelve el
+    pie. Va a convivir con las partículas, así que no lleva ni fondo ni sombra:
+    lo que no es Paola es transparente de verdad.
+
+    ⚠ POR QUÉ ESTO NO ES `cutout <in> <out>` A SECAS (revisado 2026-08-16).
+    Esa vía usa `generateMaskedImage`, que aplica la máscara EN DURO y a la
+    resolución a la que Vision la calcula —bastante menor que la foto—. El
+    resultado sale escalonado en bloques, sin un píxel de antialias, y encima
+    los píxeles del filo arrastran el color del fondo. Sobre el negro del tema
+    oscuro no se nota; sobre el papel crema del tema claro se lee como un borde
+    sucio y dentado, que es exactamente lo que se reportó.
+
+    La vía buena es `cutout ... --mask`: devuelve el ALFA suave a resolución del
+    original y deja el RGB intacto. Con eso se puede:
+      1. tapar los huecos que Vision deja dentro del sujeto (hay uno en la
+         cadera, sobre el vano iluminado del fondo);
+      2. matar el festoneado del pelo con una mediana ANCHA — no se pierde
+         detalle porque la máscara no tiene detalle de pelo que perder, es una
+         silueta maciza, y una silueta limpia se lee mucho mejor que una ondulada;
+      3. erosionar el filo un pelo, para que caiga DENTRO del sujeto;
+      4. descontaminar el color del borde.
+
+    TECHO CONOCIDO: Vision no hace matting de mechones. Para pelo de verdad hace
+    falta un modelo de matting (rembg/BiRefNet) o un recorte a mano.
+
+    Todo el tratamiento va en PIL, sin numpy, a propósito: así este paso se puede
+    ejecutar aunque el resto del archivo no (ver la nota de numpy en la cabecera).
     """
-    src = ORIGINALS["caminando"]
-    tmp = OUT.parent / "_figura-cut.png"
+    from PIL import ImageChops, ImageFilter
+
+    src_path = ORIGINALS["caminando"]
+    tmp = OUT.parent / "_figura-mask.png"
     if not CUTOUT_BIN.exists():
         sys.exit(f"falta {CUTOUT_BIN}. Compílalo:\n"
                  f"  swiftc -O -o scripts/media/cutout scripts/media/cutout.swift")
-    subprocess.run([str(CUTOUT_BIN), str(src), str(tmp)], check=True,
+    subprocess.run([str(CUTOUT_BIN), str(src_path), str(tmp), "--mask"], check=True,
                    stdout=subprocess.DEVNULL)
 
-    cut = Image.open(tmp).convert("RGBA")
-    box = cut.getchannel("A").point(lambda p: 255 if p > 8 else 0).getbbox()
-    x0, y0, x1, y1 = box
+    src = Image.open(src_path).convert("RGB")
+    mask = Image.open(tmp).convert("L")
+
+    # 1 · cierre morfológico para tapar huecos internos. El máximo con el
+    #     original garantiza que solo AÑADA: dilatar y erosionar por su cuenta
+    #     engordaría la silueta por fuera.
+    mask = ImageChops.lighter(mask, mask.filter(ImageFilter.MaxFilter(9))
+                                        .filter(ImageFilter.MinFilter(9)))
+
+    # 2 · alisado del filo. Al doble para que el erosionado del paso 3 sea
+    #     subpíxel. La mediana de 15 alcanza el festoneado de ~8 px de Vision.
+    big = mask.resize((mask.width * 2, mask.height * 2), Image.LANCZOS)
+    big = big.filter(ImageFilter.MedianFilter(15))
+    big = big.filter(ImageFilter.GaussianBlur(3.0))
+    alpha = big.resize(mask.size, Image.LANCZOS)
+
+    # 3 · remapeo de niveles: erosiona (todo lo que baja de LO se va a cero, y
+    #     con ello los píxeles contaminados) y comprime la rampa a un antialias
+    #     limpio de ~1,5 px.
+    LO, HI = 150, 215
+    alpha = alpha.point(
+        lambda v: 0 if v <= LO else (255 if v >= HI else int(255 * (v - LO) / (HI - LO)))
+    )
+
+    # 4 · descontaminación: el color de los píxeles con alfa parcial se sustituye
+    #     por el del primer plano vecino, propagado desde la zona opaca. El alfa
+    #     NO se toca: el halo vive en el color, no en la transparencia.
+    solido = alpha.point(lambda v: 255 if v >= 250 else 0)
+    color = Image.composite(src, Image.new("RGB", src.size, (0, 0, 0)), solido)
+    for _ in range(6):
+        color = color.filter(ImageFilter.MaxFilter(5))
+    color = Image.composite(src, color, solido)
+    color = color.filter(ImageFilter.GaussianBlur(1.0))
+    color = Image.composite(src, color, solido)
+
+    cut = Image.merge("RGBA", (*color.split(), alpha))
+
+    # 5 · encuadre, con el mismo aire que tenía el asset anterior para no mover
+    #     el layout del hero (media.js declara 695×1180).
+    x0, y0, x1, y1 = alpha.point(lambda p: 255 if p > 8 else 0).getbbox()
     pad_x = int((x1 - x0) * 0.06)
-    x0, x1 = max(0, x0 - pad_x), min(cut.width, x1 + pad_x)
-    y0 = max(0, y0 - int((y1 - y0) * 0.04))
-    cut = cut.crop((x0, y0, x1, y1))
+    x0, x1 = x0 - pad_x, x1 + pad_x
+    y0 = y0 - int((y1 - y0) * 0.016)
+    y1 = y1 + int((y1 - y0) * 0.036)
+    lienzo = Image.new("RGBA", (x1 - x0, y1 - y0), (0, 0, 0, 0))
+    lienzo.paste(
+        cut.crop((max(x0, 0), max(y0, 0), min(x1, src.width), min(y1, src.height))),
+        (max(-x0, 0), max(-y0, 0)),
+    )
 
-    arr = as_array(cut.convert("RGB"))
-    alpha = np.asarray(cut.getchannel("A"), dtype=np.float32) / 255.0
-    alpha = bottom_fade(alpha, start=0.74)
+    ratio = lienzo.width / lienzo.height
+    out = lienzo.resize((int(round(1180 * ratio)), 1180), Image.LANCZOS)
 
-    out = as_image(arr, alpha)
-    ratio = out.width / out.height
-    out = out.resize((int(round(1180 * ratio)), 1180), Image.LANCZOS)
+    # 6 · el pie se disuelve. Horneado además de la máscara CSS de media.css:
+    #     sobre un fondo plano un corte recto en las piernas se lee como recorte.
+    a = out.getchannel("A")
+    px = a.load()
+    W, H = out.size
+    inicio = int(H * 0.74)
+    for y in range(inicio, H):
+        f = 1.0 - (y - inicio) / (H - inicio)
+        for x in range(W):
+            px[x, y] = int(px[x, y] * f)
+    out = Image.merge("RGBA", (*out.split()[:3], a))
+
     save(out, "paola-figura", max_kb=320)
     tmp.unlink(missing_ok=True)
 
@@ -304,9 +391,57 @@ def build_backdrops():
         save(out, name, max_kb=budget)
 
 
+def build_galerias():
+    """Las 15 muestras de las galerías de servicio.
+
+    Vienen ya compuestas de la tanda V2 (ver PROMPTS-TARJETAS-V2.md), en 4:5 y
+    nacidas oscuras, así que aquí NO se les aplica el graduado cálido ni el
+    desvanecido de borde de los fondos: eso es para los platos fotográficos, que
+    llevan texto encima y tienen que apagarse. Estas son el contenido, se ven a
+    tamaño grande al abrirse el acordeón, y retocarlas solo las ensuciaría.
+
+    1000×1250 y no los 1122×1402 del original: es el ancho que necesita la
+    tarjeta abierta de la galería elástica (~780 px CSS, el doble en pantalla 2×)
+    y bajar un punto desde el original afila en vez de emborronar.
+    """
+    origen = SRC / "generated-v2"
+    if not origen.is_dir():
+        print(f"  · sin {origen.relative_to(ROOT)}/ — se omiten las galerías")
+        return
+
+    total = 0
+    for servicio in ("meta-ads", "paid-social", "funnels-cro", "ugc", "auditorias"):
+        for i in (1, 2, 3):
+            nombre = f"sample-{servicio}-{i}"
+            src = origen / f"{nombre}.png"
+            if not src.exists():
+                print(f"  ⚠ falta {src.name}")
+                continue
+            im = crop_ratio(Image.open(src).convert("RGB"), 4 / 5)
+            im = im.resize((1000, 1250), Image.LANCZOS)
+            # El presupuesto se controla en conjunto (budgets.galleries), no una
+            # a una: son quince y lo que importa es lo que suman.
+            save(im, nombre)
+            total += 1
+    print(f"  {total} muestras de galería")
+
+
 if __name__ == "__main__":
     print("\n  Construyendo medios desde Selección/\n")
-    build_retrato()
-    build_figura()
-    build_backdrops()
+    import sys as _sys
+    solo = _sys.argv[1] if len(_sys.argv) > 1 else None
+    pasos = {
+        "retrato": build_retrato,
+        "figura": build_figura,
+        "fondos": build_backdrops,
+        "galerias": build_galerias,
+    }
+    # Con argumento se ejecuta UN paso. Sin él, todos. Importa poder ir por
+    # partes: regenerar los fondos cuando solo han llegado muestras nuevas es
+    # reescribir siete archivos que nadie ha tocado.
+    if solo and solo in pasos:
+        pasos[solo]()
+    else:
+        for fn in pasos.values():
+            fn()
     print()

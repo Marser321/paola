@@ -1,0 +1,6 @@
+PRIORITY A — 4-second seamless loop, 24 fps.
+
+One finger taps the mounted phone once. The abstract circular progress ring fills only a short warm-gold arc and returns softly to its opening state. The exercise-bike flywheel begins one very slow partial rotation while all structural parts stay rigid. Arm, phone mount and camera remain stable; preserve exact hand anatomy. No new interface details or numbers appear.
+
+Append: ../../04-recursos-comunes/NEGATIVE-PROMPT.txt
+

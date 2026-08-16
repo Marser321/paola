@@ -167,7 +167,11 @@ export function initProjects() {
       x: () => -distance(),
       ease: 'none',
       scrollTrigger: {
-        trigger: '.projects',
+        // Se pinea .projects__cases, NO .projects. La sección incluye ahora la
+        // galería 3D por encima (index.html §proyectos) y pinear la sección
+        // entera la arrastraría al pin: se quedaría congelada y recortada bajo
+        // la cabecera en vez de tener su propio recorrido de scroll.
+        trigger: '.projects__cases',
         start: 'top top',
         end: () => `+=${distance()}`,
         pin: true,

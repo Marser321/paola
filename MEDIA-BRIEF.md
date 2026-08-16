@@ -104,6 +104,11 @@ del hombro — **un reflejo, no un filtro**.
 
 ---
 
+> **Prompts listos para pegar: [PROMPTS-IA.md](PROMPTS-IA.md).** Traduce los criterios de la
+> §5 de aquí a un prompt por imagen para las 21 que faltan (15 muestras de servicio + 6
+> creatividades de caso), más los de animación. Va en inglés a propósito, y lo explica en su
+> cabecera. Si alguna vez se contradice con este documento, manda este.
+
 ## 4. Qué generar
 
 Formatos: **AVIF + WebP** con el mismo nombre base. Sin extensión al declarar en el

@@ -12,6 +12,7 @@ import '../../styles/base.css'
 import '../../styles/sections.css'
 import '../../styles/tracker.css'
 import '../../styles/caso.css'
+import '../../styles/neon.css' // el borde de foco del marco de la creatividad
 
 import { projects } from '../../data/projects.js'
 import { initI18n, t } from '../../i18n/index.js'
@@ -109,4 +110,53 @@ if (project) {
   document.title = `${project.title} — Caso · PAOLA`
   const root = document.getElementById('caso')
   root.innerHTML = render(project)
+  litBorders()
 } // si no, se queda el fallback que ya está en el HTML
+
+/**
+ * Borde de foco en el marco de la creatividad, con los estilos de neon.css.
+ *
+ * NO se usa initNeon() aquí a propósito: arrastraría gsap, ScrollTrigger y
+ * cursor.js a una página que hoy no lleva ninguno de los tres (ver la cabecera
+ * de este archivo). Lo único que necesita el efecto son dos variables, y eso
+ * son doce líneas y un listener.
+ *
+ * Sin ScrollTrigger no hay trazo de entrada, así que --neon-progress se fija a
+ * 1 a mano: en la one-page lo escribe el scrub, aquí el borde nace encendido.
+ */
+function litBorders() {
+  const surfaces = [...document.querySelectorAll('.caso__visual')]
+  surfaces.forEach((el) => {
+    el.classList.add('neon')
+    el.style.setProperty('--neon-progress', '1')
+  })
+
+  if (!surfaces.length) return
+  if (window.matchMedia('(hover: none)').matches) return
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+  surfaces.forEach((el) => {
+    const halo = document.createElement('i')
+    halo.className = 'neon__halo'
+    halo.setAttribute('aria-hidden', 'true')
+    el.prepend(halo)
+    // `is-live` de forma fija: sin IntersectionObserver, y con una sola
+    // superficie en la página el gate del blur no compra nada.
+    el.classList.add('is-live')
+
+    // El rect se relee en el enter, no en cada movimiento: dentro de la caja no
+    // cambia, y leerlo por evento forzaría un layout tras escribir las
+    // variables.
+    let rect = null
+    el.addEventListener('pointerenter', () => {
+      rect = el.getBoundingClientRect()
+      el.classList.add('is-lit')
+    })
+    el.addEventListener('pointerleave', () => el.classList.remove('is-lit'))
+    el.addEventListener('pointermove', (e) => {
+      if (!rect) return
+      el.style.setProperty('--neon-x', `${((e.clientX - rect.left) / rect.width) * 100}%`)
+      el.style.setProperty('--neon-y', `${((e.clientY - rect.top) / rect.height) * 100}%`)
+    })
+  })
+}

@@ -1,0 +1,2 @@
+Image-to-video from the supplied source image. Preserve the source image as the exact first-frame reference. Cinemagraph-level movement only: local, slow and physically plausible. Locked composition, camera drift below 1% of frame width, unchanged warm champagne-gold grade and deep near-black shadows. 24 fps, single continuous take, seamless loop. Use the asset-specific motion prompt first, then append NEGATIVE-PROMPT.txt.
+

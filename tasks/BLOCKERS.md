@@ -47,8 +47,9 @@ No es trabajo de esta fase.
 
 ## B-02 · Distorsión WebGL de las cards desactivada (tarea 20)
 
-**Fecha:** 2026-08-15 · **Estado:** abierto — código escrito y en el repo, **llamada
-comentada** en `main.js`
+**Fecha:** 2026-08-15 · **Estado:** cerrado por sustitución (2026-08-16) — el código de la
+t.20 sigue en el repo con la **llamada comentada** en `main.js`, y la profundidad que
+buscaba la da ahora `src/js/webgl/projects-gallery.js`
 
 **Qué se intentó.** `src/js/webgl/card-distortion.js`: un canvas WebGL por creatividad
 (6 en total) con un shader de ondulación que sigue al puntero, con render bajo demanda,
@@ -89,6 +90,33 @@ escena, o render a textura por card), en vez de seis renderers independientes.
 impacto a propósito y avisa de que saturar es justo lo que hace que un sitio se lea como
 plantilla. La galería ya tiene pin horizontal, tilt 3D, chrome de anuncio, backstage y
 cursor-píldora. Puede que la distorsión sobre eso no sume.
+
+### Resolución (2026-08-16) — `src/js/webgl/projects-gallery.js`
+
+Se tomó exactamente la vía que este bloqueo proponía: **un único renderer** con las seis
+creatividades como planos en una sola escena, en vez de seis renderers. Contextos WebGL en
+la página: **2** (hero + galería), no 7. Verificado en el navegador del entorno — la página
+pinta correctamente al recorrer `#proyectos`, que es la prueba que cerró este bloqueo.
+
+No es la distorsión al hover de la t.20: es una galería en profundidad ligada al scroll,
+colocada **encima** del track horizontal y como decoración (`aria-hidden`). El chrome de
+anuncio, el backstage y los enlaces a `caso.html` siguen viviendo en las cards, así que no
+se ha añadido un quinto momento de impacto sobre los mismos elementos, se ha dado imagen a
+una sección que solo tenía gradientes.
+
+Dos trampas del puerto que conviene no repetir, ambas fallaban en silencio o casi:
+
+1. `precision mediump float;` declarado solo en el fragment deja `uScrollForce` con
+   precisión distinta en cada shader. El programa no enlaza y lo único que se ve es un
+   reguero de `INVALID_OPERATION: no valid shader program in use`. three ya inyecta la
+   precisión: no hay que declararla.
+2. Cachear `isActive` desde el `onToggle` de ScrollTrigger no vale cuando el trigger nace
+   ya activo — que es el caso normal si el módulo se monta al entrar en pantalla. El
+   callback no dispara, la bandera se queda en `false` y la escena se pinta una vez y no
+   vuelve a repintarse nunca. Se lee `trigger.isActive` en cada frame.
+
+**Sigue pendiente de la t.19:** medir fps y comportamiento en Firefox y Safari (sobre todo
+iOS), igual que el resto de lo WebGL.
 
 ---
 
