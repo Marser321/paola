@@ -106,12 +106,21 @@ export function applyStaticTranslations() {
 
   // --- Proceso ---
   set('#proceso h2.section-title', t('process.title'))
+  // Por ÍNDICE y no buscando dentro de cada <li>: al montarse el carrusel, la
+  // descripción de cada etapa se muda del renglón a su tarjeta (ver
+  // sections/process.js), así que título y descripción dejan de compartir padre.
+  // Los dos siguen en orden de documento, que es lo único que hace falta.
+  // También se retraduce la píldora «01 · Auditoría» del pie de la tarjeta, que
+  // es texto compuesto y no un nodo mudado.
   const steps = t('process.steps')
-  document.querySelectorAll('.step').forEach((li, i) => {
-    const step = steps[i]
-    if (!step) return
-    set('.step__title', step.title, li)
-    set('.step__desc', step.desc, li)
+  document.querySelectorAll('.step__title').forEach((el, i) => {
+    if (steps[i]) el.textContent = steps[i].title
+  })
+  document.querySelectorAll('.step__desc').forEach((el, i) => {
+    if (steps[i]) el.textContent = steps[i].desc
+  })
+  document.querySelectorAll('.process__card-tag').forEach((el, i) => {
+    if (steps[i]) el.textContent = `${String(i + 1).padStart(2, '0')} · ${steps[i].title}`
   })
 
   // --- Sobre mí ---

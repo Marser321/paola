@@ -224,7 +224,86 @@ export const galleries = {
  * Acordado sección a sección: el hero tiene manga ancha porque es el escaparate;
  * el resto va ajustado para no reventar el LCP.
  */
+/**
+ * ETAPAS DEL MÉTODO DE TRABAJO (#proceso)
+ *
+ * >>> SEIS IMÁGENES PENDIENTES. Es lo que hay que generar. <<<
+ *
+ * Mientras no existan, cada etapa se pinta con su gradiente y su número: la
+ * sección funciona entera desde el primer día y las fotos entran de una en una
+ * sin tocar una línea de código. Mismo trato que las galerías de servicio.
+ *
+ * QUÉ TIENEN QUE CONTAR. El carrusel enseña UNA etapa cada vez, así que la
+ * imagen no acompaña al texto: es la que hace entender de un vistazo en qué
+ * consiste ese paso. Criterios para las seis:
+ *   · Formato 4:5 vertical — es el hueco de la tarjeta.
+ *   · Un solo sujeto claro. Se ven a 420px de ancho y con el 40% de la tarjeta
+ *     tapada por el velo del pie: una escena con tres cosas no se lee.
+ *   · Progresión legible entre ellas. Puestas en fila tienen que contar un
+ *     recorrido, de diagnóstico a crecimiento, no seis fotos de oficina.
+ *   · Luz cálida y paleta corta, al hilo del resto del sitio (MEDIA-BRIEF.md).
+ *     Nada de azules corporativos ni de gráficas de stock.
+ *
+ * `alt` NO es opcional y no describe la foto: describe la ETAPA. Es lo que
+ * escucha quien navega con lector de pantalla en lugar de la imagen.
+ */
+export const process = {
+  placeholder: true,
+  items: [
+    {
+      // 01 · Auditoría — el diagnóstico. Antes de tocar nada, mirar.
+      pendiente: true,
+      src: 'proceso-01-auditoria',
+      gradient: ['#4A3A10', '#8A6A1F'],
+      alt: 'Revisión de una cuenta publicitaria existente en busca de fugas de presupuesto',
+    },
+    {
+      // 02 · Estrategia — el plan sobre la mesa. Papel, no pantalla: aquí
+      // todavía se decide, no se ejecuta.
+      pendiente: true,
+      src: 'proceso-02-estrategia',
+      gradient: ['#6E5514', '#A8905A'],
+      alt: 'Planificación de la estructura de campañas y el reparto de presupuesto por fase del embudo',
+    },
+    {
+      // 03 · Creatividades — la producción. Es la etapa más física de las seis y
+      // la que mejor admite una foto con manos dentro.
+      pendiente: true,
+      src: 'proceso-03-creatividades',
+      gradient: ['#8A6A1F', '#D4AF37'],
+      alt: 'Producción de anuncios: grabación y montaje de piezas UGC, estáticas y de vídeo',
+    },
+    {
+      // 04 · Lanzamiento — el momento de publicar. Tensión, no celebración: lo
+      // que se celebra viene en la 06.
+      pendiente: true,
+      src: 'proceso-04-lanzamiento',
+      gradient: ['#A8905A', '#EBD48A'],
+      alt: 'Puesta en marcha de las campañas con el seguimiento técnico ya configurado',
+    },
+    {
+      // 05 · Optimización — la iteración semanal. Repetición y ajuste fino.
+      pendiente: true,
+      src: 'proceso-05-optimizacion',
+      gradient: ['#C9A227', '#F2DFA6'],
+      alt: 'Iteración semanal sobre las campañas: se retiran las que no rinden y se refuerzan las que sí',
+    },
+    {
+      // 06 · Escala — el crecimiento. La única de las seis que puede permitirse
+      // amplitud y aire: es a donde lleva todo lo anterior.
+      pendiente: true,
+      src: 'proceso-06-escala',
+      gradient: ['#D4AF37', '#FFF4A5'],
+      alt: 'Crecimiento sostenido de la inversión hacia más canales y más mercados manteniendo la rentabilidad',
+    },
+  ],
+}
+
 export const budgets = {
+  // Las seis etapas juntas. Van a 4:5 y ~840×1050, que es el doble del hueco
+  // real (420px) para que aguanten pantallas de densidad 2. Se cargan en
+  // diferido salvo la primera, así que no tocan la entrada.
+  process: 620,
   'seq/hero': 1800,
   'seq/hero-still': 120,      // ← en la ruta crítica: es el LCP
   'seq/proyectos': 1200,

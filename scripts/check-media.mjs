@@ -16,7 +16,10 @@ import { dirname, join, resolve } from 'node:path'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const IMG = join(root, 'public', 'img')
 
-const { portraits, figure, backdrops, sequences, galleries, budgets } = await import(
+// ⚠ `process` se renombra al importarlo. Tal cual, pisa el `process` global de
+// Node y este script termina con `process.exit()`: el comprobador reventaba en la
+// última línea justo después de imprimir el informe correcto.
+const { portraits, figure, backdrops, sequences, galleries, process: etapas, budgets } = await import(
   pathToFileURL(join(root, 'src', 'data', 'media.js')).href
 )
 
@@ -164,12 +167,55 @@ for (const [service, gallery] of Object.entries(galleries || {})) {
 }
 checkBudget('galleries', galleryTotal)
 
+// --- Etapas del método de trabajo ---
+// Mismo trato que las galerías —gradiente mientras no haya foto— con una
+// exigencia más: aquí el `alt` SÍ se comprueba. En las galerías el nombre
+// accesible lo da el <button> que envuelve a la muestra, así que sus imágenes
+// van con alt vacío a propósito; estas no tienen botón encima y son lo único que
+// se ve de la etapa.
+let processTotal = 0
+for (const [i, item] of (etapas?.items || []).entries()) {
+  const n = String(i + 1).padStart(2, '0')
+  if (typeof item.alt !== 'string' || !item.alt.trim()) {
+    problems.push(`Etapa ${n} del proceso: falta \`alt\` — describe la ETAPA, no la foto`)
+  }
+  // Mientras la etapa esté `pendiente`, el sitio pinta el gradiente y su número:
+  // la ruta ya está escrita para saber qué archivo hay que generar, pero no se
+  // pide. Sin gradiente no habría nada que enseñar.
+  if (item.pendiente || !item.src) {
+    if (!Array.isArray(item.gradient) || item.gradient.length !== 2) {
+      problems.push(`Etapa ${n} del proceso: sin foto y sin \`gradient\` de 2 colores — no hay nada que pintar`)
+    }
+    if (item.pendiente) {
+      const enDisco = item.src && assetSize(item.src, item.formats).size != null
+      pending.push(
+        enDisco
+          ? `etapa ${n} del proceso: /img/${item.src} YA EXISTE — quítale \`pendiente\` para que se sirva`
+          : `etapa ${n} del proceso — falta generar /img/${item.src}.(avif|webp)`
+      )
+    }
+    continue
+  }
+  const { size, missing } = assetSize(item.src, item.formats)
+  if (size == null) {
+    problems.push(`Etapa ${n} del proceso: falta /img/${item.src} en todos sus formatos`)
+  } else {
+    processTotal += size
+    if (missing.length) {
+      warnings.push(`Etapa ${n} del proceso: sin .${missing.join(', .')} — se servirá el otro`)
+    }
+  }
+}
+checkBudget('process', processTotal)
+if (etapas?.placeholder) pending.push('las seis etapas del proceso siguen sin foto real')
+
 // --- Informe ---
 const declared =
   Object.values(portraits || {}).filter(Boolean).length +
   Object.keys(backdrops || {}).length +
   Object.keys(sequences || {}).length +
-  Object.keys(galleries || {}).length
+  Object.keys(galleries || {}).length +
+  (etapas?.items?.length ? 1 : 0)
 
 console.log(`\n  Manifiesto de medios — ${declared} entrada(s) declarada(s)\n`)
 

@@ -1,0 +1,252 @@
+/* ============================================================
+   PROCESS.CSS — el método de trabajo como carrusel.
+
+   Port del FeatureCarousel de 21st.dev. El original es React + Tailwind +
+   TypeScript + Framer Motion + @hugeicons; aquí no hay ninguno de los cinco, así
+   que lo que se porta es la COMPOSICIÓN —columna de fichas que rota a un lado,
+   baraja de tarjetas al otro— y no el componente. La mecánica está en
+   src/js/sections/process.js, con GSAP en lugar de Framer.
+
+   TRES COSAS DEL ORIGINAL QUE NO SE CONSERVAN, y por qué:
+
+   · El azul #62B2FE del panel. Aquí el color de marca es el oro y no hay hex
+     fuera de tokens.css. Pero el panel TAMPOCO se pinta de oro: el oro es el
+     acento del sitio, no su campo. Un bloque dorado de 40% de ancho lo
+     convertiría en fondo y dejaría sin fuerza a todo lo que sí lo usa como
+     acento (filetes, foco, la ficha activa de aquí mismo). El panel va en
+     --surface y el oro se queda donde marca: en la etapa en la que estás.
+
+   · Los iconos de @hugeicons. Este sitio no tiene sistema de iconos —ninguno, en
+     ninguna sección— y meter una librería para seis pictogramas sería la
+     dependencia peor amortizada del proyecto. El proceso YA tenía su signo: los
+     números 01–06 en mono, que además dicen algo que un icono no dice, que es el
+     ORDEN. Es lo que se conserva.
+
+   · El texto en mayúsculas de las fichas se queda, porque coincide con el .mono
+     del sitio, pero con su cuerpo y su interletraje, no con los del original.
+   ============================================================ */
+
+.process__carousel {
+  /* Alto de cada ficha. Lo comparten el CSS y el JS: el JS coloca las fichas en
+     `y = distancia × esta medida`, así que si se cambia aquí y no allí, la
+     columna se desalinea. Por eso es una variable y no un número suelto. */
+  --ficha-h: 4rem;
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: clip;
+}
+
+/* ===== PANEL IZQUIERDO: LAS ETAPAS ===== */
+.process__stages {
+  position: relative;
+  /* Cinco fichas de alto: la activa, dos arriba y dos abajo. Con menos, la
+     rotación no se entiende; con más, la columna compite con la tarjeta. */
+  height: calc(var(--ficha-h) * 5);
+  background: var(--surface);
+  overflow: clip;
+}
+
+/* Los dos velos que desvanecen la columna por arriba y por abajo. Son la pieza
+   que hace que la lista se lea como una rueda y no como una lista recortada a
+   hacha: las fichas de los extremos se van apagando en vez de cortarse. */
+.process__stages::before,
+.process__stages::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  height: var(--ficha-h);
+  z-index: 2;
+  pointer-events: none;
+}
+.process__stages::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--surface), transparent);
+}
+.process__stages::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--surface), transparent);
+}
+
+.process__rueda {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Cada ficha va ABSOLUTA y centrada en la rueda; el desplazamiento lo pone GSAP.
+   Si estuvieran en flujo, el reparto lo decidiría el navegador y no se podría
+   animar la posición de cada una respecto a la activa. */
+.step {
+  position: absolute;
+  height: var(--ficha-h);
+  display: flex;
+  align-items: center;
+  width: max-content;
+  max-width: 100%;
+  padding-inline: 1.5rem;
+}
+
+.step__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.85rem 1.4rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  text-align: left;
+  max-width: 100%;
+  transition: color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out);
+}
+.step__chip:hover { color: var(--text); border-color: var(--line-gold); }
+
+/* La etapa en la que estás. Mismo relleno dorado con texto del color del fondo
+   que la píldora activa del menú (pill-nav.css): es el mismo gesto —«esto es lo
+   que estás mirando»— y tiene que pintarse igual en los dos sitios. */
+.step[data-estado='activa'] .step__chip {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--bg);
+}
+.step[data-estado='activa'] .step__number { color: var(--bg); opacity: 0.65; }
+
+.step__number {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.step__title {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== PANEL DERECHO: LA BARAJA ===== */
+.process__deck {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 6vw, 4rem);
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+}
+.process__stack {
+  position: relative;
+  width: 100%;
+  max-width: 26rem;
+  aspect-ratio: 4 / 5;
+}
+
+.process__card {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(var(--radius) * 1.2);
+  overflow: hidden;
+  background: var(--surface);
+  transform-origin: center;
+  /* Las tarjetas que no son la activa no reciben ni puntero ni tabulador: están
+     ahí como profundidad, no como contenido. El JS también las marca `inert`. */
+  will-change: transform, opacity;
+}
+.process__card img,
+.process__card .process__card-gradient {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter var(--dur-slow) var(--ease-out);
+}
+/* Las de los lados van en gris y desenfocadas: es lo que hace que la del centro
+   se lea como la que está en foco, igual que en la galería elástica. */
+.process__card[data-estado='lado'] :is(img, .process__card-gradient) {
+  filter: grayscale(1) blur(2px) brightness(0.7);
+}
+
+/* Marca de agua mientras no hay foto: el número enorme de la etapa sobre su
+   gradiente. No es un hueco esperando — se lee como diseño hasta que llegue la
+   imagen, que es la condición para que el manifiesto pueda ir entregándolas de
+   una en una (src/data/media.js §ETAPAS). */
+.process__card-gradient {
+  display: grid;
+  place-items: center;
+}
+.process__card-ghost {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(6rem, 22vw, 12rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--bg);
+  opacity: 0.22;
+}
+
+/* Pie de la tarjeta activa: el velo, la píldora con número y nombre, y la
+   descripción de la etapa — que es el texto que ya existía en el <li>. */
+.process__card-body {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  padding-top: 8rem;
+  background: linear-gradient(to top, var(--veil-media), transparent);
+  pointer-events: none;
+}
+.process__card-tag {
+  display: inline-block;
+  margin-bottom: 0.9rem;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text);
+}
+.step__desc {
+  color: var(--text);
+  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+/* ===== ESCRITORIO: LAS DOS COLUMNAS ===== */
+@media (min-width: 1024px) {
+  .process__carousel { flex-direction: row; align-items: stretch; }
+  .process__stages {
+    width: 40%;
+    height: auto;              /* lo estira la fila */
+    flex-shrink: 0;
+  }
+  .process__rueda { justify-content: flex-start; }
+  .step { padding-inline: clamp(2rem, 4vw, 4rem); }
+  .process__deck {
+    flex: 1;
+    border-top: 0;
+    border-left: 1px solid var(--line);
+  }
+}
+
+/* La línea vertical dorada del proceso antiguo NO se recupera aquí: marcaba un
+   recorrido en una lista que se leía de arriba abajo, y esto ya no lo es. Su
+   trabajo —decir por dónde vas— lo hace ahora la ficha dorada. */
+
+@media (prefers-reduced-motion: reduce) {
+  .process__card :is(img, .process__card-gradient) { transition: none; }
+}

@@ -5,6 +5,7 @@ import './styles/tracker.css'
 import './styles/media.css'
 import './styles/neon.css'
 import './styles/pill-nav.css'
+import './styles/process.css'
 
 import { initI18n, getLang, t } from './i18n/index.js'
 import { applyStaticTranslations } from './i18n/apply-dom.js'
