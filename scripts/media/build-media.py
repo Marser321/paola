@@ -467,6 +467,67 @@ def build_proceso():
         print("    ↳ ahora quita `pendiente: true` de esas etapas en src/data/media.js")
 
 
+def build_parallax():
+    """Capas de parallax: alfa SACADA DE LA LUMINANCIA.
+
+    Las capas del hero son luz sobre negro — polvo en suspensión, bruma, un
+    destello. Eso permite resolver el problema que hunde este tipo de asset:
+    casi ningún generador de imágenes devuelve canal alfa de verdad, y recortar
+    a mano deja el halo gris que se ve como un parche sobre #0E0E0E.
+
+    Aquí no hace falta recortar. Si el elemento ES la luz, su brillo YA es su
+    opacidad: se genera sobre negro puro y el alfa se calcula de la luminancia.
+    El resultado no puede tener halo, porque no hay borde que decidir — la
+    transición a transparente es exactamente la misma que la del elemento a
+    negro, que es continua.
+
+    ⚠ Esto solo vale para elementos ADITIVOS (luz, humo iluminado, partículas).
+    Para un sujeto opaco recortado hace falta alfa real: ver build_figura(), que
+    usa Vision.
+
+    El color se conserva: se divide por el alfa para deshacer la premultiplicación
+    que introduce el fondo negro. Sin ese paso las capas salen lavadas al
+    componerlas sobre un fondo que no sea negro — por ejemplo el papel crema del
+    tema claro.
+    """
+    origen = SRC / "generated-parallax"
+    if not origen.is_dir():
+        print(f"  · sin {origen.relative_to(ROOT)}/ — se omiten las capas de parallax")
+        return
+
+    total = 0
+    for src in sorted(origen.glob("*.png")):
+        im = Image.open(src).convert("RGB")
+        arr = as_array(im)
+        # Luminancia perceptual, no la media de canales: un dorado saturado y un
+        # gris del mismo valor no aportan la misma luz.
+        lum = arr[..., 0] * 0.2126 + arr[..., 1] * 0.7152 + arr[..., 2] * 0.0722
+        alpha = np.clip(lum, 0.0, 1.0)
+        # NORMALIZADO, y no es cosmético. La luminancia del oro del sitio es 0.68,
+        # así que una capa dorada pensada como sólida se quedaba en un alfa máximo
+        # de 174/255 y nunca llegaba a opaca — medido. Escalando al máximo de cada
+        # imagen, el canal alfa expresa la FORMA y la fuerza final la decide
+        # `opacity` en el manifiesto, que es donde se puede ajustar por tema sin
+        # regenerar el archivo. La caída relativa se conserva entera.
+        pico = float(alpha.max())
+        if pico > 1e-3:
+            alpha = np.clip(alpha / pico, 0.0, 1.0)
+        # Deshacer la premultiplicación contra el negro. Donde el alfa es casi
+        # cero el color no importa y dividir explota, así que se acota.
+        safe = np.maximum(alpha, 1e-3)[..., None]
+        rgb = np.clip(arr / safe, 0.0, 1.0)
+        rgba = np.dstack([rgb, alpha])
+
+        out = Image.fromarray((rgba * 255).round().astype("uint8"), "RGBA")
+        ratio = out.width / out.height
+        out = out.resize((2000, int(round(2000 / ratio))), Image.LANCZOS)
+        save(out, src.stem)
+        total += 1
+    print(f"  {total} capa(s) de parallax con alfa")
+    if total:
+        print("    ↳ declárala(s) en src/data/media.js §CAPAS DE PARALLAX")
+
+
 if __name__ == "__main__":
     print("\n  Construyendo medios desde Selección/\n")
     import sys as _sys
@@ -477,6 +538,7 @@ if __name__ == "__main__":
         "fondos": build_backdrops,
         "galerias": build_galerias,
         "proceso": build_proceso,
+        "parallax": build_parallax,
     }
     # Con argumento se ejecuta UN paso. Sin él, todos. Importa poder ir por
     # partes: regenerar los fondos cuando solo han llegado muestras nuevas es
