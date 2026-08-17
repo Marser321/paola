@@ -299,7 +299,84 @@ export const process = {
   ],
 }
 
+/**
+ * CAPAS DE PARALLAX — profundidad multicapa por sección
+ *
+ * >>> AQUÍ SE AÑADEN LAS CAPAS NUEVAS. Es declarar, no programar. <<<
+ *
+ * Qué es y qué NO es. Los `backdrops` de arriba ya mueven UNA foto por sección:
+ * eso es el decorado. Esto es otra cosa — varias capas a distinta velocidad
+ * dentro de la misma sección, que es lo que produce sensación de profundidad
+ * real. Se usan a la vez sin pisarse: el backdrop es el plato del fondo y estas
+ * son los planos que van delante y detrás de él.
+ *
+ * Clave = id de la sección en index.html. Sin capas declaradas, la sección se
+ * queda exactamente como está: este módulo no toca el DOM si no hay nada que
+ * poner.
+ *
+ * CADA CAPA es una de estas dos cosas:
+ *
+ *   · IMAGEN — `src` sin extensión, igual que en todo este archivo. Tiene que
+ *     llevar ALFA REAL (PNG/WebP con transparencia), no un rectángulo con fondo
+ *     horneado: se ven unas sobre otras y sobre las partículas del hero, que son
+ *     transparentes. Un fondo opaco se vería como un parche recortado. Ver
+ *     PROMPTS-PARALLAX.md para el encargo.
+ *
+ *   · RESPLANDOR — `glow`, un radial atmosférico definido por tokens. No pesa
+ *     nada, gira con el tema solo y sirve para dar profundidad sin esperar a
+ *     ninguna imagen. Es lo que hay hoy en el hero.
+ *
+ * `depth`  · cuánto viaja con el scroll, de 0 (quieta) a 1. Tope duro en 0.5.
+ *            MISMO SIGNO que en los backdrops: positivo = baja al bajar, o sea
+ *            se queda atrás. Cuanto más lejos está algo, más pequeño se ve su
+ *            desplazamiento, así que las capas del fondo llevan MENOS depth que
+ *            las de delante. (El componente de Osmo del que sale esto lo hace al
+ *            revés porque su efecto es una apertura de telón, no profundidad.)
+ * `plane`  · 'back' detrás de todo · 'mid' entre el fondo y la figura ·
+ *            'front' por delante de la figura, por debajo del texto.
+ */
+export const parallax = {
+  hero: {
+    layers: [
+      // Las dos de hoy son resplandores, no fotos: dan profundidad desde el
+      // primer día y no bloquean nada. Las imágenes con alfa entran al lado
+      // cuando existan, sin tocar código.
+      {
+        id: 'bruma-lejana',
+        glow: { x: '18%', y: '26%', size: '58% 46%', token: '--glow-warm' },
+        depth: 0.06,
+        plane: 'back',
+      },
+      {
+        id: 'bruma-cercana',
+        glow: { x: '82%', y: '74%', size: '46% 38%', token: '--glow-warm-soft' },
+        depth: 0.22,
+        plane: 'front',
+      },
+
+      // ↓ PLANTILLA. Descomenta, deja el archivo en public/img/ y ya está.
+      //   Cuantas más capas, más profundidad — el tope práctico son cuatro o
+      //   cinco: por encima se notan más los bordes que el efecto.
+      // {
+      //   id: 'polvo-frontal',
+      //   src: 'hero-capa-polvo',
+      //   alt: '',              // decorativa → alt vacío, no ausente
+      //   depth: 0.34,
+      //   plane: 'front',
+      //   opacity: [0.5, 0.32], // [oscuro, claro]; opcional, por defecto 1
+      // },
+    ],
+  },
+
+  // ↓ Cualquier sección de index.html admite lo mismo. Ejemplo listo para usar:
+  // servicios: { layers: [{ id: 'humo', src: 'servicios-capa-humo', alt: '', depth: 0.12, plane: 'back' }] },
+}
+
 export const budgets = {
+  // Todas las capas de parallax juntas. Van con alfa, y la alfa no comprime
+  // gratis: es el mismo motivo por el que la figura del hero tiene 320 KB para
+  // ella sola. Si se aprieta, primero baja resolución y luego número de capas.
+  parallax: 700,
   // Las seis etapas juntas. Van a 4:5 y ~840×1050, que es el doble del hueco
   // real (420px) para que aguanten pantallas de densidad 2. Se cargan en
   // diferido salvo la primera, así que no tocan la entrada.

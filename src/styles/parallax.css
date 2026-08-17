@@ -1,0 +1,71 @@
+/* ============================================================
+   PARALLAX.CSS — profundidad multicapa por sección.
+   Las capas las declara src/data/media.js §CAPAS DE PARALLAX y las monta
+   src/js/fx/parallax.js. Sin capas declaradas, nada de esto llega a aplicarse.
+   ============================================================ */
+
+.has-parallax { position: relative; }
+
+/* El contenedor NO recorta: las capas se salen por arriba y por abajo a
+   propósito —es de donde sale el recorrido— y quien recorta es la sección, que
+   ya lleva `overflow: clip` (el hero lo tiene desde siempre). */
+.parallax {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.parallax__layer {
+  position: absolute;
+  /* Sobredimensionada en vertical, igual que .backdrop__layer: la capa se mueve
+     DENTRO de este margen, así que el desplazamiento nunca descubre su borde. */
+  top: -25%;
+  height: 150%;
+  left: 0;
+  right: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: var(--capa-opacity-dark, 1);
+  will-change: transform;
+}
+[data-theme='light'] .parallax__layer { opacity: var(--capa-opacity-light, 0.8); }
+
+.parallax__layer picture,
+.parallax__layer img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* `contain` y no `cover`: estas imágenes llevan alfa y su composición está
+     pensada, no es una textura que se pueda recortar por donde sea. Con `cover`
+     una pantalla estrecha se comería justo los bordes desvanecidos, que es lo
+     que hace que la capa se funda con el resto. */
+  object-fit: contain;
+}
+
+/* Los tres planos. El hero reparte así su profundidad:
+     canvas de partículas / fallback ...... sin z-index (el fondo de todo)
+     back ................................. 0
+     mid .................................. 1, junto a la figura
+     .hero__figure ........................ 1
+     front ................................ 2, por delante de la figura
+     .hero__content ....................... 3 — el texto SIEMPRE arriba
+   El texto del hero se sube a 3 en sections.css por este motivo: una capa
+   `front` tiene que poder pasar por delante de la figura sin taparle el nombre. */
+.parallax__layer[data-plane='back']  { z-index: 0; }
+.parallax__layer[data-plane='mid']   { z-index: 1; }
+.parallax__layer[data-plane='front'] { z-index: 2; }
+
+/* En vertical el recorrido de scroll de una sección es mucho más corto, así que
+   el mismo viaje se consume de golpe y se lee como un salto en vez de como
+   profundidad. El viaje se recorta en el JS (§FACTOR_MOVIL); aquí solo se baja
+   el sobredimensionado, que existe para tapar el recorrido y por tanto puede
+   encogerse con él. */
+@media (max-width: 767px) {
+  .parallax__layer { top: -15%; height: 130%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Las capas se quedan y se quedan QUIETAS. Son imagen, no movimiento — el
+     mismo criterio que las capas de fondo (media.css §REDUCED MOTION). */
+  .parallax__layer { transform: none !important; }
+}

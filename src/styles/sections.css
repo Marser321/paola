@@ -136,8 +136,11 @@
   }
 }
 
-/* z-index 2: por encima de la figura (1) y de su velo. */
-.hero__content { position: relative; z-index: 2; }
+/* El texto va SIEMPRE arriba del todo. Sube de 2 a 3 al entrar las capas de
+   parallax (parallax.css §planos): una capa `front` tiene que poder pasar por
+   delante de la figura —ahí está la profundidad— sin llevarse por delante el
+   nombre. El reparto completo del hero está documentado en parallax.css. */
+.hero__content { position: relative; z-index: 3; }
 .hero__label { margin-bottom: 1.5rem; }
 .hero__title {
   /* Dos líneas piden menos cuerpo que una: con el clamp del token, «PAOLA» y

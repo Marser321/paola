@@ -19,7 +19,7 @@ const IMG = join(root, 'public', 'img')
 // ⚠ `process` se renombra al importarlo. Tal cual, pisa el `process` global de
 // Node y este script termina con `process.exit()`: el comprobador reventaba en la
 // última línea justo después de imprimir el informe correcto.
-const { portraits, figure, backdrops, sequences, galleries, process: etapas, budgets } = await import(
+const { portraits, figure, backdrops, sequences, galleries, process: etapas, parallax: parallaxLayers, budgets } = await import(
   pathToFileURL(join(root, 'src', 'data', 'media.js')).href
 )
 
@@ -208,6 +208,37 @@ for (const [i, item] of (etapas?.items || []).entries()) {
 }
 checkBudget('process', processTotal)
 if (etapas?.placeholder) pending.push('las seis etapas del proceso siguen sin foto real')
+
+// --- Capas de parallax ---
+// Las capas de `glow` no se comprueban: no son archivos, son un radial por
+// tokens. Aquí solo se mira lo que tiene que existir en disco.
+let parallaxTotal = 0
+for (const [section, config] of Object.entries(parallaxLayers || {})) {
+  for (const [i, capa] of (config?.layers || []).entries()) {
+    const donde = `Capa ${i + 1} del parallax de «${section}»`
+    if (!capa.src && !capa.glow) {
+      problems.push(`${donde}: ni \`src\` ni \`glow\` — no hay nada que pintar`)
+      continue
+    }
+    if ((capa.depth ?? 0) > 0.5) {
+      warnings.push(`${donde}: depth ${capa.depth} > 0.5, el módulo lo recorta ahí`)
+    }
+    if (!capa.src) continue
+    // Decorativa, así que `alt: ''` es lo correcto — pero tiene que ESTAR. Sin el
+    // atributo, un lector de pantalla lee el nombre del archivo.
+    if (typeof capa.alt !== 'string') {
+      problems.push(`${donde}: falta \`alt\` (usa "" — son decorativas)`)
+    }
+    const { size, missing } = assetSize(capa.src, capa.formats)
+    if (size == null) {
+      pending.push(`${donde} — falta generar /img/${capa.src}.(avif|webp) CON ALFA`)
+    } else {
+      parallaxTotal += size
+      if (missing.length) warnings.push(`${donde}: sin .${missing.join(', .')} — se servirá el otro`)
+    }
+  }
+}
+checkBudget('parallax', parallaxTotal)
 
 // --- Informe ---
 const declared =

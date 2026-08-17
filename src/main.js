@@ -6,6 +6,7 @@ import './styles/media.css'
 import './styles/neon.css'
 import './styles/pill-nav.css'
 import './styles/process.css'
+import './styles/parallax.css'
 
 import { initI18n, getLang, t } from './i18n/index.js'
 import { applyStaticTranslations } from './i18n/apply-dom.js'
@@ -41,6 +42,7 @@ import { initContactForm } from './js/core/contact-form.js'
 import { initScramble } from './js/fx/scramble.js'
 import { initSplitTitles } from './js/fx/split-titles.js'
 import { initNeon, refreshNeon } from './js/fx/neon.js'
+import { initParallax } from './js/fx/parallax.js'
 import { projects } from './data/projects.js'
 
 // i18n va PRIMERO: fija el idioma antes de que nadie pinte nada. Si fuera
@@ -71,6 +73,8 @@ initProjectsGallery()
 // Capas de imagen (t.38). Van ANTES de los reveals de sección: insertan un
 // hijo en cada sección y conviene que el DOM esté estable cuando ScrollTrigger
 // mida. Sin nada declarado en media.js, ambas salen en su primera línea.
+initParallax()   // capas de profundidad: mismo criterio que los backdrops,
+                 // DOM estable antes de que ScrollTrigger mida
 initBackdrops()
 initSequences()
 initServices()
