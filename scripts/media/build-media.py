@@ -426,6 +426,47 @@ def build_galerias():
     print(f"  {total} muestras de galería")
 
 
+def build_proceso():
+    """Las 6 etapas del método de trabajo (#proceso).
+
+    Mismo trato que las galerías y por el mismo motivo: nacen ya compuestas, en
+    4:5 y oscuras (ver PROMPTS-PROCESO.md), así que NO se les aplica el graduado
+    cálido ni el desvanecido de borde. Eso es para los platos fotográficos, que
+    llevan texto encima y tienen que apagarse; estas son el contenido.
+
+    840×1050 y no los 1000×1250 de las galerías: el hueco real de la tarjeta es
+    de 416 px CSS como mucho (`.process__stack` va a `max-width: 26rem`), así que
+    840 ya es el doble para pantallas de densidad 2. Subir de ahí es pagar peso
+    por píxeles que nadie ve.
+    """
+    origen = SRC / "generated-proceso"
+    if not origen.is_dir():
+        print(f"  · sin {origen.relative_to(ROOT)}/ — se omiten las etapas del proceso")
+        return
+
+    etapas = (
+        "proceso-01-auditoria",
+        "proceso-02-estrategia",
+        "proceso-03-creatividades",
+        "proceso-04-lanzamiento",
+        "proceso-05-optimizacion",
+        "proceso-06-escala",
+    )
+    total = 0
+    for nombre in etapas:
+        src = origen / f"{nombre}.png"
+        if not src.exists():
+            print(f"  ⚠ falta {src.name}")
+            continue
+        im = crop_ratio(Image.open(src).convert("RGB"), 4 / 5)
+        im = im.resize((840, 1050), Image.LANCZOS)
+        save(im, nombre)
+        total += 1
+    print(f"  {total}/6 etapas del proceso")
+    if total:
+        print("    ↳ ahora quita `pendiente: true` de esas etapas en src/data/media.js")
+
+
 if __name__ == "__main__":
     print("\n  Construyendo medios desde Selección/\n")
     import sys as _sys
@@ -435,6 +476,7 @@ if __name__ == "__main__":
         "figura": build_figura,
         "fondos": build_backdrops,
         "galerias": build_galerias,
+        "proceso": build_proceso,
     }
     # Con argumento se ejecuta UN paso. Sin él, todos. Importa poder ir por
     # partes: regenerar los fondos cuando solo han llegado muestras nuevas es
