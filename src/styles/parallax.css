@@ -6,6 +6,28 @@
 
 .has-parallax { position: relative; }
 
+/* ⚠ El contenido, POR ENCIMA de los tres planos.
+   Sin esto, declarar una capa `mid` o `front` en cualquier sección que no sea el
+   hero le tapa el texto: su contenido va en flujo normal —o en z-index 1 si la
+   sección tiene fondo fotográfico (media.css §.has-backdrop)— y las capas van a
+   0, 1 y 2. Es el mismo problema que ya resolvió `.has-backdrop` en su día, con
+   la misma solución.
+
+   EL HERO QUEDA FUERA a propósito. Allí el reparto está hecho a mano y la figura
+   va DELIBERADAMENTE en medio, entre las capas `mid` y `front` — que es de donde
+   sale la profundidad. Esta regla, con sus dos clases de especificidad, le
+   ganaría a `.hero__figure` y aplanaría el hero entero.
+
+   ⚠ `.backdrop` TAMBIÉN queda fuera. Es el plato fotográfico de la sección
+   (media.css) y su sitio es EN MEDIO del reparto, no encima: la capa `back` va
+   detrás de la foto y las capas `mid` y `front` por delante — que es justo lo
+   que distingue este sistema de tener dos fondos. Subiéndolo a 3 se aplanaba
+   todo detrás de él. */
+.has-parallax:not(.hero) > *:not(.parallax):not(.backdrop) {
+  position: relative;
+  z-index: 3;
+}
+
 /* El contenedor NO recorta: las capas se salen por arriba y por abajo a
    propósito —es de donde sale el recorrido— y quien recorta es la sección, que
    ya lleva `overflow: clip` (el hero lo tiene desde siempre). */

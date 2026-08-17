@@ -252,7 +252,6 @@ export const process = {
   items: [
     {
       // 01 · Auditoría — el diagnóstico. Antes de tocar nada, mirar.
-      pendiente: true,
       src: 'proceso-01-auditoria',
       gradient: ['#4A3A10', '#8A6A1F'],
       alt: 'Revisión de una cuenta publicitaria existente en busca de fugas de presupuesto',
@@ -260,7 +259,6 @@ export const process = {
     {
       // 02 · Estrategia — el plan sobre la mesa. Papel, no pantalla: aquí
       // todavía se decide, no se ejecuta.
-      pendiente: true,
       src: 'proceso-02-estrategia',
       gradient: ['#6E5514', '#A8905A'],
       alt: 'Planificación de la estructura de campañas y el reparto de presupuesto por fase del embudo',
@@ -268,7 +266,6 @@ export const process = {
     {
       // 03 · Creatividades — la producción. Es la etapa más física de las seis y
       // la que mejor admite una foto con manos dentro.
-      pendiente: true,
       src: 'proceso-03-creatividades',
       gradient: ['#8A6A1F', '#D4AF37'],
       alt: 'Producción de anuncios: grabación y montaje de piezas UGC, estáticas y de vídeo',
@@ -276,14 +273,12 @@ export const process = {
     {
       // 04 · Lanzamiento — el momento de publicar. Tensión, no celebración: lo
       // que se celebra viene en la 06.
-      pendiente: true,
       src: 'proceso-04-lanzamiento',
       gradient: ['#A8905A', '#EBD48A'],
       alt: 'Puesta en marcha de las campañas con el seguimiento técnico ya configurado',
     },
     {
       // 05 · Optimización — la iteración semanal. Repetición y ajuste fino.
-      pendiente: true,
       src: 'proceso-05-optimizacion',
       gradient: ['#C9A227', '#F2DFA6'],
       alt: 'Iteración semanal sobre las campañas: se retiran las que no rinden y se refuerzan las que sí',
@@ -291,7 +286,6 @@ export const process = {
     {
       // 06 · Escala — el crecimiento. La única de las seis que puede permitirse
       // amplitud y aire: es a donde lleva todo lo anterior.
-      pendiente: true,
       src: 'proceso-06-escala',
       gradient: ['#D4AF37', '#FFF4A5'],
       alt: 'Crecimiento sostenido de la inversión hacia más canales y más mercados manteniendo la rentabilidad',
