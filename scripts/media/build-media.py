@@ -196,10 +196,23 @@ def bottom_fade(alpha, start=0.72):
 # SALIDA
 # ============================================================
 
-def save(im, name, max_kb=None):
+def save(im, name, max_kb=None, quality_avif=58, quality_webp=80, alpha_webp=None):
+    """`alpha_webp` solo para imágenes CON canal alfa.
+
+    ⚠ Pillow guarda el alfa del WebP SIN PÉRDIDA por defecto (alpha_quality=100)
+    aunque el color vaya comprimido. En una capa de parallax, que es casi toda
+    alfa, eso multiplica el archivo por SIETE: la capa de bruma pasaba de 52 KB a
+    392 KB sin que se vea la diferencia sobre un fondo casi negro.
+    """
     OUT.mkdir(parents=True, exist_ok=True)
+    webp_kwargs = dict(quality=quality_webp, method=6)
+    if alpha_webp is not None:
+        webp_kwargs["alpha_quality"] = alpha_webp
     written = []
-    for ext, kwargs in (("avif", dict(quality=58)), ("webp", dict(quality=80, method=6))):
+    for ext, kwargs in (
+        ("avif", dict(quality=quality_avif)),
+        ("webp", webp_kwargs),
+    ):
         path = OUT / f"{name}.{ext}"
         im.save(path, **kwargs)
         kb = path.stat().st_size // 1024
@@ -516,12 +529,29 @@ def build_parallax():
         # cero el color no importa y dividir explota, así que se acota.
         safe = np.maximum(alpha, 1e-3)[..., None]
         rgb = np.clip(arr / safe, 0.0, 1.0)
-        rgba = np.dstack([rgb, alpha])
 
-        out = Image.fromarray((rgba * 255).round().astype("uint8"), "RGBA")
-        ratio = out.width / out.height
-        out = out.resize((2000, int(round(2000 / ratio))), Image.LANCZOS)
-        save(out, src.stem)
+        # LIMPIEZA DEL COLOR INVISIBLE. Entre el 67% y el 87% de cada capa es
+        # fondo transparente — medido en las seis —, y ahí la división de arriba
+        # amplifica el ruido del generador hasta convertirlo en confeti de colores
+        # que NADIE VE (su alfa es cero) pero que el compresor tiene que codificar
+        # igual. Sustituirlo por el color medio de la parte visible bajó la capa
+        # de bruma de 705 KB a 205 KB sin tocar un solo píxel visible.
+        visible = alpha > 0.15
+        medio = rgb[visible].mean(axis=0) if visible.any() else np.ones(3, dtype=np.float32)
+        peso = np.clip(alpha / 0.15, 0.0, 1.0)[..., None]
+        rgb = rgb * peso + medio * (1.0 - peso)
+
+        out = Image.fromarray((np.dstack([rgb, alpha]) * 255).round().astype("uint8"), "RGBA")
+        # NO se reescala hacia arriba. Antes esto subía a 2000px de ancho fijo y
+        # los originales vienen a ~1500: eran 500px de píxeles inventados que no
+        # añadían detalle y sí peso. 1500 ya es el doble del ancho al que se ven
+        # estas capas en la mayoría de pantallas, y son borrosas por definición.
+        ancho = min(1500, out.width)
+        out = out.resize((ancho, int(round(ancho * out.height / out.width))), Image.LANCZOS)
+        # Calidad más baja que el resto del sitio, y se puede: son capas suaves
+        # que se sirven a `opacity` 0.3–0.5 sobre un fondo casi negro. El detalle
+        # que se pierde aquí no llega a pintarse.
+        save(out, src.stem, quality_avif=42, quality_webp=55, alpha_webp=48)
         total += 1
     print(f"  {total} capa(s) de parallax con alfa")
     if total:

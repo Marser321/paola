@@ -24,12 +24,21 @@ import { parallax as manifiesto } from '../../data/media.js'
 // Lo que sí se conserva es la mecánica: una línea de tiempo por sección,
 // `scrub`, y cada capa desplazándose a su propio ritmo dentro de ella.
 
-// Tope de viaje. Los backdrops de sección lo tienen en 0.35 porque llevan texto
-// encima y por encima de ahí compiten con él; estas capas son escenografía del
-// hero, sin texto propio, así que admiten algo más. No mucho más: pasado medio
-// viewport el desplazamiento deja de leerse como profundidad y empieza a
-// leerse como que algo se ha descolocado.
-const DEPTH_MAX = 0.5
+// Tope de viaje. NO es una preferencia estética: sale de la geometría de la capa
+// y por eso este número y el sobredimensionado de parallax.css están atados.
+//
+// La capa mide el 150% de su sección y arranca en -25%, así que tiene un margen
+// del 25% por arriba y otro por abajo para esconder su recorrido. El viaje es
+// `depth × altoDeLaCapa` = `depth × 1.5 × altoDeLaSección`, y tiene que caber en
+// `0.25 × altoDeLaSección`:
+//
+//     depth × 1.5 ≤ 0.25   →   depth ≤ 0.166
+//
+// Con el 0.5 que había antes, una capa a `depth: 0.34` viajaba 459px en un hero
+// de 900 teniendo 225 de margen: el borde superior de la imagen entraba en
+// cuadro. Si algún día hace falta más viaje, hay que subir ANTES el
+// sobredimensionado de parallax.css y rehacer esta cuenta.
+const DEPTH_MAX = 0.16
 
 // En vertical el recorrido de scroll de una sección es mucho más corto: el mismo
 // viaje se consume de golpe y se lee como un salto, no como profundidad. Se
@@ -46,18 +55,28 @@ function pintarGlow(el, glow) {
   el.style.backgroundImage = `radial-gradient(${size} at ${x} ${y}, var(${token}), transparent 70%)`
 }
 
-/** Una capa de imagen. `alt` vacío + aria-hidden: es decorado, no contenido. */
-function pintarImagen(el, capa) {
+/**
+ * Una capa de imagen. `alt` vacío + aria-hidden en el contenedor: es decorado.
+ *
+ * `eager` para las capas que nacen SOBRE la línea de flotación. Diferir la carga
+ * de una imagen que ya se está viendo es de los pocos usos de `lazy` que hacen
+ * daño en vez de bien: el hero es lo primero que se mira y sus tres planos son
+ * justo lo que da la sensación de profundidad al entrar.
+ */
+function pintarImagen(el, capa, eager) {
   el.innerHTML = `<picture>
       <source srcset="/img/${capa.src}.avif" type="image/avif" />
       <source srcset="/img/${capa.src}.webp" type="image/webp" />
       <img src="/img/${capa.src}.webp" alt="${capa.alt || ''}"
-           loading="lazy" decoding="async" />
+           loading="${eager ? 'eager' : 'lazy'}" decoding="async" />
     </picture>`
 }
 
 function montarSeccion(id, config) {
   const seccion = document.getElementById(id)
+  // El hero es la única sección que se ve sin hacer scroll, así que es la única
+  // cuyas capas se cargan de inmediato.
+  const sobreLaLinea = id === 'hero'
   const capas = config?.layers?.filter((c) => c && (c.src || c.glow)) || []
   if (!seccion || !capas.length) return
 
@@ -70,7 +89,7 @@ function montarSeccion(id, config) {
     el.className = 'parallax__layer'
     el.dataset.plane = ['back', 'mid', 'front'].includes(capa.plane) ? capa.plane : 'mid'
 
-    if (capa.src) pintarImagen(el, capa)
+    if (capa.src) pintarImagen(el, capa, sobreLaLinea)
     else pintarGlow(el, capa.glow)
 
     // La opacidad viaja como par [oscuro, claro] y elige el CSS, igual que en

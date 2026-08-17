@@ -329,41 +329,76 @@ export const process = {
  * `plane`  · 'back' detrás de todo · 'mid' entre el fondo y la figura ·
  *            'front' por delante de la figura, por debajo del texto.
  */
+// Los dos `glow` que había en el hero se RETIRARON al llegar estas capas. Eran
+// sustitutos: daban profundidad mientras no hubiera imágenes. `hero-capa-bruma`
+// hace su trabajo mejor y con textura de verdad.
+//
+// ⚠ LAS OPACIDADES ESTÁN MEDIDAS, NO ELEGIDAS. Salieron mucho más bajas de lo
+// que parecía razonable a ojo, y por dos motivos distintos:
+//
+//   · EN EL HERO no hay plato fotográfico, así que el techo es el absoluto: la
+//     opacidad más alta con la que el texto --muted (el rótulo y las cifras)
+//     mantiene 4,5:1 sobre el 1% de píxeles más claros. Sale 0,14 para la capa de
+//     fondo, y las otras dos en proporción. Con los 0,55/0,40/0,35 que se
+//     probaron primero, ese contraste caía a 2,0:1.
+//
+//   · EN LAS DEMÁS el plato fotográfico YA está por encima del techo — está
+//     documentado arriba, en el bloque de `backdrops`, y es una decisión que no
+//     se toca aquí. Así que el criterio pasa a ser MARGINAL: la capa no puede
+//     costar más del 5% del contraste que ya había. Sale 0,27 en servicios y
+//     0,24 en proceso.
+//
+// El segundo número de cada par es el tema claro, al 60% del oscuro. Ahí el oro
+// OSCURECE el papel en vez de aclararlo, y medido cuesta ~0%: 2,14 → 2,15.
 export const parallax = {
   hero: {
     layers: [
-      // Las dos de hoy son resplandores, no fotos: dan profundidad desde el
-      // primer día y no bloquean nada. Las imágenes con alfa entran al lado
-      // cuando existan, sin tocar código.
-      {
-        id: 'bruma-lejana',
-        glow: { x: '18%', y: '26%', size: '58% 46%', token: '--glow-warm' },
-        depth: 0.06,
-        plane: 'back',
-      },
-      {
-        id: 'bruma-cercana',
-        glow: { x: '82%', y: '74%', size: '46% 38%', token: '--glow-warm-soft' },
-        depth: 0.22,
-        plane: 'front',
-      },
-
-      // ↓ PLANTILLA. Descomenta, deja el archivo en public/img/ y ya está.
-      //   Cuantas más capas, más profundidad — el tope práctico son cuatro o
-      //   cinco: por encima se notan más los bordes que el efecto.
-      // {
-      //   id: 'polvo-frontal',
-      //   src: 'hero-capa-polvo',
-      //   alt: '',              // decorativa → alt vacío, no ausente
-      //   depth: 0.34,
-      //   plane: 'front',
-      //   opacity: [0.5, 0.32], // [oscuro, claro]; opcional, por defecto 1
-      // },
+      // Atmósfera de fondo. La que menos viaja —lo que está lejos se desplaza
+      // poco— y la que más opacidad admite, porque no pasa por delante de nada.
+      { id: 'bruma', src: 'hero-capa-bruma', alt: '', depth: 0.05, plane: 'back', opacity: [0.14, 0.08] },
+      // A la altura de la figura, para que la luz parezca de la escena y no
+      // pegada encima. Empata en z-index con ella y el DOM decide: la figura va
+      // después, así que el destello queda justo DETRÁS. Es lo que se quiere —
+      // una luz por delante de la cara la velaría.
+      { id: 'destello', src: 'hero-capa-destello', alt: '', depth: 0.10, plane: 'mid', opacity: [0.10, 0.06] },
+      // POR DELANTE de la figura: de ahí sale la profundidad. La más viajera y la
+      // más tenue — pasa sobre una persona, y si pesa la ensucia.
+      { id: 'polvo', src: 'hero-capa-polvo', alt: '', depth: 0.16, plane: 'front', opacity: [0.09, 0.05] },
     ],
   },
 
-  // ↓ Cualquier sección de index.html admite lo mismo. Ejemplo listo para usar:
-  // servicios: { layers: [{ id: 'humo', src: 'servicios-capa-humo', alt: '', depth: 0.12, plane: 'back' }] },
+  // El pasillo del fondo es la única foto del set con dirección de marcha, y un
+  // método es un recorrido: el haz refuerza eso en vez de decorar. Es la capa que
+  // más aporta de las que están fuera del hero.
+  proceso: {
+    layers: [
+      { id: 'haz', src: 'proceso-capa-haz', alt: '', depth: 0.14, plane: 'mid', opacity: [0.24, 0.14] },
+    ],
+  },
+
+  // ⚠ `depth` DELIBERADAMENTE bajo. Esta sección ya tiene su plato moviéndose a
+  // 0,08, y dos planos a velocidades parecidas no se leen como profundidad: se
+  // leen como una imagen mal renderizada. Va detrás de la foto y más lento.
+  servicios: {
+    layers: [
+      { id: 'humo', src: 'servicios-capa-humo', alt: '', depth: 0.05, plane: 'back', opacity: [0.27, 0.16] },
+    ],
+  },
+
+  // ⚠ #contacto SE QUEDA FUERA, y esta vez con la medición delante.
+  //
+  // La capa se generó (queda su PNG en Selección/generated-parallax/), pero la
+  // opacidad máxima que no le quita fuerza al CTA es 0,03. A ese valor no se ve:
+  // serían 78 KB de AVIF para nada. El motivo es el que ya decía el manifiesto de
+  // fondos — el CTA es tipografía enorme y centrada y no admite competencia
+  // detrás, que es por lo que su plato es el más bajo de los cinco.
+  //
+  // Para recuperarla: descomentar y `build-media.py parallax`.
+  // contacto: {
+  //   layers: [
+  //     { id: 'ventana', src: 'contacto-capa-ventana', alt: '', depth: 0.04, plane: 'back', opacity: [0.03, 0.02] },
+  //   ],
+  // },
 }
 
 export const budgets = {
