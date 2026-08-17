@@ -1,14 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <!-- Colores del sistema (tokens.css): fondo #0E0E0E y gradiente Meta violeta→rosa→naranja.
-       Excepción documentada de PLAN.md §9.2: un SVG estático no lee custom properties.
-       Ojo: nada de dobles guiones en este comentario, romperían el XML. -->
-  <defs>
-    <linearGradient id="meta" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#7B19C8"/>
-      <stop offset="50%" stop-color="#C559C4"/>
-      <stop offset="100%" stop-color="#F57327"/>
-    </linearGradient>
-  </defs>
+  <!-- Generado por scripts/media/build-icons.py. No editar a mano.
+       La P sale de ClashDisplay-Bold, la misma tipografia del logotipo.
+       Colores de tokens.css: fondo #0E0E0E y oro #D4AF37.
+       Oro PLANO y no el gradiente de marca: a 16px el gradiente no llega a
+       leerse como tal y solo aporta un extremo mas apagado. -->
   <rect width="64" height="64" rx="12" fill="#0E0E0E"/>
-  <path d="M20 48V16h13.5c6.9 0 11.5 4.2 11.5 10.6S40.4 37.4 33.5 37.4H27V48h-7Zm7-16.8h5.8c3.2 0 5.2-1.8 5.2-4.6s-2-4.6-5.2-4.6H27v9.2Z" fill="url(#meta)"/>
+  <path fill-rule="evenodd" fill="#D4AF37" d="M25.21,49.92 L15.15,49.92 L15.15,14.08 L35.0,14.08 L36.25,14.12 L37.46,14.22 L38.6,14.4 L39.7,14.64 L40.74,14.96 L41.73,15.35 L42.66,15.81 L43.54,16.34 L44.36,16.94 L45.13,17.61 L45.84,18.34 L46.47,19.13 L47.03,19.98 L47.51,20.88 L47.92,21.84 L48.26,22.85 L48.52,23.92 L48.7,25.04 L48.81,26.22 L48.85,27.45 L48.81,28.69 L48.7,29.87 L48.52,30.99 L48.26,32.06 L47.92,33.08 L47.51,34.04 L47.03,34.94 L46.47,35.79 L45.84,36.58 L45.13,37.32 L44.36,38.0 L43.54,38.6 L42.66,39.14 L41.73,39.6 L40.74,39.99 L39.7,40.31 L38.6,40.56 L37.46,40.74 L36.25,40.84 L35.0,40.88 L25.21,40.88 Z M33.87,23.12 L25.21,23.12 L25.21,31.84 L33.87,31.84 L34.41,31.83 L34.92,31.81 L35.39,31.76 L35.83,31.7 L36.23,31.63 L36.6,31.53 L36.94,31.42 L37.24,31.29 L37.51,31.15 L37.75,30.98 L37.96,30.79 L38.15,30.57 L38.31,30.31 L38.45,30.01 L38.57,29.67 L38.67,29.3 L38.75,28.89 L38.8,28.45 L38.84,27.97 L38.85,27.45 L38.84,26.95 L38.8,26.48 L38.75,26.04 L38.67,25.64 L38.57,25.27 L38.45,24.94 L38.31,24.65 L38.15,24.39 L37.96,24.16 L37.75,23.98 L37.51,23.81 L37.24,23.67 L36.94,23.54 L36.6,23.43 L36.23,23.33 L35.83,23.26 L35.39,23.2 L34.92,23.15 L34.41,23.13 L33.87,23.12 Z"/>
 </svg>

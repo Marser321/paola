@@ -9,6 +9,12 @@
       bundle y no puede importar tokens.css.
       Si cambian los tokens, hay que actualizar los hex de aquí a mano.
 
+      ⚠ 2026-08-16: los dos degradados pasaron del gradiente Meta al ORO. El malva
+      dejó de ser el acento del sitio hace tiempo (se replegó a la barra del
+      informe) y esta plantilla era, con el favicon y el wordmark, de los últimos
+      sitios donde seguía representando a la marca.
+      public/og.jpg SIGUE SIENDO EL ANTIGUO: hay que volver a capturarlo.
+
       USO: abrir en el navegador, capturar el rectángulo de 1200×630 y guardar como
       public/og.jpg (calidad 80). O usar el generador de la tarea 27, que rasteriza
       este mismo diseño con las fuentes ya self-hosted.
@@ -46,7 +52,7 @@
         text-transform: uppercase;
       }
       .og__accent {
-        background: linear-gradient(90deg, #7B19C8, #C559C4, #F57327);
+        background: linear-gradient(90deg, #8A6A1F, #D4AF37, #F2DFA6);
         -webkit-background-clip: text; background-clip: text;
         -webkit-text-fill-color: transparent; color: transparent;
       }
@@ -60,7 +66,7 @@
       /* La única aplicación del gradiente compite con nada aquí: es una imagen suelta. */
       .og__bar {
         position: absolute; left: 0; right: 0; bottom: 0; height: 6px;
-        background: linear-gradient(90deg, #7B19C8, #C559C4, #F57327);
+        background: linear-gradient(90deg, #8A6A1F, #D4AF37, #F2DFA6);
       }
     </style>
   </head>
