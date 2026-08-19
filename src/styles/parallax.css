@@ -22,8 +22,12 @@
    (media.css) y su sitio es EN MEDIO del reparto, no encima: la capa `back` va
    detrás de la foto y las capas `mid` y `front` por delante — que es justo lo
    que distingue este sistema de tener dos fondos. Subiéndolo a 3 se aplanaba
-   todo detrás de él. */
-.has-parallax:not(.hero) > *:not(.parallax):not(.backdrop) {
+   todo detrás de él.
+
+   ⚠ Y `.seam`, por lo contrario: la costura va POR ENCIMA de todo (z-index 4,
+   styles/seams.css) y es `position: absolute`. Esta regla le pondría `relative`
+   y la mandaría al flujo, empujando la sección un píxel hacia abajo. */
+.has-parallax:not(.hero) > *:not(.parallax):not(.backdrop):not(.seam) {
   position: relative;
   z-index: 3;
 }

@@ -1,0 +1,448 @@
+/* ============================================================
+   SALE.CSS — el bloque de venta: planes, calculadora y preguntas.
+
+   Estas tres secciones ocupan el hueco que dejó el informe de sesión («La
+   campaña eres tú»), retirado el 2026-08-16. El cambio no es solo de contenido:
+   allí el sitio hablaba DE SÍ MISMO en el punto en el que quien mira ya está
+   decidiendo, y aquí habla de lo que va a pasar si escribe.
+
+   Ni un hex suelto: todo sale de tokens.css.
+   ============================================================ */
+
+/* ===== PLANES ===== */
+.plans__intro,
+.calc__intro {
+  max-width: 62ch;
+  margin-top: 1.5rem;
+  color: var(--muted);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+}
+
+.plans__grid {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 4rem;
+  /* `auto-fit` con un mínimo: tres columnas en escritorio, dos en tablet y una
+     en el teléfono, sin escribir un solo breakpoint. */
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  align-items: stretch;
+}
+
+.plan-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface) 62%, transparent);
+  backdrop-filter: blur(10px);
+  transition: border-color var(--dur-med) var(--ease-out),
+              background-color var(--dur-med) var(--ease-out),
+              transform var(--dur-med) var(--ease-out);
+}
+.plan-card:hover,
+.plan-card:focus-within {
+  border-color: var(--line-gold);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  transform: translateY(-4px);
+}
+
+/* El plan de en medio es el que se recomienda, y se dice con el filete, no con
+   una etiqueta de «MÁS POPULAR»: no hay dato que la sostenga. */
+.plan-card[data-featured] { border-color: var(--line-gold); }
+
+.plan-card__tag { color: var(--muted); }
+.plan-card__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-h3);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.plan-card__who { color: var(--text); line-height: 1.5; }
+
+.plan-card__list {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+/* El filete corto hace de viñeta. Un carácter «·» o «—» se lo leería el lector
+   de pantalla en cada renglón; un pseudoelemento no. */
+.plan-card__list li {
+  display: grid;
+  grid-template-columns: 1.25rem 1fr;
+  align-items: baseline;
+}
+.plan-card__list li::before {
+  content: '';
+  width: 0.6rem;
+  height: 1px;
+  background: var(--gold);
+  translate: 0 -0.3em;
+}
+
+.plan-card__take {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.plan-card__take strong { color: var(--text); font-weight: 500; }
+
+.plan-card__cta {
+  align-self: flex-start;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.8rem 1.4rem;
+  transition: border-color var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+.plan-card__cta:hover,
+.plan-card__cta:focus-visible {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--bg);
+}
+
+/* ===== CALCULADORA ===== */
+.calc__panel {
+  margin-top: 3rem;
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface) 62%, transparent);
+  backdrop-filter: blur(10px);
+}
+@media (min-width: 900px) {
+  .calc__panel { grid-template-columns: 1fr 1fr; align-items: start; }
+}
+
+.calc__controls { display: grid; gap: 2rem; align-content: start; }
+
+.calc__field {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+}
+.calc__label { color: var(--muted); }
+.calc__field-value {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* El control. Se estiliza a mano porque el nativo trae el azul del sistema, que
+   es el único color del sitio que no decide tokens.css. Pista y pulgar por
+   separado: WebKit y Firefox no comparten pseudoelemento y no se pueden agrupar
+   en la misma regla — si un navegador no entiende un selector de la lista,
+   descarta la regla ENTERA. */
+.calc__range {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 1.5rem;
+  appearance: none;
+  background: none;
+  cursor: pointer;
+}
+.calc__range::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--line);
+  border-radius: 2px;
+}
+.calc__range::-moz-range-track {
+  height: 2px;
+  background: var(--line);
+  border-radius: 2px;
+}
+.calc__range::-webkit-slider-thumb {
+  appearance: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: -0.5rem; /* centra el pulgar sobre una pista de 2px */
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: var(--glow-gold);
+}
+.calc__range::-moz-range-thumb {
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: var(--glow-gold);
+}
+.calc__range:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+.calc__out { display: grid; align-content: start; }
+.calc__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-block: 0.9rem;
+  border-bottom: 1px solid var(--line);
+}
+.calc__row dt { color: var(--muted); }
+.calc__row dd {
+  color: var(--text);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+/* El retorno es el número que se ha venido a ver: va en cuerpo de métrica, como
+   los cuatro KPIs de #metricas, para que sea el mismo gesto en las dos. */
+.calc__big {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: clamp(1.75rem, 5vw, 2.75rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+/* ===== A ESCALA — la calculadora, dibujada =====
+   UNA barra: el retorno entero, partido en el punto donde acaba lo invertido.
+   Las mismas cifras del <dl> de al lado puestas a proporción — y ese es el
+   argumento, porque «$5.000 → $21.000» es una proporción, y una proporción se
+   ve en una barra y no se ve en un número.
+
+   ⚠ POR QUÉ UNA Y NO DOS. Hubo dos barras: «inviertes» (1/ROAS) y «recuperas»
+   (100%). La segunda era, por construcción, una CONSTANTE: no podía cambiar
+   nunca, y era el elemento más decorado del bloque —degradado, floración,
+   brillo, insignia— transportando cero información. Ahora la referencia es la
+   pista, que es un contenedor y se pinta como tal; lo que lleva relleno es lo
+   que mide algo.
+
+   ⚠ Y ANTES DE ESO HUBO UNA TERCERA, el reparto de UNA venta entre coste de
+   anuncio y resto. Se cayó al mirarla con números: `coste por venta ÷ ticket`
+   es `1 ÷ ROAS`, exactamente lo mismo que `inversión ÷ retorno`. Con estos tres
+   controles multiplicándose no hay más que UNA proporción que enseñar.
+
+   Regla que hereda del bloque entero: aquí no se estima nada. El corte de la
+   barra es una división entre dos números que ha escrito quien mira. */
+.calc__viz {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 0.9rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--line);
+}
+
+/* ⚠ AQUÍ HUBO UN «4,2x». Primero dentro de la barra, donde las marcas le
+   cruzaban el texto —el `::after` que las dibuja se pinta por encima de todo lo
+   que hay en la pista, descendientes incluidos, y ningún `z-index` lo cambia—, y
+   después a su derecha. Se fue el 2026-08-19 porque era el mismo número que el
+   <output> del control de ROAS, tres renglones más arriba, en el mismo panel. Y
+   no hacía falta ni como clave de las marcas: la primera parte de la barra es lo
+   invertido y las marcas la repiten, así que el múltiplo se cuenta. */
+
+/* La pista es el retorno entero. No lleva relleno propio: las dos partes la
+   cubren siempre al 100%, así que cualquier color aquí sería decorado puro. */
+.calc__viz-track {
+  position: relative;
+  height: 2rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+/* Las marcas. NO son cuartos arbitrarios: cada tramo es UNA VEZ lo invertido, y
+   por eso `--pitch` vale lo mismo que el corte de la barra (los dos son 1/ROAS).
+   Se pueden contar: con 4,2x hay cuatro marcas y un resto. Van por encima de los
+   dos rellenos —de ahí el ::after— o la mitad izquierda se quedaría sin ellas. */
+.calc__viz-track::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 calc(var(--pitch, 25%) - 1px),
+    color-mix(in srgb, var(--bg) 45%, transparent) calc(var(--pitch, 25%) - 1px) var(--pitch, 25%)
+  );
+}
+
+.calc__viz-seg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* Corta, no lenta: el control de rango dispara decenas de eventos por segundo
+     y `step` los agrupa en saltos. 0.18s convierte el salto en movimiento sin
+     que la barra se quede persiguiendo al dedo. */
+  transition: width 0.18s var(--ease-out), left 0.18s var(--ease-out);
+}
+
+/* Lo invertido: el mismo dinero, en tono bajo. El filete de la derecha es el
+   corte, y cae exactamente sobre la primera marca. */
+.calc__viz-seg--spend {
+  left: 0;
+  width: 23.8%;
+  background: color-mix(in srgb, var(--gold) 20%, transparent);
+  border-right: 2px solid var(--gold);
+}
+
+/* Lo que suma: de ahí al final. Su ancho no se escribe — lo define el corte. */
+.calc__viz-seg--profit {
+  left: 23.8%;
+  right: 0;
+  background: var(--gradient-gold);
+  box-shadow: var(--glow-gold);
+}
+/* El brillo que la recorre, UNA vez, cuando el bloque entra en pantalla.
+   ⚠ Iba en bucle infinito. Un destello permanente sobre la barra del dinero es
+   interfaz de tragaperras —lo escribí en este mismo archivo para justificar que
+   solo hubiera uno, como si uno no contase—, y además era lo único del sitio que
+   se movía sin parar: aquí todo revela una vez (`once: true` en todos los
+   ScrollTrigger) y se queda quieto. La clase la pone calculator.js con un
+   IntersectionObserver. */
+.calc__viz-seg--profit::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 35%,
+    color-mix(in srgb, var(--gold-soft) 70%, transparent) 50%,
+    transparent 65%
+  );
+  transform: translateX(-130%);
+}
+.calc__viz.is-in .calc__viz-seg--profit::after {
+  animation: calc-sweep 1.8s var(--ease-out) 0.25s 1 both;
+}
+@keyframes calc-sweep {
+  from { transform: translateX(-130%); }
+  to { transform: translateX(130%); }
+}
+
+/* La leyenda. Los números van AQUÍ y no dentro de cada parte de la barra: con
+   un ROAS de 8 la parte invertida mide un 12,5% y no cabe un importe dentro.
+   En posición fija caben siempre, y son lo que hace que mover la inversión
+   cambie algo de la gráfica y no solo de la tabla. */
+.calc__viz-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+}
+.calc__viz-key { display: inline-flex; align-items: baseline; gap: 0.5rem; }
+.calc__viz-chip {
+  flex-shrink: 0;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 3px;
+  translate: 0 0.05rem;
+}
+.calc__viz-chip--spend {
+  background: color-mix(in srgb, var(--gold) 20%, transparent);
+  border: 1px solid var(--gold);
+}
+.calc__viz-chip--profit { background: var(--gradient-gold); }
+.calc__viz-label { color: var(--muted); font-size: 0.7rem; }
+.calc__viz-num {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.calc__note {
+  max-width: 62ch;
+  margin-top: 2rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.calc__note strong { color: var(--text); font-weight: 500; }
+
+/* ===== PREGUNTAS ===== */
+.faq__list { margin-top: 3rem; border-top: 1px solid var(--line); }
+
+.faq__item { border-bottom: 1px solid var(--line); }
+
+.faq__q { margin: 0; }
+
+/* El botón ocupa el renglón entero: el objetivo de pulsación es la fila, no el
+   texto. Por eso este no está en la lista de §ZONA DE PULSACIÓN de base.css. */
+.faq__question {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-block: 1.5rem;
+  text-align: left;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.faq__question:hover { color: var(--gold); }
+
+/* El signo. Dos filetes cruzados que se convierten en uno al abrir: es «+» → «−»
+   sin depender de una fuente ni de un icono. */
+.faq__sign {
+  position: relative;
+  flex-shrink: 0;
+  width: 0.9rem;
+  height: 0.9rem;
+  translate: 0 0.15em;
+}
+.faq__sign::before,
+.faq__sign::after {
+  content: '';
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1px;
+  background: var(--gold);
+  transition: transform var(--dur-med) var(--ease-out);
+}
+.faq__sign::after { transform: rotate(90deg); }
+.faq__item.is-open .faq__sign::after { transform: rotate(0deg); }
+
+/* El colapso. Aquí NO se puede animar `height` como en la galería de servicios:
+   allí la tira mide lo que dice `--strip-h` y aquí cada respuesta mide lo que
+   mide su texto. `grid-template-rows: 0fr → 1fr` es lo que permite animar hasta
+   una altura desconocida sin medirla con JS.
+
+   ⚠ El hijo necesita `min-height: 0` o la fila de 0fr no llega a colapsar: el
+   tamaño mínimo automático de un elemento de grid es su contenido. */
+.faq__a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-med) var(--ease-out);
+}
+.faq__a > * {
+  min-height: 0;
+  overflow: hidden;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 68ch;
+  /* El aire de la respuesta va DENTRO del hijo que se recorta, y va SIEMPRE: un
+     `padding` en el contenedor no colapsa con la fila y dejaría un hueco con
+     todo cerrado; puesto solo al abrir, aparecería de golpe a mitad de la
+     transición. */
+  padding-bottom: 1.75rem;
+}
+.faq__a.is-open { grid-template-rows: 1fr; }
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-card,
+  .faq__a,
+  .faq__sign::before,
+  .faq__sign::after { transition: none; }
+}

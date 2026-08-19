@@ -15,7 +15,7 @@
     <meta property="og:locale" content="es_ES" />
     <meta property="og:site_name" content="PAOLA PARRA" />
     <meta property="og:title" content="PAOLA — Meta Ads Specialist · Performance Marketing" />
-    <meta property="og:description" content="Especialista en Meta Ads. La campaña eres tú: esta página mide tu visita y te enseña el informe, sin enviar un solo dato." />
+    <meta property="og:description" content="Especialista en Meta Ads. Seis casos con su backstage, el método por dentro y tres formas de empezar. Sin cookies, sin píxel y sin humo." />
     <!-- La imagen YA EXISTE en /og.jpg (1200×630, generada en la tarea 27), pero
          og:image y og:url exigen URL absoluta: se activan en la tarea 26, cuando
          haya dominio. Sustituir el placeholder por el dominio real y descomentar.
@@ -23,16 +23,16 @@
     <meta property="og:image" content="https://DOMINIO/og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="PAOLA — La campaña eres tú" />
+    <meta property="og:image:alt" content="PAOLA — Meta Ads Specialist" />
     <meta name="twitter:image" content="https://DOMINIO/og.jpg" />
     -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="PAOLA — Meta Ads Specialist" />
-    <meta name="twitter:description" content="La campaña eres tú. Un portfolio que mide tu visita y te la enseña, sin enviar nada." />
+    <meta name="twitter:description" content="Seis casos con su backstage, el método por dentro y tres formas de empezar. Sin cookies y sin píxel." />
 
     <!-- Fuentes self-hosted (tarea 17 §5). Los <link> a api.fontshare.com y a
          fonts.googleapis.com se eliminaron a propósito: mientras existieran, la
-         frase del informe "nada de esto ha salido de tu navegador" era falsa.
+         promesa de no hacer una sola petición a terceros era falsa.
          Los @font-face están en src/styles/tokens.css. -->
     <!-- JSON-LD (tarea 18). Datos de CONTENT.md; el dominio de "url" y "sameAs" es
          PROVISIONAL hasta la tarea 26. Solo se declara lo que el sitio afirma de verdad:
@@ -113,7 +113,7 @@
            y con reduced-motion. -->
       <div class="preloader__logo"></div>
       <p class="preloader__label mono">Iniciando campaña</p>
-      <p class="preloader__status mono">PAOLA_2026 · Objetivo: conversión</p>
+      <p class="preloader__status mono">Campaña 2026 · Objetivo: conversión</p>
       <p class="preloader__counter">0%</p>
       <div class="preloader__bar"><span class="preloader__bar-fill"></span></div>
     </div>
@@ -125,14 +125,15 @@
         <a href="#proyectos" data-scroll data-hover>Proyectos</a>
         <a href="#servicios" data-scroll data-hover>Servicios</a>
         <a href="#proceso" data-scroll data-hover>Proceso</a>
+        <a href="#planes" data-scroll data-hover>Planes</a>
         <a href="#sobre-mi" data-scroll data-hover>Sobre mí</a>
         <a href="#contacto" class="site-nav__cta" data-scroll data-hover>Contacto</a>
       </nav>
     </header>
 
     <main>
-      <!-- ETAPA 01 · ALCANCE — HERO -->
-      <section id="hero" class="hero" data-stage="alcance">
+      <!-- HERO -->
+      <section id="hero" class="hero">
         <canvas id="hero-canvas" aria-hidden="true"></canvas>
         <div class="hero__fallback" aria-hidden="true"></div>
         <!-- La figura recortada la monta hero.js desde el manifiesto de medios.
@@ -165,8 +166,8 @@
         </p>
       </section>
 
-      <!-- ETAPA 01 · ALCANCE — MARQUEE -->
-      <section class="marquee" aria-hidden="true" data-stage="alcance">
+      <!-- MARQUEE -->
+      <section class="marquee" aria-hidden="true">
         <div class="marquee__track">
           <div class="marquee__inner">
             <span>Meta Ads</span><i>✦</i><span class="is-outline">Paid Social</span><i>✦</i>
@@ -181,11 +182,10 @@
         </div>
       </section>
 
-      <!-- ETAPA 01 · ALCANCE — MÉTRICAS -->
-      <section id="metricas" class="metrics section-pad" data-stage="alcance">
+      <!-- MÉTRICAS -->
+      <section id="metricas" class="metrics section-pad" data-seam>
         <div class="container">
           <p class="section-label mono">
-            <span class="section-label__stage">Etapa 01 · Alcance</span>
             <span class="section-label__name">Resultados</span>
           </p>
           <div class="metrics__grid">
@@ -213,8 +213,8 @@
         </div>
       </section>
 
-      <!-- ETAPA 02 · INTERÉS — PROYECTOS / CREATIVIDADES -->
-      <section id="proyectos" class="projects" data-stage="interes">
+      <!-- PROYECTOS / CREATIVIDADES -->
+      <section id="proyectos" class="projects">
         <!-- Galería 3D: DECORACIÓN, y va PRIMERO y FUERA de .projects__cases.
              Toda la información de los casos (títulos, KPIs, backstage y enlaces
              a caso.html) vive en las cards de abajo, así que esto va aria-hidden
@@ -232,7 +232,6 @@
         <div class="projects__cases">
           <div class="projects__header container">
             <p class="section-label mono">
-              <span class="section-label__stage">Etapa 02 · Interés</span>
               <span class="section-label__name">Creatividades</span>
             </p>
             <h2 class="section-title">Proyectos que <span class="accent-text">escalan</span></h2>
@@ -245,15 +244,14 @@
         </div>
       </section>
 
-      <!-- ETAPA 03 · CONSIDERACIÓN — SERVICIOS -->
-      <section id="servicios" class="services section-pad" data-stage="consideracion">
+      <!-- SERVICIOS -->
+      <section id="servicios" class="services section-pad">
         <!-- Dos columnas: la cabecera sticky necesita una para ella sola, o los
              renglones le pasan por debajo y se imprimen encima. Ver sections.css
              §SERVICIOS. -->
         <div class="container services__grid">
           <div class="services__header">
             <p class="section-label mono">
-              <span class="section-label__stage">Etapa 03 · Consideración</span>
               <span class="section-label__name">Servicios</span>
             </p>
             <h2 class="section-title">Lo que hago</h2>
@@ -262,42 +260,41 @@
             <li class="service" data-hover data-service="meta-ads">
               <span class="service__index mono">01</span>
               <h3 class="service__title">Meta Ads</h3>
-              <p class="service__desc">Campañas de conversión en Facebook e Instagram: estructura, segmentación, pujas y escala horizontal y vertical.</p>
+              <p class="service__desc">Campañas que no dependen de que una creatividad tenga suerte: estructura por fase, pujas revisadas y una escala que aguanta cuando sube el presupuesto.</p>
               <span class="service__tags mono">FB · IG · Advantage+</span>
             </li>
             <li class="service" data-hover data-service="paid-social">
               <span class="service__index mono">02</span>
               <h3 class="service__title">Paid Social</h3>
-              <p class="service__desc">Expansión multicanal cuando el funnel lo justifica, con creatividades nativas por plataforma.</p>
+              <p class="service__desc">Salir de Meta solo cuando los números lo piden, y hacerlo con piezas nativas de cada plataforma en vez de reciclar las mismas.</p>
               <span class="service__tags mono">TikTok · Pinterest · LinkedIn</span>
             </li>
             <li class="service" data-hover data-service="funnels-cro">
               <span class="service__index mono">03</span>
               <h3 class="service__title">Funnels &amp; CRO</h3>
-              <p class="service__desc">Páginas y flujos que convierten: CAPI, píxel, eventos, tests A/B y análisis de drop-off.</p>
+              <p class="service__desc">Que lo que pagas por traer no se caiga al llegar: medición sin agujeros, páginas probadas y el punto exacto donde se pierde la venta.</p>
               <span class="service__tags mono">Landings · A/B · Tracking</span>
             </li>
             <li class="service" data-hover data-service="ugc">
               <span class="service__index mono">04</span>
               <h3 class="service__title">UGC &amp; Creatividades</h3>
-              <p class="service__desc">Sistema de producción y testing creativo: hooks, ángulos y iteración semanal basada en datos.</p>
+              <p class="service__desc">Creatividad nueva cada semana y con una hipótesis detrás, para que ganar deje de depender de haber acertado una vez.</p>
               <span class="service__tags mono">Guiones · Hooks · Testing</span>
             </li>
             <li class="service" data-hover data-service="auditorias">
               <span class="service__index mono">05</span>
               <h3 class="service__title">Auditorías &amp; Consultoría</h3>
-              <p class="service__desc">Auditoría completa de la cuenta publicitaria con roadmap accionable a 90 días.</p>
+              <p class="service__desc">Saber qué está fallando en tu cuenta y en qué orden arreglarlo, con un plan de 90 días que puedes ejecutar sin mí.</p>
               <span class="service__tags mono">Audit · Roadmap · Mentoring</span>
             </li>
           </ul>
         </div>
       </section>
 
-      <!-- ETAPA 03 · CONSIDERACIÓN — PROCESO -->
-      <section id="proceso" class="process section-pad" data-stage="consideracion">
+      <!-- PROCESO -->
+      <section id="proceso" class="process section-pad" data-seam>
         <div class="container">
           <p class="section-label mono">
-            <span class="section-label__stage">Etapa 03 · Consideración</span>
             <span class="section-label__name">Proceso</span>
           </p>
           <h2 class="section-title">Método de trabajo</h2>
@@ -307,40 +304,40 @@
               <li class="step">
                 <span class="step__number mono">01</span>
                 <h3 class="step__title">Auditoría</h3>
-                <p class="step__desc">Análisis de cuenta, tracking y competencia. Detectamos fugas de presupuesto y oportunidades rápidas.</p>
+                <p class="step__desc">Salimos con la lista de por dónde se está yendo el presupuesto hoy y con qué se puede recuperar en las dos primeras semanas.</p>
               </li>
               <li class="step">
                 <span class="step__number mono">02</span>
                 <h3 class="step__title">Estrategia</h3>
-                <p class="step__desc">Hipótesis, ángulos, estructura de campañas y presupuesto por fase del funnel.</p>
+                <p class="step__desc">Sales sabiendo cuánto va a cada fase del embudo y qué hipótesis estamos comprando con ese dinero.</p>
               </li>
               <li class="step">
                 <span class="step__number mono">03</span>
                 <h3 class="step__title">Creatividades</h3>
-                <p class="step__desc">Producción de anuncios (UGC, estáticos, vídeo) orientados a hook + prueba social + CTA.</p>
+                <p class="step__desc">Cada anuncio nace de un ángulo concreto, no de una idea suelta: gancho, prueba y llamada, listos para medirse por separado.</p>
               </li>
               <li class="step">
                 <span class="step__number mono">04</span>
                 <h3 class="step__title">Lanzamiento</h3>
-                <p class="step__desc">Setup técnico impecable: CAPI, eventos, catálogos y estructura de testing.</p>
+                <p class="step__desc">Se publica con la medición limpia: eventos que cuadran, catálogo en orden y un test que se puede leer sin dudas.</p>
               </li>
               <li class="step">
                 <span class="step__number mono">05</span>
                 <h3 class="step__title">Optimización</h3>
-                <p class="step__desc">Iteración semanal: kill de perdedores, escala de ganadores, refresco creativo.</p>
+                <p class="step__desc">Cada semana se retira lo que no rinde y se refuerza lo que sí — y te llega dicho por qué, no solo qué.</p>
               </li>
               <li class="step">
                 <span class="step__number mono">06</span>
                 <h3 class="step__title">Escala</h3>
-                <p class="step__desc">Crecimiento sostenible protegiendo el ROAS: más presupuesto, más canales, más mercados.</p>
+                <p class="step__desc">Subir el presupuesto sin que el retorno se caiga: más audiencias, más canales y más mercados, en ese orden.</p>
               </li>
             </ol>
           </div>
         </div>
       </section>
 
-      <!-- ETAPA 04 · INTENCIÓN — SOBRE MÍ -->
-      <section id="sobre-mi" class="about section-pad" data-stage="intencion">
+      <!-- SOBRE MÍ -->
+      <section id="sobre-mi" class="about section-pad" data-seam>
         <div class="container about__grid">
           <div class="about__media" data-hover>
             <div class="about__img" role="img" aria-label="Retrato de Paola">
@@ -349,11 +346,10 @@
           </div>
           <div class="about__content">
             <p class="section-label mono">
-              <span class="section-label__stage">Etapa 04 · Intención</span>
               <span class="section-label__name">Quién lo opera</span>
             </p>
             <h2 class="section-title">Hola, soy Paola</h2>
-            <p class="about__text">Llevo más de 6 años gestionando campañas de paid social para marcas que quieren crecer con datos, no con intuición. Mi obsesión: que cada euro invertido tenga un retorno medible.</p>
+            <p class="about__text">Llevo más de 6 años gestionando campañas de paid social para marcas que quieren crecer con datos, no con intuición. Mi obsesión: que cada dólar invertido tenga un retorno medible.</p>
             <p class="about__text">Trabajo con un número reducido de clientes para estar dentro de cada cuenta, cada semana. Sin humo: reporting claro, testing constante y decisiones basadas en números.</p>
             <ul class="about__cv mono">
               <li>2019 — Media Buyer · Agencia Performance (BCN)</li>
@@ -365,11 +361,10 @@
         </div>
       </section>
 
-      <!-- ETAPA 04 · INTENCIÓN — TESTIMONIOS -->
-      <section id="testimonios" class="testimonials section-pad" data-stage="intencion">
+      <!-- TESTIMONIOS -->
+      <section id="testimonios" class="testimonials section-pad" data-seam>
         <div class="container">
           <p class="section-label mono">
-            <span class="section-label__stage">Etapa 04 · Intención</span>
             <span class="section-label__name">Prueba social</span>
           </p>
           <div class="testimonials__stack">
@@ -389,60 +384,218 @@
         </div>
       </section>
 
-      <!-- ETAPA 05 · CONVERSIÓN — INFORME DE SESIÓN (CONTENT.md §14) -->
-      <!-- El panel debe ser legible SIN JS: los valores arrancan en "—". -->
-      <section id="informe" class="report section-pad" data-stage="conversion">
+      <!-- PLANES — el bloque de venta ocupa el hueco que dejó el informe de
+           sesión («La campaña eres tú»), retirado el 2026-08-16. Aquí no se
+           enseñan precios, y es una decisión, no un olvido: cada uno de los tres
+           formatos se presupuesta sobre la cuenta que tiene delante. -->
+      <section id="planes" class="plans section-pad" data-seam>
         <div class="container">
           <p class="section-label mono">
-            <span class="section-label__stage">Etapa 05 · Conversión</span>
-            <span class="section-label__name">Tu informe</span>
+            <span class="section-label__name">Trabajar juntos</span>
           </p>
-          <h2 class="section-title">La campaña <span class="accent-text">eres tú</span></h2>
-          <p class="report__intro">Mientras leías, esta página hacía lo mismo que hago cada día con las cuentas que gestiono: medir. Este es el informe de tu visita.</p>
+          <h2 class="section-title">Tres formas de <span class="accent-text">empezar</span></h2>
+          <p class="plans__intro">Ninguna empieza con un contrato. Las tres empiezan con la misma llamada de 30 minutos, en la que miramos tu cuenta y te digo cuál de ellas te hace falta — o si no te hace falta ninguna.</p>
 
-          <div class="report__panel" aria-describedby="report-note">
-            <header class="report__head mono">
-              <span class="report__dot" aria-hidden="true"></span>
-              <span class="report__title">Informe de sesión</span>
-              <span class="report__status" data-report="status">En espera</span>
-            </header>
+          <ul class="plans__grid">
+            <li class="plan-card">
+              <p class="plan-card__tag mono">Puntual · 2 semanas</p>
+              <h3 class="plan-card__title">Auditoría</h3>
+              <p class="plan-card__who">Tienes campañas en marcha y sospechas que se te está yendo presupuesto, pero no sabes por dónde.</p>
+              <ul class="plan-card__list">
+                <li>Revisión completa de la cuenta publicitaria</li>
+                <li>Diagnóstico de medición: píxel, CAPI y eventos duplicados</li>
+                <li>Análisis de creatividades, audiencias y estructura</li>
+                <li>Roadmap priorizado a 90 días</li>
+              </ul>
+              <p class="plan-card__take"><strong>Te llevas</strong> un documento con lo que hay que arreglar, en orden y con cuánto pesa cada cosa. Es tuyo, lo apliques conmigo o sin mí.</p>
+              <a class="plan-card__cta mono" href="#contacto" data-scroll data-hover data-plan="Auditoría">Pedir propuesta</a>
+            </li>
 
-            <dl class="report__grid">
-              <div class="report__row"><dt class="mono">Tiempo en sesión</dt><dd class="mono" data-report="elapsed">—</dd></div>
-              <div class="report__row"><dt class="mono">Profundidad</dt><dd class="mono" data-report="depth">—</dd></div>
-              <div class="report__row"><dt class="mono">Señales emitidas</dt><dd class="mono" data-report="signals">—</dd></div>
-              <div class="report__row"><dt class="mono">Etapa alcanzada</dt><dd class="mono" data-report="stage">—</dd></div>
-              <div class="report__row"><dt class="mono">Creatividades vistas</dt><dd class="mono" data-report="cases">—</dd></div>
-              <div class="report__row"><dt class="mono">Más atención</dt><dd class="mono" data-report="topcase">—</dd></div>
-              <div class="report__row"><dt class="mono">Variante servida</dt><dd class="mono" data-report="variant">—</dd></div>
+            <li class="plan-card" data-featured>
+              <p class="plan-card__tag mono">Continuo · mínimo 3 meses</p>
+              <h3 class="plan-card__title">Gestión mensual</h3>
+              <p class="plan-card__who">Ya inviertes cada mes y quieres a alguien dentro de la cuenta, no un informe cuando el mes ya ha pasado.</p>
+              <ul class="plan-card__list">
+                <li>Estrategia y estructura de campañas por fase del funnel</li>
+                <li>Sistema de testing creativo con tanda nueva cada semana</li>
+                <li>Optimización y escala protegiendo el ROAS</li>
+                <li>Revisión quincenal en llamada, no en PDF</li>
+              </ul>
+              <p class="plan-card__take"><strong>Te llevas</strong> una cuenta que crece con decisiones explicadas: qué se cambió, por qué y qué pasó después.</p>
+              <a class="plan-card__cta mono" href="#contacto" data-scroll data-hover data-plan="Gestión mensual">Pedir propuesta</a>
+            </li>
+
+            <li class="plan-card">
+              <p class="plan-card__tag mono">Puntual · 6 semanas</p>
+              <h3 class="plan-card__title">Sprint de escala</h3>
+              <p class="plan-card__who">La cuenta ya funciona y quieres subir el presupuesto sin que el ROAS se caiga por el camino.</p>
+              <ul class="plan-card__list">
+                <li>Plan de escalado por fases, con su techo calculado</li>
+                <li>Apertura de audiencias, mercados y canales</li>
+                <li>Sistema de refresco creativo que aguante el ritmo</li>
+                <li>Traspaso documentado a tu equipo interno</li>
+              </ul>
+              <p class="plan-card__take"><strong>Te llevas</strong> un método de escalado que tu equipo sigue usando cuando yo ya no estoy.</p>
+              <a class="plan-card__cta mono" href="#contacto" data-scroll data-hover data-plan="Sprint de escala">Pedir propuesta</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- CALCULADORA — aritmética pura, en el navegador. Los valores arrancan
+           escritos en el HTML para que la sección se lea entera sin JS. -->
+      <section id="calculadora" class="calc section-pad">
+        <div class="container">
+          <p class="section-label mono">
+            <span class="section-label__name">Calculadora</span>
+          </p>
+          <h2 class="section-title">Echa la cuenta <span class="accent-text">antes</span> de invertir</h2>
+          <p class="calc__intro">Mueve los controles con tus propios números. Esto no predice nada: es la misma aritmética que vas a ver en cada reporte, y sirve para saber si lo que te propones se sostiene.</p>
+
+          <div class="calc__panel">
+            <div class="calc__controls">
+              <div class="calc__field">
+                <label class="calc__label mono" for="calc-spend">Inversión publicitaria al mes</label>
+                <output class="calc__field-value" for="calc-spend" data-calc="spend">$5.000</output>
+                <input class="calc__range" id="calc-spend" type="range" min="1000" max="50000" step="500" value="5000" />
+              </div>
+              <div class="calc__field">
+                <label class="calc__label mono" for="calc-roas">ROAS objetivo</label>
+                <output class="calc__field-value" for="calc-roas" data-calc="roas">4,2x</output>
+                <input class="calc__range" id="calc-roas" type="range" min="1.5" max="8" step="0.1" value="4.2" />
+              </div>
+              <div class="calc__field">
+                <label class="calc__label mono" for="calc-ticket">Ticket medio</label>
+                <output class="calc__field-value" for="calc-ticket" data-calc="ticket">$80</output>
+                <input class="calc__range" id="calc-ticket" type="range" min="20" max="600" step="10" value="80" />
+              </div>
+            </div>
+
+            <dl class="calc__out">
+              <div class="calc__row">
+                <dt class="mono">Retorno estimado</dt>
+                <dd class="calc__big" data-calc="revenue">$21.000</dd>
+              </div>
+              <div class="calc__row">
+                <dt class="mono">Sobre lo invertido</dt>
+                <dd class="mono" data-calc="profit">+$16.000</dd>
+              </div>
+              <div class="calc__row">
+                <dt class="mono">Ventas al mes</dt>
+                <dd class="mono" data-calc="sales">263</dd>
+              </div>
+              <div class="calc__row">
+                <dt class="mono">Coste máximo por venta</dt>
+                <dd class="mono" data-calc="cpa">$19</dd>
+              </div>
             </dl>
 
-            <div class="report__score">
-              <p class="report__score-head mono">
-                Probabilidad de conversión
-                <span class="report__score-tag">Estimación heurística</span>
-                <button type="button" class="report__formula-btn mono" aria-expanded="false" aria-controls="report-formula">ver fórmula</button>
+            <!-- A ESCALA — la misma aritmética de arriba, dibujada.
+                 UNA barra: el retorno entero, partido donde acaba lo que se
+                 invirtió. Las dos partes miden algo; la pista es un contenedor
+                 y no se pinta como si fuese un dato. Cada marca es una vez lo
+                 invertido, así que se pueden contar.
+
+                 ⚠ POR QUÉ `aria-hidden`, y qué lo convertiría en un fallo.
+                 Esto NO es decoración —para quien ve, convierte una
+                 multiplicación en una proporción que se lee de un vistazo— pero
+                 sí es una codificación REDUNDANTE: no hay aquí ni una cifra que
+                 no esté ya en texto a un palmo. Auditado, uno por uno:
+
+                   · el corte de la barra (1/ROAS) → el <output> del control de
+                     ROAS, «4,2x»;
+                   · lo invertido → el <output> del control de inversión;
+                   · lo que suma → la fila «Sobre lo invertido» del <dl>;
+                   · el total → la fila «Retorno estimado» del <dl>;
+                   · y el resumen hablado de calculator.js dice la frase entera:
+                     de cuánto sales, con qué múltiplo y a dónde llegas.
+
+                 Anunciar otra vez las mismas cinco cifras en forma de barras
+                 sería ruido, no acceso. Pero la regla va en las dos direcciones:
+                 el día que aquí aparezca un dato que NO esté en esa lista, este
+                 `aria-hidden` deja de estar justificado y pasa a esconder
+                 información.
+
+                 Los anchos y los importes los escribe calculator.js; el texto lo
+                 traduce i18n/apply-dom.js. -->
+            <div class="calc__viz" aria-hidden="true">
+              <div class="calc__viz-track" data-viz="pista">
+                <span class="calc__viz-seg calc__viz-seg--spend" data-viz="spend"></span>
+                <span class="calc__viz-seg calc__viz-seg--profit" data-viz="profit"></span>
+              </div>
+              <p class="calc__viz-foot">
+                <span class="calc__viz-key">
+                  <i class="calc__viz-chip calc__viz-chip--spend"></i>
+                  <span class="calc__viz-label mono">Inviertes</span>
+                  <b class="calc__viz-num" data-calc="vizSpend">$5.000</b>
+                </span>
+                <span class="calc__viz-key">
+                  <i class="calc__viz-chip calc__viz-chip--profit"></i>
+                  <span class="calc__viz-label mono">Sobre lo invertido</span>
+                  <b class="calc__viz-num" data-calc="vizProfit">+$16.000</b>
+                </span>
               </p>
-              <p class="report__score-value" data-report="score">—</p>
-              <div class="report__score-bar"><span data-report="scorebar"></span></div>
-              <p class="report__formula mono" id="report-formula" hidden>Heurística local: profundidad ×30 + permanencia ×20 + creatividades ×20 + señales ×15 + conversión ×15. Máximo 99: ninguna estimación honesta dice 100%.</p>
             </div>
           </div>
 
-          <p id="report-note" class="report__note">
-            <strong>Nada de esto ha salido de tu navegador.</strong> Sin cookies, sin píxel y sin servidor: se ha calculado aquí y desaparece cuando cierres la pestaña.
-          </p>
-          <p class="report__note">
-            Medir bien no es recoger más datos. Es recoger los justos y saber leerlos. Eso es exactamente lo que hago con las cuentas que gestiono.
+          <p class="calc__note">
+            <strong>Multiplicar es la parte fácil.</strong> Llegar a ese ROAS con ese ticket es todo lo demás de esta página: la estructura, las creatividades y las semanas de testing. Y el cálculo se hace en tu navegador — no se envía a ninguna parte.
           </p>
         </div>
       </section>
 
-      <!-- ETAPA 05 · CONVERSIÓN — CONTACTO -->
-      <section id="contacto" class="contact section-pad" data-stage="conversion">
+      <!-- FAQ -->
+      <section id="faq" class="faq section-pad" data-seam>
         <div class="container">
           <p class="section-label mono">
-            <span class="section-label__stage">Etapa 05 · Conversión</span>
+            <span class="section-label__name">Preguntas</span>
+          </p>
+          <h2 class="section-title">Antes de escribirme</h2>
+          <ul class="faq__list">
+            <li class="faq__item">
+              <h3 class="faq__q">¿Cuánto hay que invertir para que esto tenga sentido?</h3>
+              <div class="faq__a">
+                <p>Por debajo de unos $3.000 al mes de inversión publicitaria, el algoritmo no reúne datos suficientes para optimizar y cualquier test tarda semanas en concluir. Si estás por debajo, te lo digo en la primera llamada y te propongo qué hacer antes de empezar.</p>
+              </div>
+            </li>
+            <li class="faq__item">
+              <h3 class="faq__q">¿Cuánto tarda en verse algo?</h3>
+              <div class="faq__a">
+                <p>Las primeras señales, entre dos y tres semanas: es lo que tarda una tanda de creatividades en dar datos concluyentes. Un cambio de tendencia sostenido, entre 60 y 90 días. Cualquiera que te prometa resultados la primera semana está hablando de suerte, no de método.</p>
+              </div>
+            </li>
+            <li class="faq__item">
+              <h3 class="faq__q">¿Hay permanencia?</h3>
+              <div class="faq__a">
+                <p>La gestión mensual pide tres meses de compromiso inicial, y no es para atarte: en menos tiempo no da tiempo a auditar, corregir y medir el efecto de lo corregido. A partir del cuarto mes es mes a mes, sin preaviso.</p>
+              </div>
+            </li>
+            <li class="faq__item">
+              <h3 class="faq__q">¿Trabajas con mi sector?</h3>
+              <div class="faq__a">
+                <p>Sobre todo e-commerce, formación e infoproductos y servicios con venta digital. Si vendes offline o con ciclos de decisión de meses, el trabajo cambia bastante y hay perfiles mejores que el mío: te lo diré antes de aceptar el proyecto, no después.</p>
+              </div>
+            </li>
+            <li class="faq__item">
+              <h3 class="faq__q">¿Quién produce las creatividades?</h3>
+              <div class="faq__a">
+                <p>El sistema, los ángulos y los guiones, yo. La producción depende del caso: tu equipo, creadores UGC o producción externa. Lo que no cambia es el criterio — cada pieza sale con una hipótesis detrás y se mide por separado.</p>
+              </div>
+            </li>
+            <li class="faq__item">
+              <h3 class="faq__q">¿Qué necesito tener montado antes de empezar?</h3>
+              <div class="faq__a">
+                <p>Píxel y API de conversiones funcionando, catálogo si vendes producto y acceso de administrador a tu cuenta publicitaria. Si falta algo, no es un problema: la auditoría empieza justo ahí.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- CONTACTO -->
+      <section id="contacto" class="contact section-pad" data-seam>
+        <div class="container">
+          <p class="section-label mono">
             <span class="section-label__name">Contacto</span>
           </p>
           <p class="contact__pre mono">¿Tienes un proyecto entre manos?</p>
@@ -481,6 +634,19 @@
             <div class="contact-form__row">
               <label class="contact-form__label mono" for="cf-email">Email</label>
               <input class="contact-form__input" id="cf-email" name="email" type="email" required autocomplete="email" />
+            </div>
+            <!-- Lo rellena el CTA de cada plan (sections/plans.js) al traerte
+                 hasta aquí. Se puede cambiar a mano, y «Todavía no lo sé» es una
+                 respuesta legítima: el objetivo es cualificar el mensaje, no
+                 obligar a decidir antes de hablar. -->
+            <div class="contact-form__row">
+              <label class="contact-form__label mono" for="cf-plan">Qué te interesa</label>
+              <select class="contact-form__input" id="cf-plan" name="plan">
+                <option value="Todavía no lo sé">Todavía no lo sé</option>
+                <option value="Auditoría">Auditoría</option>
+                <option value="Gestión mensual">Gestión mensual</option>
+                <option value="Sprint de escala">Sprint de escala</option>
+              </select>
             </div>
             <div class="contact-form__row">
               <label class="contact-form__label mono" for="cf-mensaje">Cuéntame el proyecto</label>
@@ -525,7 +691,6 @@
           <a href="./legal/privacidad.html" data-hover>Privacidad</a>
           <a href="./legal/cookies.html" data-hover>Cookies</a>
         </div>
-        <button id="hud-toggle" data-hover hidden>Reactivar panel de sesión</button>
         <button id="back-to-top" data-hover>Volver arriba ↑</button>
       </div>
     </footer>

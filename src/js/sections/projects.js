@@ -36,10 +36,14 @@ export function renderProjects() {
 
       return `
       <article class="project-card" data-hover="audience" data-cursor-label="${p.audienceShort}" data-id="${p.id}">
-        <!-- Chrome de anuncio: atrezo. aria-hidden para no ensuciar la lectura del caso. -->
+        <!-- Chrome de anuncio: atrezo. aria-hidden para no ensuciar la lectura del caso.
+             La marca es la del CLIENTE, no la de quien lleva la cuenta: el anunciante
+             de un anuncio es la marca anunciada, y ponerla es lo que hace que la
+             tarjeta se lea como un anuncio de verdad. Hasta el 2026-08-16 las seis
+             decían «PAOLA®» — repetía su nombre seis veces y contaba algo falso. -->
         <header class="ad-chrome" aria-hidden="true">
           <span class="ad-chrome__avatar" style="background: linear-gradient(135deg, ${p.gradient[0]}, ${p.gradient[1]})"></span>
-          <span class="ad-chrome__brand">PAOLA<sup>®</sup></span>
+          <span class="ad-chrome__brand">${p.title}</span>
           <span class="ad-chrome__meta mono">${t('backstage.sponsored')}</span>
         </header>
 
@@ -118,7 +122,7 @@ function initBackstage() {
     // En escritorio el panel es una capa sobre la creatividad y la tarjeta no
     // cambia de alto: ahí no hay nada que remedir, y encima el track va pinneado
     // con offsets en píxeles, así que un refresh de más lo movería.
-    // Por debajo de 1024 el panel ocupa flujo y la tarjeta CRECE (tracker.css
+    // Por debajo de 1024 el panel ocupa flujo y la tarjeta CRECE (sections.css
     // §backstage en vertical), así que los triggers de todo lo que va debajo se
     // quedan con la medida vieja si no se remide.
     if (esVertical.matches) ScrollTrigger.refresh()
@@ -151,7 +155,6 @@ function initTilt() {
  * Re-render tras cambiar de idioma (tarea 28). Recrear el track destruye los
  * listeners de tilt (son por card), así que hay que volver a montarlos. El del
  * backstage sobrevive: está delegado en `.projects__track`, que no se sustituye.
- * Quien llama es responsable de invocar después `tracker.refresh()`.
  */
 export function refreshProjects() {
   renderProjects()

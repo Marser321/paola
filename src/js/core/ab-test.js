@@ -2,8 +2,6 @@
 // El h1 "PAOLA" NO entra en el test: la marca es marca.
 
 import gsap from 'gsap'
-import { setVariant } from './tracker.js'
-import { shouldReduceMotion } from './lenis.js'
 import { t } from '../../i18n/index.js'
 
 
@@ -63,15 +61,10 @@ export function initAbTest() {
   // Escritura INSTANTÁNEA: initHero() (tarea 07) anima el subtítulo justo después
   // desde el estado del DOM. Animar aquí haría visible el cambio de texto.
   paint(current, { animate: false })
-  setVariant(current, { forced: false })
 
-  // Listener delegado: el botón del HUD se construye más tarde (primer scroll),
-  // así que no se puede referenciar directamente.
-  document.addEventListener('click', (event) => {
-    if (!event.target.closest('[data-hud-action="variant"]')) return
-    current = current === 'A' ? 'B' : 'A'
-    storeAssigned(current)
-    paint(current, { animate: !shouldReduceMotion() })
-    setVariant(current, { forced: true })
-  })
+  // ⚠ El conmutador manual de variante VIVÍA EN EL HUD y se fue con él
+  // (2026-08-16). No se sustituye por otro botón: el sitio ya no publica en
+  // ningún sitio qué variante te ha tocado, así que un control para cambiarla
+  // no tendría nada que enseñar. El reparto 50/50 sigue, callado, que es como
+  // funciona un test de verdad.
 }

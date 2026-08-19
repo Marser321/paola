@@ -37,13 +37,12 @@ function scrambleElement(el) {
 export function initScramble() {
   if (shouldReduceMotion()) return
 
-  // OJO con dos cosas (ver "⚠ No hacer"):
-  // 1) Se apunta a .section-label__stage / __name, NO a .section-label: ese
-  //    contenedor tiene DOS hijos <span> y scramblearlo por textContent los
-  //    destruiría, perdiendo la jerarquía de color del label de etapa.
-  // 2) La UI del tracker queda excluida: escribe los mismos nodos a 4 Hz.
+  // OJO: se apunta a .section-label__name, NO a .section-label. El contenedor es
+  // el que lleva el filete y el margen; scramblearlo por textContent se llevaría
+  // por delante el <span> de dentro. (Hasta el 2026-08-16 había DOS hijos, el
+  // rótulo de etapa y el nombre; el de etapa se fue con el concepto de campaña.)
   const targets = document.querySelectorAll(
-    '.hero__meta span, .metric__label, .section-label__stage, .section-label__name, .projects__hint'
+    '.hero__meta span, .metric__label, .section-label__name, .projects__hint'
   )
 
   const observer = new IntersectionObserver(
@@ -51,9 +50,6 @@ export function initScramble() {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return
         const el = entry.target
-        // Cinturón además del selector: nada dentro del HUD, del informe ni de
-        // un toast, pase lo que pase con el selector en el futuro.
-        if (el.closest('.hud, .report, .signal-toast')) return
         observer.unobserve(el)
         el.dataset.original = el.textContent
         scrambleElement(el)

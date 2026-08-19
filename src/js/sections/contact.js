@@ -1,12 +1,17 @@
 import gsap from 'gsap'
 import { shouldReduceMotion } from '../core/lenis.js'
 import { getLenis } from '../core/lenis.js'
-import { on, emit } from '../core/tracker.js'
 
 export function initContact() {
   // --- Reloj local ---
-  // Se cuelga del tick del tracker (4 Hz) en vez de un setInterval: PLAN.md §9.8
-  // fija un único reloj para todo el sitio. Solo escribe cuando el string cambia.
+  // Se cuelga del ticker de GSAP, NUNCA de un setInterval: PLAN.md §9.8 fija un
+  // único RAF para todo el sitio y ese es el que ya mueve Lenis y ScrollTrigger.
+  // (Hasta el 2026-08-16 se colgaba del tick del tracker, que era un consumidor
+  // más de ese mismo ticker; al retirarse el tracker, el reloj se engancha
+  // directamente donde estaba la fuente.)
+  //
+  // El ticker corre a la tasa de refresco, así que se escribe como mucho una vez
+  // por segundo — y aun así solo cuando el string cambia.
   const timeEl = document.getElementById('local-time')
   if (timeEl) {
     let last = ''
@@ -21,15 +26,8 @@ export function initContact() {
       timeEl.textContent = now
     }
     paint()
-    on('tick', paint)
+    gsap.ticker.add(paint)
   }
-
-  // --- Conversión ---
-  // El click en el CTA cierra el embudo. Se emite ANTES de que el mailto: se
-  // lleve el foco de la pestaña.
-  document.querySelector('[data-magnetic]')?.addEventListener('click', () => {
-    emit('Conversion', { source: 'cta' })
-  })
 
   // --- Back to top ---
   const backToTop = document.getElementById('back-to-top')

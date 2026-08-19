@@ -30,8 +30,8 @@
    contra: el velo se invertiría también. El blend se queda SOLO en el logotipo,
    que sigue yendo a pelo sobre el hero (sections.css §HEADER).
 
-   Mismo velo que el HUD (tracker.css): color del propio fondo con transparencia
-   y desenfoque detrás. No es decorativo — por debajo pasan las partículas del
+   Velo de color del propio fondo con transparencia y desenfoque detrás. No es
+   decorativo — por debajo pasan las partículas del
    hero y las creatividades de la galería. */
 .pill-nav__list {
   position: relative;

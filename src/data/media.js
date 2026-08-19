@@ -376,29 +376,74 @@ export const parallax = {
     ],
   },
 
-  // ⚠ `depth` DELIBERADAMENTE bajo. Esta sección ya tiene su plato moviéndose a
-  // 0,08, y dos planos a velocidades parecidas no se leen como profundidad: se
-  // leen como una imagen mal renderizada. Va detrás de la foto y más lento.
-  servicios: {
+  // ⚠ #servicios SE QUEDÓ SIN CAPA el 2026-08-16, y a petición expresa.
+  //
+  // Tenía una de humo dorado (`servicios-capa-humo`, back, depth 0,05). No
+  // gustaba y no aportaba: por debajo del plato fotográfico, a una velocidad casi
+  // idéntica a la suya, lo único que se percibía era una neblina sucia sobre la
+  // sección. Su PNG sigue en `Selección/generated-parallax/` y los archivos
+  // servidos se borraron; para recuperarla haría falta `build-media.py parallax`,
+  // pero antes habría que resolver el problema de fondo, que era la velocidad.
+  //
+  // La sección se queda con su plato (`bg-servicios`, 0,08) y con la galería
+  // elástica de muestras, que es donde está su interés de verdad.
+
+  // ── RESPLANDORES ──────────────────────────────────────────────────────────
+  // Las cuatro secciones que no tenían más que un plano. Son capas `glow`: un
+  // radial por tokens, sin archivo y sin un solo KB, que ya sabía pintar
+  // fx/parallax.js §pintarGlow y que no usaba nadie.
+  //
+  // ⚠ TODOS van del lado del plato fotográfico, nunca del lado del texto. Un
+  // radial dorado detrás de una columna de lectura le come contraste; puesto
+  // donde ya está la foto, se lee como la luz de esa escena derramándose sobre la
+  // sección, y encima viaja a otra velocidad que ella — que es exactamente lo que
+  // produce la sensación de profundidad.
+  //
+  // La opacidad efectiva es la del token por la de la capa: `--glow-warm` es
+  // rgba(212,175,55,.22), así que un 0,55 deja el pico en ~0,12 de alfa. Por
+  // debajo del techo de cualquiera de estas secciones (ver §backdrops).
+  metricas: {
     layers: [
-      { id: 'humo', src: 'servicios-capa-humo', alt: '', depth: 0.05, plane: 'back', opacity: [0.27, 0.16] },
+      { id: 'resplandor', glow: { x: '80%', y: '30%', size: '55% 55%' },
+        depth: 0.04, plane: 'back', opacity: [0.55, 0.35] },
     ],
   },
 
-  // ⚠ #contacto SE QUEDA FUERA, y esta vez con la medición delante.
+  // La única sección del sitio sin NADA detrás: ni plato ni capas. El resplandor
+  // va tras el retrato, que ocupa la columna izquierda.
+  'sobre-mi': {
+    layers: [
+      { id: 'resplandor', glow: { x: '28%', y: '45%', size: '50% 60%' },
+        depth: 0.06, plane: 'back', opacity: [0.5, 0.32] },
+    ],
+  },
+
+  testimonios: {
+    layers: [
+      { id: 'resplandor', glow: { x: '78%', y: '55%', size: '55% 50%' },
+        depth: 0.04, plane: 'back', opacity: [0.45, 0.3] },
+    ],
+  },
+
+  // ⚠ El más bajo de los cuatro, por el mismo motivo por el que su plato es el
+  // más bajo de los cinco: el CTA es tipografía enorme y centrada y no admite
+  // competencia detrás.
   //
-  // La capa se generó (queda su PNG en Selección/generated-parallax/), pero la
-  // opacidad máxima que no le quita fuerza al CTA es 0,03. A ese valor no se ve:
-  // serían 78 KB de AVIF para nada. El motivo es el que ya decía el manifiesto de
-  // fondos — el CTA es tipografía enorme y centrada y no admite competencia
-  // detrás, que es por lo que su plato es el más bajo de los cinco.
-  //
-  // Para recuperarla: descomentar y `build-media.py parallax`.
-  // contacto: {
-  //   layers: [
-  //     { id: 'ventana', src: 'contacto-capa-ventana', alt: '', depth: 0.04, plane: 'back', opacity: [0.03, 0.02] },
-  //   ],
-  // },
+  // Aquí hubo una capa de IMAGEN descartada (`contacto-capa-ventana`, su PNG
+  // sigue en Selección/): medida, la opacidad máxima que no le quitaba fuerza al
+  // CTA era 0,03, y a ese valor no se veía — 78 KB para nada. El resplandor
+  // resuelve lo mismo sin pesar: no hay archivo que cargar.
+  contacto: {
+    layers: [
+      { id: 'resplandor', glow: { x: '20%', y: '60%', size: '50% 50%' },
+        depth: 0.03, plane: 'back', opacity: [0.4, 0.26] },
+    ],
+  },
+
+  // ⚠ #proyectos NO lleva capa, y es la única exclusión deliberada que queda.
+  // Ya tiene el track horizontal pinneado y la galería 3D en WebGL: una capa más
+  // sería la tercera imagen compitiendo en la misma sección. Mismo criterio que
+  // el que la deja fuera de los platos fotográficos (§backdrops).
 }
 
 export const budgets = {

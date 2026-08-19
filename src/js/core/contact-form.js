@@ -1,8 +1,9 @@
 // Formulario de contacto (tarea 24) — Netlify Forms.
 //
-// El envío correcto emite `form:success`, que el orquestador traduce a la señal
-// `Conversion` del tracker. El dedupe del tracker garantiza que cuente UNA sola vez
-// aunque además se pulse el CTA magnético (tarea 14).
+// El envío correcto emite `form:success`. Hasta el 2026-08-16 el orquestador lo
+// traducía a la señal `Conversion` del tracker; retirado aquel, el evento se
+// queda porque es el gancho natural para lo que venga (una analítica de verdad,
+// una redirección a gracias) y no cuesta nada.
 
 const ENDPOINT = '/' // Netlify recoge el POST en la propia ruta
 

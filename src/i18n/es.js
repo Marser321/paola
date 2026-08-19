@@ -7,9 +7,9 @@ export const es = {
   description:
     'Especialista en Meta Ads (Facebook e Instagram). Escala tu e-commerce o negocio digital con campañas de performance medibles: ROAS medio 4.2x, +$2M gestionados.',
 
-  preloader: { label: 'Iniciando campaña', status: 'PAOLA_2026 · Objetivo: conversión', delivering: 'Entregando impresión' },
+  preloader: { label: 'Iniciando campaña', status: 'Campaña 2026 · Objetivo: conversión', delivering: 'Entregando impresión' },
 
-  nav: { projects: 'Proyectos', services: 'Servicios', process: 'Proceso', about: 'Sobre mí', contact: 'Contacto' },
+  nav: { projects: 'Proyectos', services: 'Servicios', process: 'Proceso', plans: 'Planes', about: 'Sobre mí', contact: 'Contacto' },
 
   hero: {
     label: 'Meta Ads Specialist — Performance Marketing',
@@ -23,18 +23,14 @@ export const es = {
     B: 'Cada dólar invertido tiene que <span class="accent-text">volver acompañado</span>.',
   },
 
-  // Etapas del embudo (CONTENT.md §5). Se traduce el NOMBRE de la etapa;
-  // la palabra "Etapa" y el número los compone la plantilla.
-  stageWord: 'Etapa',
-  stages: {
-    alcance: 'Alcance', interes: 'Interés', consideracion: 'Consideración',
-    intencion: 'Intención', conversion: 'Conversión',
-  },
+  // Rótulo de cada sección. Hasta el 2026-08-16 iba precedido de «Etapa 0X ·
+  // Interés»: el embudo se retiró con el resto del concepto de campaña.
   labels: {
     results: 'Resultados', cases: 'Creatividades',
     services: 'Servicios', process: 'Proceso',
     about: 'Quién lo opera', testimonials: 'Prueba social',
-    report: 'Tu informe', contact: 'Contacto',
+    plans: 'Trabajar juntos', calculator: 'Calculadora', faq: 'Preguntas',
+    contact: 'Contacto',
   },
 
   metrics: ['ROAS medio', 'Ad spend gestionado', 'Retención de clientes', 'Campañas lanzadas'],
@@ -58,15 +54,15 @@ export const es = {
     // imagen, así que describe QUÉ SE VE, no el servicio en abstracto.
     toggle: 'Ver muestras de este trabajo',
     items: [
-      { title: 'Meta Ads', desc: 'Campañas de conversión en Facebook e Instagram: estructura, segmentación, pujas y escala horizontal y vertical.', tags: 'FB · IG · Advantage+',
+      { title: 'Meta Ads', desc: 'Campañas que no dependen de que una creatividad tenga suerte: estructura por fase, pujas revisadas y una escala que aguanta cuando sube el presupuesto.', tags: 'FB · IG · Advantage+',
         samples: ['Estructura de campaña por fase de funnel', 'Anuncio de catálogo en Reels', 'Panel de escala con ROAS por conjunto'] },
-      { title: 'Paid Social', desc: 'Expansión multicanal cuando el funnel lo justifica, con creatividades nativas por plataforma.', tags: 'TikTok · Pinterest · LinkedIn',
+      { title: 'Paid Social', desc: 'Salir de Meta solo cuando los números lo piden, y hacerlo con piezas nativas de cada plataforma en vez de reciclar las mismas.', tags: 'TikTok · Pinterest · LinkedIn',
         samples: ['Misma campaña adaptada a tres plataformas', 'Creatividad nativa de TikTok', 'Comparativa de coste por canal'] },
-      { title: 'Funnels &amp; CRO', desc: 'Páginas y flujos que convierten: CAPI, píxel, eventos, tests A/B y análisis de drop-off.', tags: 'Landings · A/B · Tracking',
+      { title: 'Funnels &amp; CRO', desc: 'Que lo que pagas por traer no se caiga al llegar: medición sin agujeros, páginas probadas y el punto exacto donde se pierde la venta.', tags: 'Landings · A/B · Tracking',
         samples: ['Landing antes y después del rediseño', 'Embudo con caída por paso', 'Test A/B con la variante ganadora'] },
-      { title: 'UGC &amp; Creatividades', desc: 'Sistema de producción y testing creativo: hooks, ángulos e iteración semanal basada en datos.', tags: 'Guiones · Hooks · Testing',
+      { title: 'UGC &amp; Creatividades', desc: 'Creatividad nueva cada semana y con una hipótesis detrás, para que ganar deje de depender de haber acertado una vez.', tags: 'Guiones · Hooks · Testing',
         samples: ['Guion de UGC con sus tres hooks', 'Tanda de creatividades de una semana', 'Ranking de ángulos por retención'] },
-      { title: 'Auditorías &amp; Consultoría', desc: 'Auditoría completa de la cuenta publicitaria con roadmap accionable a 90 días.', tags: 'Audit · Roadmap · Mentoring',
+      { title: 'Auditorías &amp; Consultoría', desc: 'Saber qué está fallando en tu cuenta y en qué orden arreglarlo, con un plan de 90 días que puedes ejecutar sin mí.', tags: 'Audit · Roadmap · Mentoring',
         samples: ['Diagnóstico de cuenta con fugas marcadas', 'Roadmap a 90 días por prioridad', 'Revisión de eventos y CAPI'] },
     ],
   },
@@ -74,12 +70,12 @@ export const es = {
   process: {
     title: 'Método de trabajo',
     steps: [
-      { title: 'Auditoría', desc: 'Análisis de cuenta, tracking y competencia. Detectamos fugas de presupuesto y oportunidades rápidas.' },
-      { title: 'Estrategia', desc: 'Hipótesis, ángulos, estructura de campañas y presupuesto por fase del funnel.' },
-      { title: 'Creatividades', desc: 'Producción de anuncios (UGC, estáticos, vídeo) orientados a hook + prueba social + CTA.' },
-      { title: 'Lanzamiento', desc: 'Setup técnico impecable: CAPI, eventos, catálogos y estructura de testing.' },
-      { title: 'Optimización', desc: 'Iteración semanal: kill de perdedores, escala de ganadores, refresco creativo.' },
-      { title: 'Escala', desc: 'Crecimiento sostenible protegiendo el ROAS: más presupuesto, más canales, más mercados.' },
+      { title: 'Auditoría', desc: 'Salimos con la lista de por dónde se está yendo el presupuesto hoy y con qué se puede recuperar en las dos primeras semanas.' },
+      { title: 'Estrategia', desc: 'Sales sabiendo cuánto va a cada fase del embudo y qué hipótesis estamos comprando con ese dinero.' },
+      { title: 'Creatividades', desc: 'Cada anuncio nace de un ángulo concreto, no de una idea suelta: gancho, prueba y llamada, listos para medirse por separado.' },
+      { title: 'Lanzamiento', desc: 'Se publica con la medición limpia: eventos que cuadran, catálogo en orden y un test que se puede leer sin dudas.' },
+      { title: 'Optimización', desc: 'Cada semana se retira lo que no rinde y se refuerza lo que sí — y te llega dicho por qué, no solo qué.' },
+      { title: 'Escala', desc: 'Subir el presupuesto sin que el retorno se caiga: más audiencias, más canales y más mercados, en ese orden.' },
     ],
   },
 
@@ -103,50 +99,112 @@ export const es = {
     { quote: '«Pasamos de quemar presupuesto a escalar con control total. La mejor inversión del año.»', author: 'Lucía P. — Fundadora · Glow Skin' },
   ],
 
-  // --- UI del concepto (CONTENT.md §12, §13, §14) ---
-  hud: {
-    title: 'Sesión en curso',
-    elapsed: 'Tiempo', depth: 'Profundidad', stage: 'Etapa',
-    signals: 'Señales', variant: 'Variante', last: 'Última señal',
-    switch: 'Cambiar', off: 'Desactivar panel',
-    reactivate: 'Reactivar panel de sesión', disabled: 'Panel desactivado',
-    aria: 'Panel de sesión',
+  // ⚠ AQUÍ VIVÍA LA UI DEL CONCEPTO «LA CAMPAÑA ERES TÚ» (CONTENT.md §12-14):
+  // el panel de sesión, las glosas de las señales de Ads Manager, el título de
+  // retargeting y el informe entero. Se retiró el 2026-08-16: no se entendía y
+  // no vendía. Su hueco lo ocupa el bloque de venta que empieza aquí.
+
+  // --- BLOQUE DE VENTA: planes, calculadora y preguntas ---
+  plans: {
+    title: 'Tres formas de <span class="accent-text">empezar</span>',
+    intro: 'Ninguna empieza con un contrato. Las tres empiezan con la misma llamada de 30 minutos, en la que miramos tu cuenta y te digo cuál de ellas te hace falta — o si no te hace falta ninguna.',
+    cta: 'Pedir propuesta',
+    // El <strong> con el que arranca cada «te llevas». Va suelto porque el resto
+    // de la frase cambia por plan y esta palabra no.
+    takeWord: 'Te llevas',
+    items: [
+      {
+        tag: 'Puntual · 2 semanas',
+        title: 'Auditoría',
+        who: 'Tienes campañas en marcha y sospechas que se te está yendo presupuesto, pero no sabes por dónde.',
+        list: [
+          'Revisión completa de la cuenta publicitaria',
+          'Diagnóstico de medición: píxel, CAPI y eventos duplicados',
+          'Análisis de creatividades, audiencias y estructura',
+          'Roadmap priorizado a 90 días',
+        ],
+        take: ' un documento con lo que hay que arreglar, en orden y con cuánto pesa cada cosa. Es tuyo, lo apliques conmigo o sin mí.',
+      },
+      {
+        tag: 'Continuo · mínimo 3 meses',
+        title: 'Gestión mensual',
+        who: 'Ya inviertes cada mes y quieres a alguien dentro de la cuenta, no un informe cuando el mes ya ha pasado.',
+        list: [
+          'Estrategia y estructura de campañas por fase del funnel',
+          'Sistema de testing creativo con tanda nueva cada semana',
+          'Optimización y escala protegiendo el ROAS',
+          'Revisión quincenal en llamada, no en PDF',
+        ],
+        take: ' una cuenta que crece con decisiones explicadas: qué se cambió, por qué y qué pasó después.',
+      },
+      {
+        tag: 'Puntual · 6 semanas',
+        title: 'Sprint de escala',
+        who: 'La cuenta ya funciona y quieres subir el presupuesto sin que el ROAS se caiga por el camino.',
+        list: [
+          'Plan de escalado por fases, con su techo calculado',
+          'Apertura de audiencias, mercados y canales',
+          'Sistema de refresco creativo que aguante el ritmo',
+          'Traspaso documentado a tu equipo interno',
+        ],
+        take: ' un método de escalado que tu equipo sigue usando cuando yo ya no estoy.',
+      },
+    ],
   },
 
-  // ⚠ Las CLAVES de este objeto son nombres de señal de Ads Manager y NO se
-  // traducen nunca, en ningún idioma. Solo se traducen los valores (las glosas).
-  signals: {
-    PageView: 'impresión servida',
-    ViewContent: 'contenido visto',
-    Scroll75: '75% de profundidad',
-    ContentEngagement: 'interés en {case}',
-    Dwell60: '60 s en página',
-    Retargeting: 'has vuelto',
-    Conversion: 'objetivo cumplido',
-  },
-  retargetTitle: '← Esto es retargeting · PAOLA',
-
-  report: {
-    title: 'La campaña <span class="accent-text">eres tú</span>',
-    intro: 'Mientras leías, esta página hacía lo mismo que hago cada día con las cuentas que gestiono: medir. Este es el informe de tu visita.',
-    panelTitle: 'Informe de sesión',
-    status: { idle: 'En espera', compiling: 'Compilando…', done: 'Compilado', converted: 'Objetivo cumplido', off: 'Panel desactivado' },
-    rows: {
-      elapsed: 'Tiempo en sesión', depth: 'Profundidad', signals: 'Señales emitidas',
-      stage: 'Etapa alcanzada', cases: 'Creatividades vistas',
-      topcase: 'Más atención', variant: 'Variante servida',
+  calc: {
+    title: 'Echa la cuenta <span class="accent-text">antes</span> de invertir',
+    intro: 'Mueve los controles con tus propios números. Esto no predice nada: es la misma aritmética que vas a ver en cada reporte, y sirve para saber si lo que te propones se sostiene.',
+    fields: {
+      spend: 'Inversión publicitaria al mes',
+      roas: 'ROAS objetivo',
+      ticket: 'Ticket medio',
     },
-    forced: ' · cambiada manualmente',
-    scoreLabel: 'Probabilidad de conversión',
-    scoreTag: 'Estimación heurística',
-    formulaShow: 'ver fórmula',
-    formulaHide: 'ocultar fórmula',
-    formula: 'Heurística local: profundidad ×30 + permanencia ×20 + creatividades ×20 + señales ×15 + conversión ×15. Máximo 99: ninguna estimación honesta dice 100%.',
-    note1strong: 'Nada de esto ha salido de tu navegador.',
-    note1: ' Sin cookies, sin píxel y sin servidor: se ha calculado aquí y desaparece cuando cierres la pestaña.',
-    note2: 'Medir bien no es recoger más datos. Es recoger los justos y saber leerlos. Eso es exactamente lo que hago con las cuentas que gestiono.',
-    announce: 'Informe de tu visita listo',
-    offNote: 'Has apagado la medición. El informe se queda como estaba.',
+    rows: {
+      revenue: 'Retorno estimado',
+      profit: 'Sobre lo invertido',
+      sales: 'Ventas al mes',
+      cpa: 'Coste máximo por venta',
+    },
+    // Rótulos de las barras «a escala». El bloque va aria-hidden: son etiquetas
+    // que se LEEN, no que se anuncien.
+    viz: {
+      spend: 'Inviertes',
+    },
+    noteStrong: 'Multiplicar es la parte fácil.',
+    note: ' Llegar a ese ROAS con ese ticket es todo lo demás de esta página: la estructura, las creatividades y las semanas de testing. Y el cálculo se hace en tu navegador — no se envía a ninguna parte.',
+    // Solo para lector de pantalla, al soltar el control.
+    announce: 'Con {spend} al mes y un ROAS de {roas}: retorno estimado {revenue}, {sales} ventas al mes, coste máximo por venta {cpa}.',
+  },
+
+  faq: {
+    title: 'Antes de escribirme',
+    items: [
+      {
+        q: '¿Cuánto hay que invertir para que esto tenga sentido?',
+        a: 'Por debajo de unos $3.000 al mes de inversión publicitaria, el algoritmo no reúne datos suficientes para optimizar y cualquier test tarda semanas en concluir. Si estás por debajo, te lo digo en la primera llamada y te propongo qué hacer antes de empezar.',
+      },
+      {
+        q: '¿Cuánto tarda en verse algo?',
+        a: 'Las primeras señales, entre dos y tres semanas: es lo que tarda una tanda de creatividades en dar datos concluyentes. Un cambio de tendencia sostenido, entre 60 y 90 días. Cualquiera que te prometa resultados la primera semana está hablando de suerte, no de método.',
+      },
+      {
+        q: '¿Hay permanencia?',
+        a: 'La gestión mensual pide tres meses de compromiso inicial, y no es para atarte: en menos tiempo no da tiempo a auditar, corregir y medir el efecto de lo corregido. A partir del cuarto mes es mes a mes, sin preaviso.',
+      },
+      {
+        q: '¿Trabajas con mi sector?',
+        a: 'Sobre todo e-commerce, formación e infoproductos y servicios con venta digital. Si vendes offline o con ciclos de decisión de meses, el trabajo cambia bastante y hay perfiles mejores que el mío: te lo diré antes de aceptar el proyecto, no después.',
+      },
+      {
+        q: '¿Quién produce las creatividades?',
+        a: 'El sistema, los ángulos y los guiones, yo. La producción depende del caso: tu equipo, creadores UGC o producción externa. Lo que no cambia es el criterio — cada pieza sale con una hipótesis detrás y se mide por separado.',
+      },
+      {
+        q: '¿Qué necesito tener montado antes de empezar?',
+        a: 'Píxel y API de conversiones funcionando, catálogo si vendes producto y acceso de administrador a tu cuenta publicitaria. Si falta algo, no es un problema: la auditoría empieza justo ahí.',
+      },
+    ],
   },
 
   contact: { pre: '¿Tienes un proyecto entre manos?', cta: '¿Escalamos?', time: 'Hora local —' },

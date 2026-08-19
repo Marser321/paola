@@ -26,17 +26,55 @@
      del sitio, pero con su cuerpo y su interletraje, no con los del original.
    ============================================================ */
 
+/* ===== EL PANEL ES DE VIDRIO =====
+   La sección tiene detrás su plato fotográfico (`bg-proceso`, el pasillo) y su
+   capa de haz. Hasta el 2026-08-16 el carrusel iba opaco —`--surface` en la
+   rueda, `--bg` en la baraja— y las tapaba enteras: se generaron dos imágenes
+   para esta sección y no se veía ninguna.
+
+   Ahora el panel es un vidrio: deja pasar el fondo en reposo y se ESPESA cuando
+   lo tocas, que es lo que le da el protagonismo al interactuar sin quitarle aire
+   cuando solo pasas de largo. Ver §HOVER abajo.
+
+   ⚠ Las dos variables van juntas y no se pueden separar: `--vidrio` pinta el
+   panel y `--velo` los desvanecidos de la rueda, y un velo que no sea del mismo
+   color que su panel se ve como una banda gris. */
 .process__carousel {
   /* Alto de cada ficha. Lo comparten el CSS y el JS: el JS coloca las fichas en
      `y = distancia × esta medida`, así que si se cambia aquí y no allí, la
      columna se desalinea. Por eso es una variable y no un número suelto. */
   --ficha-h: 4rem;
+  --vidrio: color-mix(in srgb, var(--surface) 46%, transparent);
+  --velo: color-mix(in srgb, var(--surface) 72%, transparent);
+  /* El MISMO color del velo con alfa 0, escrito y no `transparent`. Es el final
+     del degradado, y declararlo aparte impide que se separe del principio: si el
+     velo cambia de color y su final no, el desvanecido tira al color viejo. */
+  --velo-fin: color-mix(in srgb, var(--surface) 0%, transparent);
   margin-top: 4rem;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: clip;
+  background: var(--vidrio);
+  backdrop-filter: blur(14px) saturate(115%);
+  transition: background-color var(--dur-med) var(--ease-out),
+              border-color var(--dur-med) var(--ease-out);
+}
+
+/* ===== HOVER: LA SECCIÓN SE ACERCA =====
+   Con el puntero encima o el foco dentro, el vidrio se espesa y el filete se
+   pone dorado. Es el mismo gesto que ya hace la galería elástica de servicios
+   —tocar algo lo trae al frente— y además resuelve un problema real: en cuanto
+   se lee, el texto necesita más campo detrás que cuando solo se mira.
+
+   `:focus-within` no es un extra: quien navega con teclado entra en la rueda por
+   las fichas y tiene que recibir exactamente el mismo panel. */
+.process__carousel:hover,
+.process__carousel:focus-within {
+  --vidrio: color-mix(in srgb, var(--surface) 78%, transparent);
+  --velo: color-mix(in srgb, var(--surface) 92%, transparent);
+  border-color: var(--line-gold);
 }
 
 /* ===== PANEL IZQUIERDO: LAS ETAPAS ===== */
@@ -45,7 +83,6 @@
   /* Cinco fichas de alto: la activa, dos arriba y dos abajo. Con menos, la
      rotación no se entiende; con más, la columna compite con la tarjeta. */
   height: calc(var(--ficha-h) * 5);
-  background: var(--surface);
   overflow: clip;
 }
 
@@ -63,11 +100,11 @@
 }
 .process__stages::before {
   top: 0;
-  background: linear-gradient(to bottom, var(--surface), transparent);
+  background: linear-gradient(to bottom, var(--velo), var(--velo-fin));
 }
 .process__stages::after {
   bottom: 0;
-  background: linear-gradient(to top, var(--surface), transparent);
+  background: linear-gradient(to top, var(--velo), var(--velo-fin));
 }
 
 .process__rueda {
@@ -139,6 +176,8 @@
 }
 
 /* ===== PANEL DERECHO: LA BARAJA ===== */
+/* Sin fondo propio: el de la baraja es el vidrio del carrusel, y por debajo el
+   pasillo de la foto. Llevaba `--bg`, que es opaco y era la mitad del problema. */
 .process__deck {
   position: relative;
   display: flex;
@@ -146,7 +185,6 @@
   justify-content: center;
   padding: clamp(2rem, 6vw, 4rem);
   border-top: 1px solid var(--line);
-  background: var(--bg);
 }
 .process__stack {
   position: relative;

@@ -230,12 +230,107 @@
   font-size: var(--fs-metric); line-height: 1; letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
 }
+/* La gráfica. Alto de verdad, no un renglón: 24px de línea gris de 1px era el
+   dato más persuasivo del sitio dibujado en el color del texto deshabilitado.
+   El <svg> lo inyecta sections/metrics.js midiendo ESTA caja, así que el alto
+   se decide aquí y la pendiente sale igual en cualquier ancho de columna. */
 .metric__spark {
-  display: block; height: 24px; margin-top: 0.75rem;
-  color: var(--muted); /* el path del sparkline usa currentColor */
-  /* el <svg> lo inyecta la tarea 10 */
+  display: block;
+  /* Alto de gráfica, no de renglón. La pendiente que lee el ojo es alto/ancho:
+     por debajo de ~4rem en una columna de 300px, cualquier serie sale plana y
+     la curva deja de contar nada. */
+  height: clamp(3.5rem, 5.5vw, 6rem);
+  margin-top: 1.1rem;
 }
+.spark {
+  display: block; width: 100%; height: 100%;
+  /* El halo del punto final late HACIA AFUERA del viewBox. Sin esto se recorta
+     contra el borde y el latido se lee como un parpadeo cuadrado. */
+  overflow: visible;
+}
+
+/* Los topes de degradado van por CSS y no como atributo: `stop-color` en
+   atributo de presentación no acepta `var()`, y aquí el oro tiene que girar con
+   el tema como el resto del sitio. */
+.spark__stop--deep { stop-color: var(--spark-from); }
+.spark__stop--gold { stop-color: var(--gold); }
+.spark__stop--soft { stop-color: var(--spark-to); }
+/* Más bajo que antes: con base cero el relleno pasa de ser una banda entre el
+   mínimo y el máximo a ocupar casi la tarjeta entera, y al 0.42 de antes las
+   cuatro se leían como un rectángulo de oro. */
+.spark__stop--area-top { stop-color: var(--gold); stop-opacity: 0.26; }
+.spark__stop--area-bottom { stop-color: var(--gold); stop-opacity: 0; }
+
+/* El CERO. No es un adorno bajo la curva: es la línea contra la que se mide el
+   relleno y hasta la que llegan los pies. Punteada porque es un eje de
+   referencia, no un dato. */
+.spark__base { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 5; }
+
+/* Un punto por lectura, sobre los vértices de la polilínea. Es lo que separa
+   «aquí se midió» de «esto es la línea que une dos medidas»: sin ellos, seis
+   muestras y una función continua se dibujan igual, y no son lo mismo. */
+/* Mismo criterio que el punto final: recortados contra el fondo. Sin el anillo
+   se funden con su propio trazo —que además va en degradado, así que un relleno
+   plano se leería como bulto por la izquierda y como bache por la derecha. */
+.spark__node { fill: var(--spark-dot); stroke: var(--bg); stroke-width: 1; }
+
+.spark__line {
+  fill: none; stroke-width: 1.75;
+  stroke-linecap: round; stroke-linejoin: round;
+  transition: stroke-width var(--dur-fast) var(--ease-out);
+}
+/* Floración: el MISMO trazo, más gordo y desenfocado, debajo. Es el neón del
+   sitio aplicado al dato — mismo recurso que fx/neon.js, sin un filtro SVG que
+   habría que declarar cuatro veces. */
+.spark__glow {
+  fill: none; stroke-width: 4.5; opacity: var(--spark-bloom);
+  filter: blur(5px);
+  transition: opacity var(--dur-med) var(--ease-out);
+}
+/* El punto final: dónde está HOY la serie. Es lo que ancla la curva al número
+   grande de arriba. */
+/* El punto final se recorta contra el fondo para que no se funda con su propio
+   trazo: es el único elemento de la gráfica que hay que localizar de un vistazo. */
+.spark__dot { fill: var(--spark-dot); stroke: var(--bg); stroke-width: 1.5; }
+/* ⚠ El latido lo enciende la clase `is-in`, que pone metrics.js cuando la curva
+   ha terminado de entrar. No puede estar puesto de salida: una animación CSS
+   gana en la cascada a los estilos en línea, así que el `opacity: 0` inicial de
+   GSAP no lo taparía y el halo latiría antes de que exista la gráfica. */
+.spark__halo {
+  fill: none; stroke: var(--gold); stroke-width: 1;
+  opacity: 0;
+  transform-box: fill-box; transform-origin: 50% 50%;
+}
+.spark.is-in .spark__halo { animation: spark-pulse 2.8s var(--ease-out) infinite; }
+@keyframes spark-pulse {
+  0%   { transform: scale(0.6); opacity: 0.75; }
+  70%  { opacity: 0; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+
+/* Al pasar por encima, la métrica sube el brillo. Es la única interacción de la
+   sección y confirma que la tarjeta es una unidad, no cuatro trozos sueltos. */
+.metric:hover .spark__glow { opacity: calc(var(--spark-bloom) + 0.3); }
+.metric:hover .spark__line { stroke-width: 2.25; }
+/* El recorrido de la serie. Lo inyecta sections/metrics.js debajo de la
+   gráfica: dice de dónde viene el número grande, que es lo que una pendiente
+   —por honesta que sea— no puede decir sola. Cifras tabulares porque los cuatro
+   rótulos van en columna y bailarían. */
+.metric__range {
+  margin-top: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+.metric__range i { font-style: normal; color: var(--gold); padding: 0 0.4em; }
+
 .metric__label { margin-top: 1rem; }
+/* Con el recorrido en medio, el rótulo se pega a él: son dos renglones de la
+   misma cosa, no dos bloques. */
+.metric__range + .metric__label { margin-top: 0.5rem; }
 
 /* ===== PROYECTOS ===== */
 .projects { overflow: clip; }
@@ -940,3 +1035,119 @@
 .footer__legal { display: flex; gap: 1.5rem; }
 .footer__legal a { transition: color var(--dur-fast) var(--ease-out); }
 .footer__legal a:hover { color: var(--gold); }
+
+/* ============================================================
+   CHROME DE ANUNCIO Y BACKSTAGE
+
+   Vivía en tracker.css, que era la hoja del concepto «LA CAMPAÑA ERES TÚ»
+   (HUD + toasts + informe). Ese concepto se retiró entero el 2026-08-16 y con él
+   la hoja; estos tres bloques —el chrome de la tarjeta, el panel de backstage y
+   su botón— son lo único que sobrevive, porque no eran parte del guiño meta:
+   son la tarjeta de proyecto.
+   ============================================================ */
+.ad-chrome {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+}
+.ad-chrome__avatar {
+  width: 24px; height: 24px; border-radius: 4px; flex-shrink: 0;
+}
+/* La marca que corona la tarjeta es la del CLIENTE, no la de quien gestiona la
+   cuenta: en un anuncio el anunciante es la marca anunciada. Antes ponía
+   «PAOLA®» en las seis, que además de repetir su nombre seis veces contaba algo
+   que no es verdad. Ver projects.js §render. */
+.ad-chrome__brand {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 0.85rem; letter-spacing: -0.02em;
+}
+.ad-chrome__meta { margin-left: auto; }
+
+.ad-chrome__format {
+  position: absolute; top: 1rem; right: 1rem; z-index: 2;
+  color: var(--text);
+  background: var(--overlay);
+  border: 1px solid var(--line);
+  padding: 0.3rem 0.6rem;
+}
+.ad-chrome__cta {
+  padding: 0.85rem 1.1rem; text-align: center;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+}
+
+/* Backstage: overlay que sube sobre la creatividad. Altura de la card intacta. */
+.backstage {
+  position: absolute; inset: 0; z-index: 3;
+  background: var(--bg);
+  padding: 1.25rem;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 0.6rem;
+  transform: translateY(100%);
+  transition: transform var(--dur-med) var(--ease-out);
+}
+.backstage:not([hidden]) { transform: translateY(0); }
+/* [hidden] con display:none rompería la transición: se anula y se usa el transform. */
+.backstage[hidden] { display: flex; visibility: hidden; }
+.backstage:not([hidden]) { visibility: visible; }
+
+.backstage__title, .backstage__test-title { color: var(--text); }
+.backstage__rows div {
+  display: flex; justify-content: space-between; gap: 1rem;
+  padding-block: 0.35rem; border-bottom: 1px solid var(--line);
+}
+.backstage__rows dt { color: var(--muted); }
+.backstage__rows dd { color: var(--text); text-align: right; }
+
+.backstage__variants { display: grid; gap: 0.5rem; }
+.backstage__variant {
+  position: relative;
+  border: 1px solid var(--line); padding: 0.6rem 0.75rem;
+  display: flex; align-items: baseline; gap: 0.6rem;
+  opacity: 0.45;
+}
+.backstage__variant.is-winner { opacity: 1; border-color: var(--muted); }
+.backstage__variant-key { color: var(--muted); }
+.backstage__variant-text { font-size: 0.9rem; }
+.backstage__badge {
+  margin-left: auto;
+  background: var(--text); color: var(--bg);
+  padding: 0.15rem 0.45rem;
+}
+.backstage__result { color: var(--text); margin-top: auto; }
+
+/* En vertical el backstage DEJA DE SER UNA CAPA y pasa a ocupar sitio.
+   En escritorio la tarjeta mide 560px y su creatividad 350px de alto: el panel
+   cabe encima sin más. En un móvil de 375 la creatividad son 233px y el panel
+   necesita 348 — medido —, así que quedaba un scroll interno dentro de una
+   tarjeta que está dentro del scroll de la página. Tres scrolls anidados en un
+   teléfono: nadie encuentra la última fila.
+
+   `position: static` lo devuelve al flujo, y entonces es él quien le da altura a
+   la creatividad; el `:has()` le quita a esta su `aspect-ratio` para que pueda
+   crecer. Sin deslizamiento: el `translateY` de la capa no tiene sentido cuando
+   el panel ya no está encima de nada. La tarjeta crece al abrir, que es lo que
+   hace que se entienda de dónde sale — y por eso projects.js remide ScrollTrigger
+   en este tramo. */
+@media (max-width: 1023px) {
+  .project-card__visual:has(.backstage:not([hidden])) { aspect-ratio: auto; }
+  .backstage:not([hidden]) {
+    position: static;
+    transform: none;
+  }
+}
+
+.project-card__more {
+  margin-top: 1.5rem;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  transition: color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+.project-card__more:hover { color: var(--text); border-color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .backstage { transition: none; }
+}

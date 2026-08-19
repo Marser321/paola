@@ -1,8 +1,8 @@
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { shouldReduceMotion } from '../core/lenis.js'
 import { galleries } from '../../data/media.js'
 import { refreshNeon } from '../fx/neon.js'
+import { initCollapse } from '../ui/collapse.js'
 import { t } from '../../i18n/index.js'
 
 // Galería de muestras por servicio.
@@ -145,9 +145,8 @@ function mountToggles(rows) {
     const button = document.createElement('button')
     button.className = 'service__toggle mono'
     button.type = 'button'
-    button.setAttribute('aria-expanded', 'false')
-    button.setAttribute('aria-controls', id)
     button.textContent = t('services.toggle') || '+'
+    // `aria-expanded` y `aria-controls` los pone initCollapse (ui/collapse.js).
 
     // El colapso envuelve a la tira. El estado vive AQUÍ, no en un `hidden` sobre
     // la tira: `hidden` no la ocultaba —el `display: flex` de la hoja lo anulaba—
@@ -156,10 +155,6 @@ function mountToggles(rows) {
     const collapse = document.createElement('div')
     collapse.className = 'service__collapse'
     collapse.id = id
-    // Recogida, la tira sigue en el DOM para poder animarla. `inert` es lo que la
-    // saca del tabulador y del lector de pantalla mientras tanto; se quita y se
-    // pone al instante, sin esperar a la transición.
-    collapse.inert = true
 
     const strip = document.createElement('ul')
     strip.className = 'service__strip'
@@ -168,43 +163,22 @@ function mountToggles(rows) {
     li.append(button, collapse)
     initElastic(strip)
 
-    // La tira cambia la altura de la sección, y .services__header es sticky con
-    // ScrollTriggers ya medidos: hay que remedir. Pero AL TERMINAR de abrirse, no
-    // al empezar — durante la transición la altura todavía es la vieja y el
-    // refresh mediría contra ella.
-    let backstop = 0
-    const remedir = () => {
-      clearTimeout(backstop)
-      backstop = 0
-      ScrollTrigger.refresh()
-    }
-    collapse.addEventListener('transitionend', (event) => {
-      if (event.target === collapse && event.propertyName === 'height') remedir()
-    })
-
-    button.addEventListener('click', () => {
-      const open = button.getAttribute('aria-expanded') === 'true'
-      if (!open && !strip.childElementCount) {
+    // El estado, el `inert` y la remedida de ScrollTrigger —que aquí hace falta
+    // de verdad: la tira cambia la altura de la sección y .services__header es
+    // sticky con triggers ya medidos— los lleva el contrato compartido con el
+    // acordeón de la FAQ (ui/collapse.js). Aquí solo queda lo que es de esta
+    // sección: rellenar la tira en el primer despliegue.
+    initCollapse(button, collapse, {
+      onOpen: () => {
+        if (strip.childElementCount) return
         strip.innerHTML = samplesFor(li) || ''
         // Las muestras nacen aquí, en el primer despliegue, mucho después de
-        // initNeon(). Sin este aviso se quedarían sin borde de foco — mismo caso
-        // que el HUD, que se construye en diferido (ui/hud.js).
+        // initNeon(). Sin este aviso se quedarían sin borde de foco.
         refreshNeon()
         // La tira se muestra YA en 4:1:1, no plana: es lo que enseña que la
         // galería es elástica sin tener que descubrirlo pulsando.
         abrir(strip, strip.querySelector('.sample'))
-      }
-      button.setAttribute('aria-expanded', String(!open))
-      collapse.classList.toggle('is-open', !open)
-      collapse.inert = open
-
-      // Red de seguridad para el remedido: `transitionend` no llega si no hay
-      // transición —reduced-motion, o un navegador que no interpole
-      // grid-template-rows— y sin él los ScrollTriggers se quedarían con la
-      // medida vieja para siempre. El listener de arriba cancela este temporizador
-      // cuando sí llega.
-      clearTimeout(backstop)
-      backstop = setTimeout(remedir, 800)
+      },
     })
   })
 }

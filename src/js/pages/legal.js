@@ -1,6 +1,5 @@
 // Entrada de las páginas legales (tarea 24).
-// Solo estilos y el conmutador de tema. Sin tracker: igual que en caso.html, el
-// concepto vive en la one-page.
+// Solo estilos y el conmutador de tema.
 //
 // Aquí vivía el botón de «retirar el consentimiento de analítica». Se retiró con
 // el banner: no había analítica externa que consentir, así que el botón borraba

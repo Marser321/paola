@@ -1,6 +1,5 @@
 import gsap from 'gsap'
 import { shouldReduceMotion } from './lenis.js'
-import { trackHover } from './tracker.js'
 
 // Suscriptores al ÚNICO mousemove del sitio (PLAN.md §9.8: un solo RAF, y por el
 // mismo motivo un solo listener global de puntero). Quien necesite la posición
@@ -55,11 +54,9 @@ export function initCursor() {
   })
 
   // Estados hover — delegación de eventos (un solo listener para todo el sitio).
-  // La tarea 31 engancha aquí el conteo de hovers del tracker: coste cero.
   document.addEventListener('mouseover', (e) => {
     const target = e.target.closest('[data-hover]')
     if (!target) return
-    trackHover()
     ring.classList.add('is-hover')
     if (target.dataset.hover === 'audience') {
       ring.classList.add('is-audience')

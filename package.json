@@ -10,7 +10,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check:media": "node scripts/check-media.mjs"
+    "check:media": "node scripts/check-media.mjs",
+    "check:i18n": "node scripts/check-i18n.mjs"
   },
   "devDependencies": {
     "vite": "^8.2.0"

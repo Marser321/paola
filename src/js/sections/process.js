@@ -20,6 +20,10 @@ import { process as etapas } from '../../data/media.js'
 const INTERVALO = 4000 // el original va a 3s; con seis etapas y texto que leer, corto
 const ITEM_H = 64      // px — tiene que coincidir con --ficha-h en process.css
 
+// Puntero fino. En táctil no hay hover y todo va por pulsación. Misma guarda,
+// con el mismo nombre, que en sections/services.js.
+const punteroFino = () => window.matchMedia('(hover: hover)').matches
+
 /** Envuelve un valor en un rango: la rueda es circular, tras la 06 viene la 01. */
 const envolver = (min, max, v) => {
   const rango = max - min
@@ -194,6 +198,33 @@ export function initProcess() {
       pausar() // quien elige manda: el automático no le pisa la elección
     })
   })
+
+  // --- Previsualización por hover ---------------------------------------------
+  // Con puntero fino, ROZAR una ficha ya enseña su etapa: no hay que pulsar para
+  // ver de qué va cada paso. Es el mismo gesto que la galería elástica de
+  // servicios (sections/services.js §initElastic) y por los mismos motivos: con
+  // solo el clic, el carrusel se siente rígido y hay que descubrir que se puede
+  // tocar.
+  //
+  // UN listener delegado en la rueda —`mouseover` burbujea—, no seis.
+  //
+  // ⚠ Aquí el salto es por el CAMINO CORTO, al revés que el clic. El clic mueve
+  // siempre hacia delante porque acompaña al automático; el hover responde a un
+  // gesto de exploración, y girar la rueda entera para enseñar la ficha que está
+  // justo encima del puntero se lee como un tirón, no como una respuesta.
+  //
+  // No hace falta pausar aquí: el carrusel entero ya para con `mouseenter` (ver
+  // más abajo), así que para cuando el puntero llega a una ficha, está parado.
+  if (punteroFino() && !reducido) {
+    lista.addEventListener('mouseover', (event) => {
+      const chip = event.target.closest?.('.step__chip')
+      if (!chip || !lista.contains(chip)) return
+      const i = pasos.indexOf(chip.closest('.step'))
+      if (i < 0) return
+      const salto = envolver(-total / 2, total / 2, i - indice())
+      if (salto) { paso += salto; pintar() }
+    })
+  }
 
   pintar()
 

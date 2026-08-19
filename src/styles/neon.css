@@ -80,14 +80,12 @@
   --neon-spot: 13rem;
 }
 
-/* ⚠ RESCATE DE POSICIONAMIENTO. neon.css se importa DESPUÉS de sections.css y
-   tracker.css, y `.neon` tiene la misma especificidad que `.testimonial` o
-   `.hud`, así que el `position: relative` de arriba GANA por orden y les roba
-   el suyo: los testimonios dejarían de ser sticky y el HUD dejaría de estar
-   fijo, cayendo al flujo. Cualquier superficie nueva que se posicione sola
-   tiene que repetirse aquí. */
+/* ⚠ RESCATE DE POSICIONAMIENTO. neon.css se importa DESPUÉS de sections.css, y
+   `.neon` tiene la misma especificidad que `.testimonial`, así que el
+   `position: relative` de arriba GANA por orden y le roba el suyo: los
+   testimonios dejarían de ser sticky y caerían al flujo. Cualquier superficie
+   nueva que se posicione sola tiene que repetirse aquí. */
 .testimonial.neon { position: sticky; }
-.hud.neon { position: fixed; }
 
 /* El filete iluminado. `padding` fija el grosor y la doble máscara recorta
    todo el interior, así que del radial solo sobrevive el marco. */

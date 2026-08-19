@@ -185,3 +185,38 @@ un acuario.
 - `src/js/fx/parallax.js` ni `src/styles/parallax.css`. El sistema ya funciona; las
   capas son datos.
 - El z-index del hero. Está repartido y documentado en `parallax.css`.
+
+
+---
+
+## Estado a 2026-08-16 — qué capas hay y cuáles faltan
+
+| Sección | Capa | Tipo |
+|---|---|---|
+| `#hero` | bruma · destello · polvo | imagen con alfa |
+| `#proceso` | haz | imagen con alfa |
+| `#metricas` · `#sobre-mi` · `#testimonios` · `#contacto` | resplandor | **`glow`** (radial por tokens, cero KB) |
+| `#servicios` | — | ninguna |
+| `#proyectos` | — | ninguna, y a propósito |
+
+**El humo de `#servicios` se retiró.** No gustaba y no aportaba: iba por debajo del plato
+fotográfico y a una velocidad casi idéntica a la suya (0,05 contra 0,08), así que lo
+único que se percibía era una neblina sucia. Su PNG sigue en
+`Selección/generated-parallax/servicios-capa-humo.png`; los archivos servidos se
+borraron. **Antes de recuperarla hay que resolver lo que fallaba, que era la velocidad,
+no la imagen.**
+
+**Los cuatro resplandores son un sustituto declarado.** Dan profundidad sin esperar a
+ninguna imagen, pero una capa de foto con alfa real es mejor: tiene textura y dirección.
+Estas cuatro son las que faltan por encargar, y sustituirlas es cambiar el `glow` por un
+`src` en el manifiesto — no se toca código:
+
+| Sección | Qué tiene que contar la capa | `plane` / `depth` |
+|---|---|---|
+| `#metricas` | Luz de pantalla derramada desde la derecha, del lado de los monitores de la foto | `back` / 0,04 |
+| `#sobre-mi` | Aire alrededor del retrato: la única sección sin plato, la más plana del sitio | `back` / 0,06 |
+| `#testimonios` | Luz de ventana baja y cálida, del registro conversado de la foto del sillón | `back` / 0,04 |
+| `#contacto` | Lo más tenue de las cuatro: el CTA es tipografía enorme y centrada y no admite competencia detrás | `back` / 0,03 |
+
+Las cuatro con **alfa real** y muriendo hacia el lado del texto, como las del hero, y con
+las opacidades del manifiesto como techo: están medidas, no elegidas.

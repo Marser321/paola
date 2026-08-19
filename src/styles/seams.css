@@ -1,0 +1,47 @@
+/* ============================================================
+   SEAMS.CSS — la costura entre dos secciones.
+   Las declara `data-seam` en index.html y las monta src/js/fx/seams.js.
+   Sin ese atributo, nada de esto llega a aplicarse.
+   ============================================================ */
+
+[data-seam] { position: relative; }
+
+/* El filete. Es la línea que ya separaba visualmente las secciones —el mismo
+   `--line` que llevan los rótulos— pero puesta en el borde y con algo cruzándola
+   al pasar. En reposo (sin scroll, con reduced-motion) es exactamente eso: una
+   línea. El movimiento es el añadido, no la pieza. */
+.seam {
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 1px;
+  z-index: 4; /* sobre el contenido (3 con parallax, 1 con plato) */
+  background: var(--line);
+  overflow: clip; /* el segmento no se sale por los lados al cruzar */
+  pointer-events: none;
+}
+
+/* El segmento luminoso que la recorre. Ancho corto y bordes muertos: lo que se
+   ve es un destello viajando, no una barra de progreso. El halo es el mismo
+   token que usa el neón, para que la luz del sitio sea toda la misma. */
+.seam i {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 22%;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  box-shadow: var(--glow-gold);
+  opacity: 0;
+}
+
+/* En vertical la costura se queda en el filete: el recorrido de scroll de una
+   sección es tan corto que el segmento cruzaría de un tirón, y el viaje del
+   contenido se comería la mitad del alto útil. Mismo criterio que el parallax
+   (fx/parallax.js §FACTOR_MOVIL). */
+@media (max-width: 767px) {
+  .seam i { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seam i { display: none; }
+}

@@ -61,9 +61,9 @@ export function initI18n() {
 }
 
 /**
- * Cambia de idioma y avisa. Los consumidores (secciones y UI del tracker) se
- * suscriben a 'i18n:change' y se repintan solos; el orquestador se encarga de
- * lo que hay que reconstruir (cards) y de refrescar el tracker.
+ * Cambia de idioma y avisa. Los consumidores se suscriben a 'i18n:change' y se
+ * repintan solos; el orquestador se encarga de lo que hay que reconstruir (las
+ * cards, las muestras) y de remedir ScrollTrigger.
  */
 export function setLang(lang) {
   if (!DICTS[lang] || lang === current) return current

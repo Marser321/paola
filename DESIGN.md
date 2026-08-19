@@ -172,7 +172,12 @@ coherentes con esta tabla.
 > Es deliberadamente la parte más callada del sitio. Si se nota, está mal.
 > Reglas de tono y de contención en `PLAN.md` §11.
 
-## 10. Panel de sesión (HUD)
+## 10. Panel de sesión (HUD) — RETIRADO
+
+> ⚠ **RETIRADO el 2026-08-16.** Ni el rail ni sus tokens (`--fs-hud`, `--hud-w`, `--z-hud`) siguen en el código.
+> Se conserva aquí como registro de lo que hubo y por qué se fue, no como spec.
+> Lo que ocupa su sitio está en §14.
+
 
 Rail lateral persistente que muestra el estado de la campaña. Lo crea JS (tarea 32), como
 el cursor — no está en el HTML.
@@ -229,7 +234,12 @@ tabulable, y se inserta al final del `<body>` → es el último elemento del ord
 y el temporizador baja a 1 Hz. La profundidad y la etapa siguen a 4 Hz: son datos, no
 movimiento. Gana una sexta fila, `ÚLTIMA SEÑAL`, que sustituye a los toasts.
 
-## 11. Toast de señal
+## 11. Toast de señal — RETIRADO
+
+> ⚠ **RETIRADO el 2026-08-16.** Se fue con el panel: era su misma superficie.
+> Se conserva aquí como registro de lo que hubo y por qué se fue, no como spec.
+> Lo que ocupa su sitio está en §14.
+
 
 La mecánica más fácil de estropear: la distancia entre un guiño y una notificación de app
 se mide en milisegundos y en píxeles. Los números de `PLAN.md` §11.3 son spec.
@@ -249,7 +259,12 @@ se mide en milisegundos y en píxeles. Los números de `PLAN.md` §11.3 son spec
 | Móvil / reduced-motion | **No existen** |
 | Accesibilidad | `aria-hidden="true"` — 12 interrupciones con vocabulario técnico en inglés harían inusable el lector de pantalla, y el informe da la misma información completa y mejor |
 
-## 12. Panel del informe
+## 12. Panel del informe — RETIRADO
+
+> ⚠ **RETIRADO el 2026-08-16.** Con él se fue el gradiente Meta, que era su último consumidor vivo.
+> Se conserva aquí como registro de lo que hubo y por qué se fue, no como spec.
+> Lo que ocupa su sitio está en §14.
+
 
 El clímax del sitio. Vive en `#informe`, entre testimonios y contacto.
 
@@ -298,3 +313,54 @@ en el backstage textual, nunca solo en el cursor.
 
 **Interacción con la tarea 29:** cuando existan los casos de estudio, **el título navega y
 el botón despliega**. El resto de la card no es clicable, para no romper el scrub del pin.
+
+
+---
+
+## 14. El bloque de venta (planes, calculadora y preguntas)
+
+Sustituye a §10–§12 desde el 2026-08-16. Tres secciones entre testimonios y contacto,
+estilos en `src/styles/sale.css`.
+
+| Superficie | Especificación |
+|---|---|
+| `.plan-card` | `border: 1px solid var(--line)`, `--radius`, fondo `--surface` al **62%** con `backdrop-filter: blur(10px)`. Al hover o con el foco dentro: filete `--line-gold`, fondo al 88% y `translateY(-4px)` |
+| Plan recomendado | Solo el filete dorado (`[data-featured]`). **Nunca una etiqueta «MÁS POPULAR»**: no hay dato que la sostenga |
+| Viñetas | Un filete corto de 0,6rem en `--gold` como `::before`. No es un carácter: un «·» se lo leería el lector de pantalla en cada renglón |
+| `.calc__panel` | Mismo vidrio que las tarjetas. Dos columnas a partir de 900px |
+| Control de rango | Pista de 1px en `--line`, pulgar dorado con `--glow-gold`. Pista y pulgar en reglas **separadas** por navegador: si un selector de la lista no se entiende, se descarta la regla entera |
+| Cifra principal | El retorno va en cuerpo de métrica, como los 4 KPIs de `#metricas`: es el mismo gesto |
+| `.faq__question` | El `<button>` va **dentro** del `<h3>`, no lo sustituye: el nivel de encabezado sobrevive y el control es un botón de verdad |
+| Signo `+`/`−` | Dos filetes cruzados en `--gold`; al abrir, el vertical rota a 0. Sin iconos y sin fuente |
+| Colapso | `grid-template-rows: 0fr → 1fr`. **No** se anima `height` como en la galería de servicios: allí la tira mide `--strip-h` y aquí cada respuesta mide lo que mide su texto |
+
+El comportamiento de los dos acordeones del sitio —estado, `inert`, remedida de
+ScrollTrigger— es **uno solo**: `src/js/ui/collapse.js`.
+
+## 15. La costura entre secciones
+
+`src/styles/seams.css` + `src/js/fx/seams.js`, opt-in con `data-seam`.
+
+| Propiedad | Valor |
+|---|---|
+| Filete | 1px en `--line` en el borde superior de la sección, `z-index: 4` |
+| Segmento | 22% de ancho, degradado a `--gold` con `--glow-gold`, cruza de lado a lado con `scrub` |
+| Contenido | La sección que entra sube 48px; la que sale baja 19px, escala a 0,985 y baja a `opacity: .55` |
+| Nunca en | `#proyectos` (pin horizontal) ni `#servicios` (cabecera sticky) |
+| Nunca transforma | `.projects__cases`, `.services__header`, `.about__media`, `.testimonial` — todo lo que se posiciona solo |
+| Móvil y reduced-motion | Solo el filete, quieto |
+
+## 16. El nombre, en su sitio
+
+Su nombre se ve en **cuatro** lugares del sitio y en ninguno más:
+
+1. el wordmark del header,
+2. el `h1` del hero,
+3. «Hola, soy Paola» en `#sobre-mi`,
+4. el pie y las páginas legales.
+
+Todo lo demás era adorno y se retiró el 2026-08-16: el `PAOLA®` que coronaba las seis
+tarjetas de proyecto —donde además contaba algo falso, porque **el anunciante de un
+anuncio es la marca anunciada** y ahora dice el nombre del cliente—, el `PAOLA_2026` del
+preloader y el título de retargeting. Los `<title>`, el JSON-LD y `og:site_name` no
+cuentan: son SEO, no decoración.

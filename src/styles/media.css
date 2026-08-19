@@ -21,8 +21,10 @@
    `position: absolute` cuyos hijos van absolutos dentro de él. Esta regla le
    ponía `relative`, con lo que pasaba a medir 0 y sus capas —que van a
    `height: 150%`— se quedaban en cero. Desaparecían sin error, y solo en las
-   secciones con fondo fotográfico, que son las que tienen esta clase. */
-.has-backdrop > *:not(.backdrop):not(.parallax) { position: relative; z-index: 1; }
+   secciones con fondo fotográfico, que son las que tienen esta clase.
+   ⚠ `.seam` queda fuera por lo mismo: es absoluta y va por encima de todo
+   (styles/seams.css). */
+.has-backdrop > *:not(.backdrop):not(.parallax):not(.seam) { position: relative; z-index: 1; }
 
 .backdrop {
   position: absolute; inset: 0; z-index: 0;

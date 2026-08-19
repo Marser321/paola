@@ -1,7 +1,7 @@
 /* ============================================================
    CASO.CSS — página de detalle (tarea 29).
-   Reutiliza los bloques del backstage de tracker.css: son los mismos datos,
-   solo que aquí van abiertos y sin overlay.
+   Reutiliza los bloques del backstage de sections.css (§CHROME DE ANUNCIO Y
+   BACKSTAGE): son los mismos datos, solo que aquí van abiertos y sin overlay.
    ============================================================ */
 
 .caso-page { padding-top: 8rem; }
@@ -65,7 +65,7 @@
   max-width: 40ch;
 }
 
-/* El backstage aquí no es overlay: se anulan las reglas de tracker.css que lo
+/* El backstage aquí no es overlay: se anulan las reglas de sections.css que lo
    posicionan sobre la creatividad. */
 .caso__backstage .backstage__rows { margin-top: 1.5rem; }
 .caso__backstage .backstage__variants { margin-top: 1rem; }

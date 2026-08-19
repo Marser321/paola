@@ -289,7 +289,12 @@ Criterios de aceptación · Verificación · ⚠ No hacer.
 - Accesibilidad base: navegable por teclado, `aria-label` en elementos no textuales,
   foco visible, reduced-motion funcional.
 
-## 11. Reglas de contención del tracker
+## 11. Reglas de contención del tracker — RETIRADO
+
+> ⚠ **RETIRADO el 2026-08-16.** El tracker entero (bus, panel, toasts e informe) se borró: `src/js/core/tracker.js`, `src/js/ui/hud.js`, `src/js/ui/signals.js`, `src/js/sections/report.js` y `src/styles/tracker.css`.
+> Se conserva aquí como registro de lo que hubo y por qué se fue, no como spec.
+> Lo que ocupa su sitio está en el bloque de venta — `#planes`, `#calculadora` y `#faq`.
+
 
 > El concepto §1 vive o muere en la diferencia entre *"qué elegante, me ha leído"* y
 > *"esta web me está vigilando"*. Sus riesgos no son técnicos, son de tono. Estas reglas

@@ -1,12 +1,13 @@
 import './styles/tokens.css'
 import './styles/base.css'
 import './styles/sections.css'
-import './styles/tracker.css'
 import './styles/media.css'
 import './styles/neon.css'
 import './styles/pill-nav.css'
 import './styles/process.css'
+import './styles/sale.css'
 import './styles/parallax.css'
+import './styles/seams.css'
 
 import { initI18n, getLang, t } from './i18n/index.js'
 import { applyStaticTranslations } from './i18n/apply-dom.js'
@@ -17,10 +18,7 @@ import { initTheme } from './js/ui/theme.js'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { initLenis } from './js/core/lenis.js'
-import { initTracker, refresh as refreshTracker, emit } from './js/core/tracker.js'
 import { initAbTest, repaintVariant } from './js/core/ab-test.js'
-import { initHud } from './js/ui/hud.js'
-import { initSignals } from './js/ui/signals.js'
 import { initCursor } from './js/core/cursor.js'
 import { initPreloader } from './js/core/preloader.js'
 import { initHero } from './js/sections/hero.js'
@@ -36,13 +34,16 @@ import { initAbout } from './js/sections/about.js'
 import { initBackdrops } from './js/sections/backdrops.js'
 import { initSequences } from './js/sections/sequence.js'
 import { initTestimonials } from './js/sections/testimonials.js'
-import { initReport } from './js/sections/report.js'
+import { initPlans } from './js/sections/plans.js'
+import { initCalculator } from './js/sections/calculator.js'
+import { initFaq } from './js/sections/faq.js'
 import { initContact } from './js/sections/contact.js'
 import { initContactForm } from './js/core/contact-form.js'
 import { initScramble } from './js/fx/scramble.js'
 import { initSplitTitles } from './js/fx/split-titles.js'
 import { initNeon, refreshNeon } from './js/fx/neon.js'
 import { initParallax } from './js/fx/parallax.js'
+import { initSeams } from './js/fx/seams.js'
 import { projects } from './data/projects.js'
 
 // i18n va PRIMERO: fija el idioma antes de que nadie pinte nada. Si fuera
@@ -53,10 +54,7 @@ applyStaticTranslations()
 
 initLenis()        // 1º — ScrollTrigger depende de esto
 renderProjects()   // 2º — el DOM de las cards debe existir antes de medir
-initTracker()      // 3º — (a) necesita las .project-card ya renderizadas
-initAbTest()       // 4º — (b) ANTES de initHero(), o se ve cambiar el texto
-initHud()
-initSignals()
+initAbTest()       // 3º — (a) ANTES de initHero(), o se ve cambiar el texto
 initCursor()
 initPreloader()
 initHero()
@@ -81,7 +79,12 @@ initServices()
 initProcess()
 initAbout()
 initTestimonials()
-initReport()       // (c) ANTES de initContact(): reserva su altura antes de medir
+// Bloque de venta. Va ANTES de initContact(): el CTA de cada plan escribe en el
+// desplegable del formulario, que tiene que existir ya — y lo hace, porque es
+// HTML estático, pero el orden deja dicho quién depende de quién.
+initPlans()
+initCalculator()
+initFaq()
 initContact()
 // El menú se rehace ANTES que los dos conmutadores: los tres se cuelgan de
 // .site-nav, y si el de idioma llegara primero acabaría metido dentro de la lista
@@ -94,14 +97,8 @@ initTheme(() => t('theme'))  // después del de idioma: los dos se cuelgan de
                              // .site-nav y este va el último de la fila
 initContactForm()  // t.24
 
-// El envío correcto del formulario es una conversión igual que el CTA (t.14).
-// El dedupe del tracker garantiza que cuente UNA sola vez aunque pasen las dos.
-window.addEventListener('form:success', () => emit('Conversion', { source: 'form' }))
-
-// Cambio de idioma en caliente. El orden importa: primero el DOM estático,
-// luego las cards (que se recrean), y solo entonces el refresh del tracker —
-// si no, su IntersectionObserver se queda observando nodos que ya no existen y
-// el dwell por creatividad deja de contar EN SILENCIO (t.28, ajuste 3).
+// Cambio de idioma en caliente. El orden importa: primero el DOM estático y
+// luego las cards, que se recrean enteras.
 window.addEventListener('i18n:change', () => {
   applyStaticTranslations()
   // El subtítulo del hero NO lo alcanza el aplicador estático: lo posee el test
@@ -114,11 +111,14 @@ window.addEventListener('i18n:change', () => {
   // SIN clase .neon y sin halo. Sin esto se quedan sin borde al cambiar de
   // idioma, y en silencio.
   refreshNeon()
-  refreshTracker()
   ScrollTrigger.refresh()
 })
 
 // Fase B — efectos de texto (t.21). Van al final: operan sobre el DOM ya montado.
+// Las costuras van con ellos y por el mismo motivo: miden el borde de cada
+// sección y necesitan el DOM ya en su sitio, con las cards renderizadas y los
+// fondos puestos.
+initSeams()
 initSplitTitles()
 initScramble()
 // El neón va DESPUÉS de todo: recorre el DOM buscando sus superficies y necesita

@@ -7,11 +7,12 @@
 
 import { t } from './index.js'
 
-const STAGE_NUMBER = { alcance: '01', interes: '02', consideracion: '03', intencion: '04', conversion: '05' }
-// Nombre de sección por id, para el segundo trozo del label de etapa.
+// Nombre de sección por id. Es también el nombre accesible de la región (ver
+// abajo), así que toda sección con `.section-label` tiene que estar en el mapa.
 const SECTION_LABEL = {
   metricas: 'results', proyectos: 'cases', servicios: 'services', proceso: 'process',
-  'sobre-mi': 'about', testimonios: 'testimonials', informe: 'report', contacto: 'contact',
+  'sobre-mi': 'about', testimonios: 'testimonials',
+  planes: 'plans', calculadora: 'calculator', faq: 'faq', contacto: 'contact',
 }
 
 const set = (sel, value, root = document) => {
@@ -41,7 +42,8 @@ export function applyStaticTranslations() {
   // estructura al cambiar de idioma. En el primer pase todavía no existe, porque
   // applyStaticTranslations() corre antes que initPillNav(); en los siguientes,
   // sí. Se escribe en los rótulos si están, y en el enlace si no.
-  const nav = ['projects', 'services', 'process', 'about', 'contact']
+  // ⚠ Por ÍNDICE: el orden tiene que ser el mismo que el de los <a> en el HTML.
+  const nav = ['projects', 'services', 'process', 'plans', 'about', 'contact']
   document.querySelectorAll('.site-nav a').forEach((a, i) => {
     if (!nav[i]) return
     const texto = t(`nav.${nav[i]}`)
@@ -65,14 +67,11 @@ export function applyStaticTranslations() {
     scroll.firstChild.textContent = t('hero.scroll')
   }
 
-  // --- Labels de etapa: "Etapa 02 · Interés" + nombre de sección ---
-  document.querySelectorAll('main section[data-stage]').forEach((section) => {
-    const stage = section.dataset.stage
-    const stageEl = section.querySelector('.section-label__stage')
+  // --- Rótulo de sección ---
+  // Antes había DOS rótulos por sección: «Etapa 02 · Interés» y el nombre. El de
+  // etapa se retiró el 2026-08-16 con el concepto de campaña; queda el nombre.
+  document.querySelectorAll('main section[id]').forEach((section) => {
     const nameEl = section.querySelector('.section-label__name')
-    if (stageEl) {
-      stageEl.textContent = `${t('stageWord')} ${STAGE_NUMBER[stage]} · ${t(`stages.${stage}`)}`
-    }
     const key = SECTION_LABEL[section.id]
     if (nameEl && key) nameEl.textContent = t(`labels.${key}`)
 
@@ -142,29 +141,59 @@ export function applyStaticTranslations() {
     set('.testimonial__author', item.author, card)
   })
 
-  // --- Informe (los VALORES los escribe report.js; aquí solo las etiquetas) ---
-  setHTML('#informe h2.section-title', t('report.title'))
-  set('.report__intro', t('report.intro'))
-  set('.report__title', t('report.panelTitle'))
-  const rowKeys = ['elapsed', 'depth', 'signals', 'stage', 'cases', 'topcase', 'variant']
-  document.querySelectorAll('.report__row dt').forEach((dt, i) => {
-    if (rowKeys[i]) dt.textContent = t(`report.rows.${rowKeys[i]}`)
+  // --- Planes ---
+  setHTML('#planes h2.section-title', t('plans.title'))
+  set('.plans__intro', t('plans.intro'))
+  const planes = t('plans.items')
+  document.querySelectorAll('.plan-card').forEach((card, i) => {
+    const item = planes[i]
+    if (!item) return
+    set('.plan-card__tag', item.tag, card)
+    set('.plan-card__title', item.title, card)
+    set('.plan-card__who', item.who, card)
+    setEach('.plan-card__list li', item.list, card)
+    // «Te llevas …»: el <strong> y el resto de la frase van por separado, así que
+    // se compone aquí en vez de guardar la etiqueta dentro del texto traducido.
+    const take = card.querySelector('.plan-card__take')
+    if (take) take.innerHTML = `<strong>${t('plans.takeWord')}</strong>${item.take}`
+    set('.plan-card__cta', t('plans.cta'), card)
   })
-  const scoreHead = document.querySelector('.report__score-head')
-  if (scoreHead && scoreHead.firstChild?.nodeType === Node.TEXT_NODE) {
-    scoreHead.firstChild.textContent = `${t('report.scoreLabel')} `
-  }
-  set('.report__score-tag', t('report.scoreTag'))
-  const formulaBtn = document.querySelector('.report__formula-btn')
-  if (formulaBtn) {
-    const open = formulaBtn.getAttribute('aria-expanded') === 'true'
-    formulaBtn.textContent = open ? t('report.formulaHide') : t('report.formulaShow')
-  }
-  set('.report__formula', t('report.formula'))
-  const note1 = document.querySelector('#report-note')
-  if (note1) note1.innerHTML = `<strong>${t('report.note1strong')}</strong>${t('report.note1')}`
-  const notes = document.querySelectorAll('.report__note')
-  if (notes[1]) notes[1].textContent = t('report.note2')
+
+  // --- Calculadora (los VALORES los escribe calculator.js) ---
+  setHTML('#calculadora h2.section-title', t('calc.title'))
+  set('.calc__intro', t('calc.intro'))
+  const campos = ['spend', 'roas', 'ticket']
+  document.querySelectorAll('.calc__label').forEach((el, i) => {
+    if (campos[i]) el.textContent = t(`calc.fields.${campos[i]}`)
+  })
+  const filas = ['revenue', 'profit', 'sales', 'cpa']
+  document.querySelectorAll('.calc__row dt').forEach((dt, i) => {
+    if (filas[i]) dt.textContent = t(`calc.rows.${filas[i]}`)
+  })
+  // La leyenda de la barra «a escala». El segundo rótulo REUSA el del <dl>: es
+  // el mismo número con el mismo nombre a dos palmos, y llamarlo de dos maneras
+  // distintas en el mismo panel es peor que repetirlo.
+  // Los importes y el corte los escribe calculator.js, que ya se repinta solo al
+  // cambiar de idioma (el formato de los números depende del locale).
+  const leyenda = [t('calc.viz.spend'), t('calc.rows.profit')]
+  document.querySelectorAll('.calc__viz-label').forEach((el, i) => {
+    if (leyenda[i] !== undefined) el.textContent = leyenda[i]
+  })
+  const calcNote = document.querySelector('.calc__note')
+  if (calcNote) calcNote.innerHTML = `<strong>${t('calc.noteStrong')}</strong>${t('calc.note')}`
+
+  // --- Preguntas ---
+  // El rótulo de cada pregunta puede estar dentro del <button> que monta
+  // sections/faq.js, o directamente en el <h3> si el módulo aún no ha corrido.
+  set('#faq h2.section-title', t('faq.title'))
+  const preguntas = t('faq.items')
+  document.querySelectorAll('.faq__item').forEach((item, i) => {
+    const dato = preguntas[i]
+    if (!dato) return
+    const rotulo = item.querySelector('.faq__question-text') || item.querySelector('.faq__q')
+    if (rotulo) rotulo.textContent = dato.q
+    set('.faq__a p', dato.a, item)
+  })
 
   // --- Contacto ---
   set('.contact__pre', t('contact.pre'))

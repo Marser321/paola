@@ -64,6 +64,10 @@ Separador entre ítems: `✦` (o `•`). Ítems alternos con estilo outline (`is
 
 ## 5. Etapas del embudo (estructura del sitio)
 
+> ⚠ **Los rótulos «Etapa 0X · Interés» se retiraron el 2026-08-16** junto con el resto
+> del concepto de campaña. El orden de las secciones que describe este apartado sigue
+> siendo el bueno; lo que ya no se imprime es el nombre de la etapa.
+
 Sustituyen a los índices genéricos `01 —`, `02 —`… Cinco etapas, diez secciones: que dos
 secciones compartan etapa es lo que hace que el embudo se lea como embudo.
 
@@ -211,7 +215,11 @@ Se muestran las dos hipótesis y cuál ganó. Label de la ganadora: `GANADORA`.
 
 ---
 
-## 12. Panel de sesión / HUD (tarea 32)
+## 12. Panel de sesión / HUD (tarea 32) — RETIRADO
+
+> ⚠ **RETIRADO el 2026-08-16.** El panel flotante «SESIÓN EN CURSO» ya no existe.
+> Se conserva aquí como registro de lo que hubo y por qué se fue, no como spec.
+> Lo que ocupa su sitio está en §20-22 (planes, calculadora y preguntas).
 
 Rail lateral discreto. **Describe la campaña, nunca a la persona.**
 
@@ -232,7 +240,11 @@ Rail lateral discreto. **Describe la campaña, nunca a la persona.**
   `ÚLTIMA SEÑAL` → nombre de la última señal emitida.
 - Estado con el panel desactivado (texto del enlace del footer): `PANEL DESACTIVADO`
 
-## 13. Señales y toasts (tarea 33)
+## 13. Señales y toasts (tarea 33) — RETIRADO
+
+> ⚠ **RETIRADO el 2026-08-16.** Los avisos flotantes de señal se fueron con el panel.
+> Se conserva aquí como registro de lo que hubo y por qué se fue, no como spec.
+> Lo que ocupa su sitio está en §20-22.
 
 Los nombres de señal son vocabulario literal de Ads Manager y **no se traducen nunca**
 (tampoco en la tarea 28 de i18n): esa es la gracia. La glosa en español sí se traduce.
@@ -257,7 +269,11 @@ Formato del toast: `▸ ` + nombre + ` — ` + glosa.
 Al volver se restaura **exactamente** el título vigente (no una constante: la tarea 28
 puede haberlo cambiado de idioma).
 
-## 14. Informe de sesión (Etapa 05 · Conversión — tarea 35)
+## 14. Informe de sesión (tarea 35) — RETIRADO
+
+> ⚠ **RETIRADO el 2026-08-16.** «La campaña eres tú» no se entendía y no vendía: en el punto en el que quien mira ya está decidiendo, el sitio hablaba de sí mismo.
+> Se conserva aquí como registro de lo que hubo y por qué se fue, no como spec.
+> Lo que ocupa su sitio está en §20-22, que ocupan literalmente su hueco entre testimonios y contacto.
 
 - H2: `La campaña `**`eres tú`**
 - Entradilla (cuerpo): `Mientras leías, esta página hacía lo mismo que hago cada día
@@ -367,3 +383,61 @@ explícitamente la medición local (que no necesita permiso) de la externa (que 
       cierta**: si se añade cualquier script de terceros, o si las fuentes siguen
       cargándose desde CDN externo, hay que corregir el copy o self-hostear (ver
       `PLAN.md` §11 y tarea 17 §5)
+
+
+---
+
+## 20. Planes — «Cómo trabajamos» (`#planes`)
+
+Ocupa, con §21 y §22, el hueco del informe retirado. **Sin precios, y es una decisión:**
+cada formato se presupuesta sobre la cuenta que tiene delante, y una cifra en la web
+descalificaría a la mitad de los buenos encajes antes de la primera llamada.
+
+- Rótulo: `TRABAJAR JUNTOS`
+- H2: `Tres formas de `**`empezar`**
+- Entradilla: `Ninguna empieza con un contrato. Las tres empiezan con la misma llamada de
+  30 minutos, en la que miramos tu cuenta y te digo cuál de ellas te hace falta — o si no
+  te hace falta ninguna.`
+
+Cada tarjeta lleva, en este orden: etiqueta de duración · título · **para quién es** ·
+cuatro puntos de qué incluye · **qué te llevas** · CTA `Pedir propuesta`.
+
+| # | Etiqueta | Título |
+|---|---|---|
+| 1 | `Puntual · 2 semanas` | Auditoría |
+| 2 | `Continuo · mínimo 3 meses` | Gestión mensual (destacada) |
+| 3 | `Puntual · 6 semanas` | Sprint de escala |
+
+El CTA de cada tarjeta **precualifica el formulario**: al pulsarlo, el desplegable «Qué te
+interesa» de `#contacto` queda puesto en ese plan. El texto literal de las tres vive en
+`src/i18n/es.js` §plans y en `index.html`; los dos tienen que decir lo mismo
+(`npm run check:i18n`).
+
+## 21. Calculadora de escala (`#calculadora`)
+
+- Rótulo: `CALCULADORA`
+- H2: `Echa la cuenta `**`antes`**` de invertir`
+- Tres controles: inversión mensual · ROAS objetivo · ticket medio.
+- Cuatro salidas: retorno estimado · sobre lo invertido · ventas al mes · coste máximo
+  por venta.
+
+**Regla de honestidad — es la razón de que esta sección exista y no una previsión.** Aquí
+estaba el informe, que estimaba una «probabilidad de conversión» con una heurística
+inventada. Lo que se publica ahora es solo lo que se puede afirmar sin mentir: una
+multiplicación con los números de quien mira. El cierre lo dice en voz alta:
+
+> **Multiplicar es la parte fácil.** Llegar a ese ROAS con ese ticket es todo lo demás de
+> esta página: la estructura, las creatividades y las semanas de testing. Y el cálculo se
+> hace en tu navegador — no se envía a ninguna parte.
+
+Cualquier cifra que se añada a este bloque tiene que pasar el mismo listón.
+
+## 22. Preguntas frecuentes (`#faq`)
+
+- Rótulo: `PREGUNTAS`
+- H2: `Antes de escribirme`
+
+Seis preguntas, y las seis responden a una objeción real: inversión mínima · plazos ·
+permanencia · sectores · quién produce las creatividades · qué hay que tener montado.
+El tono es el del resto del sitio — **dice también lo que NO encaja** («si vendes offline
+[…] hay perfiles mejores que el mío»), que es lo que hace creíble el resto.

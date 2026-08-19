@@ -3,14 +3,14 @@
 // UNA plantilla + query string, no seis HTML a mano. Navegación nativa: ni router
 // ni pushState.
 //
-// ⚠ El tracker NO se inicializa aquí, y es deliberado: el concepto "LA CAMPAÑA
-// ERES TÚ" vive en la one-page. Un HUD en una página de detalle sería ruido y el
-// informe no tendría de qué informar.
+// Los bloques del backstage que esta página reutiliza viven en sections.css
+// (§CHROME DE ANUNCIO Y BACKSTAGE). Estuvieron en una hoja aparte, tracker.css,
+// mientras existió el concepto «la campaña eres tú»; esa hoja se borró entera el
+// 2026-08-16 y lo que se salvó se mudó allí.
 
 import '../../styles/tokens.css'
 import '../../styles/base.css'
 import '../../styles/sections.css'
-import '../../styles/tracker.css'
 import '../../styles/caso.css'
 import '../../styles/neon.css' // el borde de foco del marco de la creatividad
 import '../../styles/pill-nav.css'
