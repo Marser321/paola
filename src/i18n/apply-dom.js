@@ -195,6 +195,11 @@ export function applyStaticTranslations() {
     set('.faq__a p', dato.a, item)
   })
 
+  // --- «Lo que no hago» (cierra la FAQ) ---
+  set('.limits__title', t('limits.title'))
+  set('.limits__intro', t('limits.intro'))
+  setEach('.limits__item', t('limits.items'))
+
   // --- Contacto ---
   set('.contact__pre', t('contact.pre'))
   set('.contact__cta-text', t('contact.cta'))

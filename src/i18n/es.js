@@ -208,10 +208,28 @@ export const es = {
     ],
   },
 
+  // «Lo que no hago» (PROPUESTAS-NIVEL.md §B3). Cuatro de los cinco renglones
+  // son la contracara de respuestas que ya están en la FAQ; el de SEO/email/
+  // orgánico es el complemento de `services.items`. Si se toca uno, mirar allí.
+  limits: {
+    title: 'Lo que no hago',
+    intro: 'Decirlo por delante filtra los malos encajes y hace creíble todo lo demás. Si algo de esta lista es tu caso, te lo digo en la primera llamada — no en el segundo mes.',
+    items: [
+      'No trabajo por debajo de unos $3.000 al mes de inversión publicitaria. Por debajo de ahí el algoritmo no reúne datos para optimizar y cualquier test tarda semanas en concluir.',
+      'No llevo cuentas de venta offline ni ciclos de decisión de meses. El trabajo cambia bastante y hay perfiles mejores que el mío para eso.',
+      'No hago SEO, email marketing ni redes orgánicas. Lo que hago está en la lista de más arriba, y prefiero decirlo a venderte un paquete de todo.',
+      'No prometo una cifra antes de haber visto tu cuenta. Un ROAS prometido de entrada es una cifra inventada; el primer número serio sale de la auditoría.',
+      'No acepto el proyecto si no encaja. La llamada de 30 minutos también sirve para eso, y no cuesta nada.',
+    ],
+  },
+
   contact: {
     pre: '¿Tienes un proyecto entre manos?',
     cta: '¿Escalamos?',
     time: 'Hora local —',
+    // Disponibilidad (§C4). El nombre del mes lo pone Intl, no el diccionario.
+    availabilityOne: 'Acepto 1 proyecto para {mes}',
+    availabilityMany: 'Acepto {plazas} proyectos para {mes}',
     // Rótulo de la barra fija de móvil (PROPUESTAS-NIVEL.md §C3).
     mobileCta: 'Escríbeme',
     // El formulario. Los `value` del <select> NO se traducen — viajan a Netlify y

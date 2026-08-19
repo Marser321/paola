@@ -201,10 +201,24 @@ export const en = {
     ],
   },
 
+  limits: {
+    title: 'What I do not do',
+    intro: 'Saying it up front filters out the bad fits and makes everything else credible. If any of this is your case, I tell you on the first call — not in month two.',
+    items: [
+      'I do not work below roughly $3,000 a month in ad spend. Below that the algorithm does not gather enough data to optimise and any test takes weeks to conclude.',
+      'I do not take on offline sales or decision cycles measured in months. The work changes a lot and there are better people than me for it.',
+      'I do not do SEO, email marketing or organic social. What I do is the list further up, and I would rather say so than sell you a bundle of everything.',
+      'I do not promise a number before seeing your account. A ROAS promised up front is a made-up number; the first serious one comes out of the audit.',
+      'I do not take the project on if it does not fit. The 30-minute call is for that too, and it costs nothing.',
+    ],
+  },
+
   contact: {
     pre: 'Got a project in mind?',
     cta: 'Shall we scale?',
     time: 'Local time —',
+    availabilityOne: 'Taking 1 project for {mes}',
+    availabilityMany: 'Taking {plazas} projects for {mes}',
     mobileCta: 'Write to me',
     form: {
       name: 'Name',

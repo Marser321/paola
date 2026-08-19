@@ -589,6 +589,31 @@
               </div>
             </li>
           </ul>
+
+          <!-- «Lo que no hago» (PROPUESTAS-NIVEL.md §B3). Cierra la FAQ y no abre
+               sección propia a propósito: es la misma conversación —lo que hay que
+               saber antes de escribir— y una sección entera le daría un peso que
+               no le toca.
+
+               Los cinco renglones NO son material nuevo: cuatro salen de respuestas
+               que ya están ahí arriba (la inversión mínima, los sectores que no
+               encajan, los plazos, la llamada que también sirve para decir que no)
+               y aquí se dicen de frente en vez de dentro de una respuesta. El
+               quinto —SEO, email y orgánico— es el complemento de `#servicios`.
+
+               No lleva acordeón: son afirmaciones, no preguntas. Esconderlas
+               detrás de un clic sería justo lo contrario de lo que hacen. -->
+          <div class="limits">
+            <h3 class="limits__title mono">Lo que no hago</h3>
+            <p class="limits__intro">Decirlo por delante filtra los malos encajes y hace creíble todo lo demás. Si algo de esta lista es tu caso, te lo digo en la primera llamada — no en el segundo mes.</p>
+            <ul class="limits__list">
+              <li class="limits__item">No trabajo por debajo de unos $3.000 al mes de inversión publicitaria. Por debajo de ahí el algoritmo no reúne datos para optimizar y cualquier test tarda semanas en concluir.</li>
+              <li class="limits__item">No llevo cuentas de venta offline ni ciclos de decisión de meses. El trabajo cambia bastante y hay perfiles mejores que el mío para eso.</li>
+              <li class="limits__item">No hago SEO, email marketing ni redes orgánicas. Lo que hago está en la lista de más arriba, y prefiero decirlo a venderte un paquete de todo.</li>
+              <li class="limits__item">No prometo una cifra antes de haber visto tu cuenta. Un ROAS prometido de entrada es una cifra inventada; el primer número serio sale de la auditoría.</li>
+              <li class="limits__item">No acepto el proyecto si no encaja. La llamada de 30 minutos también sirve para eso, y no cuesta nada.</li>
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -598,6 +623,12 @@
           <p class="section-label mono">
             <span class="section-label__name">Contacto</span>
           </p>
+          <!-- Disponibilidad (PROPUESTAS-NIVEL.md §C4). Nace VACÍO y oculto: su
+               texto no está escrito aquí porque no es copy, es un dato con fecha
+               de caducidad (`src/data/availability.js`). Si el dato no está
+               completo y vigente, ui/availability.js lo deja tal cual — el modo
+               de fallo de una escasez es no decirla. -->
+          <p class="contact__availability mono" hidden></p>
           <p class="contact__pre mono">¿Tienes un proyecto entre manos?</p>
           <!-- Va en <h2> porque ES el titular de la sección: es el texto más grande
                de la página y hasta ahora era un <span>, así que quien navega por

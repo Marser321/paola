@@ -713,6 +713,26 @@
 /* ===== CONTACTO ===== */
 .contact { text-align: center; }
 .contact .section-label { text-align: left; }
+/* Disponibilidad (PROPUESTAS-NIVEL.md §C4). Va ENCIMA del «¿tienes un proyecto
+   entre manos?» porque es una condición, no un titular: se lee antes de la
+   pregunta y no compite con el CTA gigante que viene después.
+
+   El punto es lo único de color de todo el renglón, y es oro y no verde a
+   propósito: verde es el vocabulario de los paneles de estado, y esto no es un
+   semáforo de sistema — es una frase que dice la titular. Sin parpadeo: una
+   escasez que además pulsa se lee como un truco de tienda. */
+.contact__availability {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  margin-bottom: 1.25rem;
+  color: var(--muted);
+}
+.contact__availability::before {
+  content: '';
+  width: 0.4rem; height: 0.4rem; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: var(--glow-gold);
+}
+
 .contact__pre { margin-bottom: 2rem; }
 .contact__cta { display: inline-block; }
 .contact__cta-text {

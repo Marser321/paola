@@ -16,6 +16,7 @@ import { initPillNav } from './js/ui/pill-nav.js'
 import { initLangSwitch } from './js/ui/lang-switch.js'
 import { initTheme } from './js/ui/theme.js'
 import { initMobileCta } from './js/ui/mobile-cta.js'
+import { initAvailability } from './js/ui/availability.js'
 
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -103,6 +104,9 @@ initContactForm()  // t.24
 // declarado su trigger. El enlace en sí lo cableó initLenis() con el resto de
 // `[data-scroll]`, porque está en el HTML estático.
 initMobileCta()
+// Disponibilidad. Se pinta sola y se repinta al cambiar de idioma: su texto no
+// vive en el HTML, sale de un dato + Intl (ver ui/availability.js).
+initAvailability()
 
 // Cambio de idioma en caliente. El orden importa: primero el DOM estático y
 // luego las cards, que se recrean enteras.

@@ -91,6 +91,10 @@ El tracker es la parte del sitio que puede envejecer mal en silencio. Cada trime
 - [ ] Sin errores de consola en Chrome, Firefox y Safari.
 - [ ] Pin de la galería y scrubs sin saltos.
 - [ ] `npm audit` — mirar solo lo que afecte a producción; este sitio no tiene backend.
+- [ ] **Disponibilidad (`src/data/availability.js`)**: si está en `activo: true`, que el
+      número siga siendo cierto y que `revisado` sea de hace menos de 45 días. Caduca
+      sola, pero una plaza que se llenó y sigue anunciada tres semanas es peor que no
+      anunciar nada.
 - [ ] **`npm run check:media`**: ningún asset roto, nadie por encima de su presupuesto, y
       **nada pendiente marcado como generado por IA**. Si la lista de pendientes no está
       vacía, el sitio está publicando material placeholder — incluidos, posiblemente,

@@ -446,3 +446,52 @@
   .faq__sign::before,
   .faq__sign::after { transition: none; }
 }
+
+/* ===== «LO QUE NO HAGO» (PROPUESTAS-NIVEL.md §B3) ===== */
+/* Cierra la FAQ, y por eso NO abre caja ni fondo propios: es la misma
+   conversación. Lo único que lo separa de la lista de preguntas es el aire de
+   arriba y que el título va en mono, como los rótulos de sección — se lee como
+   un apartado, no como otro bloque de venta.
+
+   La lista reutiliza el filete corto de `.plan-card__list` en vez de una viñeta
+   de texto, por el mismo motivo de allí: un «·» o un «—» se lo lee el lector de
+   pantalla en cada renglón, y un pseudoelemento no. Va en `--muted` y no en oro:
+   estas cinco líneas quitan cosas, y el oro es el color de lo que se ofrece. */
+.limits {
+  margin-top: clamp(3.5rem, 7vw, 5.5rem);
+  max-width: 68ch;
+}
+.limits__title {
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+.limits__intro {
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+}
+.limits__list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+.limits__item {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr;
+  align-items: baseline;
+}
+.limits__item::before {
+  content: '';
+  width: 0.7rem;
+  height: 1px;
+  background: var(--line);
+  translate: 0 -0.3em;
+}

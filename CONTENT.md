@@ -318,6 +318,8 @@ estaba.`
 
 ## 15. Contacto (Etapa 05 · Conversión)
 
+- Disponibilidad (mono, encima de todo): `ACEPTO 2 PROYECTOS PARA OCTUBRE` — **no es
+  copy, es un dato**. Sale de `src/data/availability.js` y viene APAGADO. Ver §23.
 - CTA gigante: `¿ESCALAMOS?`
 - Texto previo (mono): `¿TIENES UN PROYECTO ENTRE MANOS?`
 - Email: `hola@paola-ads.com`
@@ -441,3 +443,33 @@ Seis preguntas, y las seis responden a una objeción real: inversión mínima ·
 permanencia · sectores · quién produce las creatividades · qué hay que tener montado.
 El tono es el del resto del sitio — **dice también lo que NO encaja** («si vendes offline
 […] hay perfiles mejores que el mío»), que es lo que hace creíble el resto.
+
+## 23. «Lo que no hago» (`#faq`, bloque final)
+
+- Título (mono): `LO QUE NO HAGO`
+- Entradilla: `Decirlo por delante filtra los malos encajes y hace creíble todo lo demás.
+  Si algo de esta lista es tu caso, te lo digo en la primera llamada — no en el segundo
+  mes.`
+
+Cinco renglones, y **cuatro no son material nuevo**: son la contracara de respuestas que
+ya están en §22 —la inversión mínima, los sectores que no encajan, los plazos y la
+llamada que también sirve para decir que no—, dichas de frente en lugar de dentro de una
+respuesta. El quinto (SEO, email marketing y orgánico) es el complemento de la lista de
+§8: dice dónde termina.
+
+⚠ **Si se toca una de las seis preguntas de §22, mirar aquí.** Las dos listas cuentan los
+mismos hechos y separarlas es la forma más fácil de que el sitio se contradiga a sí mismo.
+
+## 24. Disponibilidad (`#contacto`) — un DATO, no un texto
+
+`ACEPTO {n} PROYECTOS PARA {mes}` encima del CTA. El número y el mes salen de
+`src/data/availability.js`; el nombre del mes lo resuelve `Intl` en el idioma activo, así
+que **el dato se escribe una sola vez y vale para los dos idiomas**.
+
+Viene con `activo: false` y así tiene que llegar al repositorio. La razón está escrita en
+el propio archivo y es la misma que sostiene todo lo demás: este sitio vende números
+verdaderos, y una escasez inventada se detecta a la primera y se lleva por delante el
+argumento entero. Solo la titular puede rellenarlo.
+
+Se apaga solo cuando el mes anunciado ya pasó o cuando la fecha de revisión tiene más de
+45 días. **El modo de fallo es el silencio**, nunca una cifra vieja.

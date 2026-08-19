@@ -13,11 +13,14 @@
 > facilitar el siguiente paso. Lo que solo decore, sobra — acabamos de quitar 1.200
 > líneas de exactamente eso.
 >
-> **Repaso del 2026-08-19.** Cerradas **C2** (antes → después en la tarjeta), **C3** (barra
-> de acción en móvil) y **D1** (microtextos del formulario en los dos idiomas): las tres
-> que se podían hacer enteras sin pedirle nada a la clienta. Lo que sigue abierto está
-> abierto por un motivo, y en casi todos los casos el motivo es que **falta un dato o una
-> decisión de negocio**, no código — está dicho en cada punto.
+> **Repaso del 2026-08-19.** Cerradas **C2**, **C3** y **D1** —antes → después en la
+> tarjeta, barra de acción en móvil y microtextos del formulario en los dos idiomas—, y
+> después **B3** (lo que no hago) y **C4** (disponibilidad).
+>
+> De las dos últimas conviene retener una cosa: **B3 no inventa nada** —cuatro de sus
+> cinco renglones son la contracara de respuestas que ya estaban en la FAQ— y **C4 llega
+> apagado**, porque el número solo lo puede dar la titular. Lo que se construyó ahí es el
+> mecanismo y sus guardas, no el dato.
 
 ---
 
@@ -78,16 +81,22 @@ que **no** funcionó y por qué— vale más que los seis en versión corta.
 
 **Coste:** bajo en código, alto en escritura. Es una tarde de la clienta.
 
-### B3. «Lo que no hago» / criterios de encaje
+### B3. «Lo que no hago» / criterios de encaje — ✅ HECHO el 2026-08-19
 
-**Qué aporta:** credibilidad, que es la moneda del sitio. Una lista corta y honesta —no
-gestiono cuentas por debajo de X, no trabajo con sectores Y, no hago SEO— filtra los
-malos encajes y hace creíble todo lo demás. La FAQ ya apunta a esto en dos respuestas;
-esto lo dice de frente.
+Bloque final de `#faq`, sin sección propia: es la misma conversación —lo que hay que
+saber antes de escribir— y una sección entera le habría dado un peso que no le toca.
+Sin acordeón, además, porque son afirmaciones y no preguntas: esconderlas detrás de un
+clic sería justo lo contrario de lo que hacen.
 
-**Dónde:** dentro de `#faq`, como bloque final, o pegado a `#planes`.
+**Cuatro de los cinco renglones no son material nuevo.** Salen de respuestas que ya
+estaban ahí arriba —la inversión mínima de $3.000, los sectores que no encajan, los
+plazos, la llamada que también sirve para decir que no— y aquí se dicen de frente en vez
+de dentro de una respuesta. El quinto (SEO, email marketing y orgánico) es el complemento
+de `#servicios`: dice dónde termina la lista.
 
-**Coste:** bajo. Solo copy.
+Eso importa porque era el riesgo del punto: escribir «lo que no hago» desde cero habría
+sido inventarse el negocio de otra persona. Copy en `CONTENT.md` §23, con el aviso de que
+las dos listas cuentan los mismos hechos y hay que tocarlas juntas.
 
 ### B4. Newsletter / «una lección por semana»
 
@@ -143,11 +152,26 @@ oculta se pone en `visibility: hidden`, no solo `opacity: 0`, para que no sea un
 de tabulación. Cero listeners de scroll: dos `ScrollTrigger` sin scrub dentro de un
 `matchMedia`.
 
-### C4. Estado de disponibilidad
+### C4. Estado de disponibilidad — ✅ HECHO el 2026-08-19, y **apagado**
 
-`Acepto 2 proyectos para octubre` en el header o junto al CTA. Escasez real, verificable
-y editable en un dato. Si deja de ser cierto, hay que quitarlo — una escasez falsa se
-detecta a la primera y se lleva por delante todo lo demás.
+`Acepto 2 proyectos para octubre`, en mono y con un punto de oro, encima del CTA de
+`#contacto` — no en el header, que ya lleva menú, idioma y tema.
+
+**Lo que se construyó es el mecanismo; el dato no.** `src/data/availability.js` sale del
+repositorio con `activo: false` y los cuatro campos vacíos, porque cuántos proyectos
+acepta solo lo sabe ella y este sitio se sostiene sobre decir números verdaderos. Un
+«quedan 2 plazas» de relleno no sería un adorno: contradiría el argumento entero.
+
+El aviso del punto —«si deja de ser cierto, hay que quitarlo»— está resuelto para que no
+dependa de que alguien se acuerde. El renglón **se apaga solo** en dos casos: cuando el
+mes anunciado ya pasó (un «para octubre» leído en diciembre es peor que nada) y cuando la
+fecha de revisión tiene más de 45 días. Ante cualquier hueco o fecha vencida no pinta
+nada: el modo de fallo es el silencio, nunca una cifra vieja. Trece casos de la guarda
+probados, incluidos los dos bordes (último día del mes, día 45 exacto).
+
+El mes no se escribe: se guarda en ISO y lo resuelve `Intl` en el idioma activo, así que
+el dato se edita una vez y sirve para `octubre` y para `October`. Queda además una
+comprobación trimestral en `MAINTENANCE.md`.
 
 ---
 
