@@ -37,6 +37,7 @@ export const en = {
   projects: {
     title: 'Work that <span class="accent-text">scales</span>',
     hint: 'Drag the scroll →',
+    delta: 'From {before} to {after}',
     backstage: 'View backstage',
     backstageHide: 'Hide backstage',
   },
@@ -200,7 +201,28 @@ export const en = {
     ],
   },
 
-  contact: { pre: 'Got a project in mind?', cta: 'Shall we scale?', time: 'Local time —' },
+  contact: {
+    pre: 'Got a project in mind?',
+    cta: 'Shall we scale?',
+    time: 'Local time —',
+    mobileCta: 'Write to me',
+    form: {
+      name: 'Name',
+      email: 'Email',
+      plan: 'What you are after',
+      planOptions: ['Not sure yet', 'Audit', 'Monthly management', 'Scaling sprint'],
+      message: 'Tell me about the project',
+      consent: 'I have read and accept the {link}.',
+      consentLink: 'privacy policy',
+      submit: 'Send message',
+      honeypot: 'Do not fill in:',
+    },
+    status: {
+      sending: 'Sending…',
+      ok: 'Message sent. I reply within 24 h.',
+      error: 'I could not send the form. Email me directly at hola@paola-ads.com.',
+    },
+  },
 
   footer: {
     rights: '© 2026 Paola — All rights reserved',

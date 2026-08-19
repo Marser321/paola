@@ -204,6 +204,35 @@ export function applyStaticTranslations() {
     time.firstChild.textContent = `${t('contact.time')} `
   }
 
+  set('.mobile-cta__text', t('contact.mobileCta'))
+
+  // --- Formulario de contacto ---
+  // Era el hueco de i18n más visible que quedaba: en inglés el formulario entero
+  // —el último paso de la página, el que convierte— se quedaba en español.
+  // Por ORDEN de los .contact-form__row, igual que el nav: la alternativa era
+  // sembrar el markup de `data-i18n`, que es justo lo que este archivo evita.
+  setEach('.contact-form__label', [
+    t('contact.form.name'), t('contact.form.email'),
+    t('contact.form.plan'), t('contact.form.message'),
+  ])
+  // Del <select> se traduce el rótulo, nunca el `value`: ese viaja a Netlify y
+  // es también la clave con la que sections/plans.js precualifica el desplegable.
+  setEach('#cf-plan option', t('contact.form.planOptions'))
+  set('.contact-form__submit', t('contact.form.submit'))
+  // El honeypot está oculto, pero lo lee un lector de pantalla que ignore el CSS.
+  const hp = document.querySelector('.contact-form__hp label')
+  if (hp && hp.firstChild?.nodeType === Node.TEXT_NODE) {
+    hp.firstChild.textContent = `${t('contact.form.honeypot')} `
+  }
+  // El consentimiento lleva un enlace dentro: se reconstruye conservando su href.
+  const consent = document.querySelector('.contact-form__consent > span')
+  const consentLink = consent?.querySelector('a')
+  if (consent && consentLink) {
+    consent.innerHTML = t('contact.form.consent', {
+      link: `<a href="${consentLink.getAttribute('href')}" data-hover>${t('contact.form.consentLink')}</a>`,
+    })
+  }
+
   // --- Footer ---
   const rights = document.querySelector('.footer__bottom > span')
   if (rights) rights.textContent = t('footer.rights')

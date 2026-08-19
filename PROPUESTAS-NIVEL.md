@@ -12,6 +12,12 @@
 > más cosas.** Todo lo que se añada tiene que aportar una prueba, quitar una duda o
 > facilitar el siguiente paso. Lo que solo decore, sobra — acabamos de quitar 1.200
 > líneas de exactamente eso.
+>
+> **Repaso del 2026-08-19.** Cerradas **C2** (antes → después en la tarjeta), **C3** (barra
+> de acción en móvil) y **D1** (microtextos del formulario en los dos idiomas): las tres
+> que se podían hacer enteras sin pedirle nada a la clienta. Lo que sigue abierto está
+> abierto por un motivo, y en casi todos los casos el motivo es que **falta un dato o una
+> decisión de negocio**, no código — está dicho en cada punto.
 
 ---
 
@@ -106,23 +112,36 @@ seis logotipos reales, justo debajo del hero, da prueba social **antes** de pedi
 Necesita permiso de marca — y sin logos reales, no se pone: seis rectángulos grises son
 peores que nada.
 
-### C2. La tarjeta de proyecto puede decir el **antes → después**
+### C2. La tarjeta de proyecto dice el **antes → después** — ✅ HECHO el 2026-08-19
 
-Los datos ya existen (`beforeAfter` en `projects.js`) y hoy solo se ven dentro del
-backstage, que hay que abrir. `ROAS 2.1x → 5.8x` en la propia tarjeta es la cifra más
-persuasiva del sitio escondida detrás de un clic.
+La cifra más persuasiva del sitio vivía dentro del backstage, o sea detrás de un clic
+que la mayoría no da. Ahora se lee en la cara de la tarjeta, bajo los dos KPI y con el
+mismo lenguaje: mono, el estado de partida en `--muted` y el de llegada en `--text`.
+Sin acento — seis tarjetas con oro encendido lo apagarían en todo el sitio.
 
-**Coste: mínimo.** Es una línea en la plantilla de `sections/projects.js`.
+El backstage se queda solo con el resultado del test A/B, que sí es material de
+trastienda; repetir la misma cifra en los dos sitios la abarataba. La flecha es
+decorativa y el nombre accesible lo lleva el `<p>` (`projects.delta` en los dos
+diccionarios), para que un lector de pantalla oiga «De ROAS 2.1x a ROAS 5.8x» y no
+«flecha derecha».
 
-### C3. Una barra de acción fija en móvil
+### C3. Una barra de acción fija en móvil — ✅ HECHO el 2026-08-19
 
-Debajo de 768px, el CTA de contacto queda a un scroll de 16.000px. Una barra inferior
-discreta con «Escríbeme» que aparezca pasado el hero es el cambio con mejor relación
-esfuerzo/conversión de toda la lista.
+`src/js/ui/mobile-cta.js` + `src/styles/mobile-cta.css`, con el enlace en el HTML
+estático (`.mobile-cta`). Por debajo de 768px aparece cuando el hero termina de salir
+y se aparta al asomar `#contacto`, donde el CTA de verdad ya ocupa la pantalla.
 
-**⚠ Cuidado:** el HUD vivía anclado abajo a la derecha y se retiró en parte por competir
-con el pulgar. Esta barra tiene que ser **una sola cosa**, opaca y con su zona de
-pulsación de 44px.
+Se respetó el aviso: es **una sola cosa** —un enlace, sin contador, sin cerrar, sin
+segundo botón—, opaca (`--surface`, nada de `backdrop-filter`: detrás pasan seis planos
+de parallax) y de 44px de alto útil, con `env(safe-area-inset-bottom)` para no quedar
+debajo del indicador de inicio de iOS.
+
+Dos detalles que no son obvios y por eso están comentados en el código: va en el markup
+y no la inyecta el JS porque `[data-scroll]` lo cablea `initLenis()` **una sola vez** al
+arrancar y porque `npm run check:i18n` solo vigila lo que está escrito en el HTML; y
+oculta se pone en `visibility: hidden`, no solo `opacity: 0`, para que no sea una trampa
+de tabulación. Cero listeners de scroll: dos `ScrollTrigger` sin scrub dentro de un
+`matchMedia`.
 
 ### C4. Estado de disponibilidad
 
@@ -134,11 +153,22 @@ detecta a la primera y se lleva por delante todo lo demás.
 
 ## Bloque D — Texto y detalle fino
 
-### D1. Los microtextos del formulario no están traducidos
+### D1. Los microtextos del formulario — ✅ HECHO el 2026-08-19
 
-`Nombre`, `Email`, `Cuéntame el proyecto`, `Enviar mensaje` y el nuevo `Qué te interesa`
-están en español en el HTML y **no pasan por el diccionario**: en inglés, el formulario
-entero se queda en español. Es el hueco de i18n más visible que queda.
+Los cuatro rótulos, las cuatro opciones del desplegable, el consentimiento, el botón, el
+honeypot y los tres mensajes de estado (`Enviando…`, éxito, fallo) pasan ya por
+`contact.form` y `contact.status` en los dos diccionarios, y por
+`applyStaticTranslations()`.
+
+Lo que **no** se traduce, a propósito: los `value` del `<select>`. Viajan a Netlify y los
+lee la clienta, que trabaja en español — y son además la clave con la que
+`sections/plans.js` precualifica el formulario desde el CTA de cada plan. Lo que cambia
+de idioma es el rótulo visible.
+
+El consentimiento lleva un enlace dentro, así que se reconstruye con `{link}`
+conservando su `href`; comprobado que aguanta varios cambios de idioma seguidos.
+`.contact-form__label`, `.contact-form__submit` y `.mobile-cta__text` entran en
+`npm run check:i18n`, que ahora vigila 18 bloques.
 
 ### D2. El `<h1>` del hero es un nombre, no una promesa
 

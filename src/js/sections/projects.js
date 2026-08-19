@@ -65,9 +65,8 @@ export function renderProjects() {
               ${variant('a')}
               ${variant('b')}
             </div>
-            <p class="backstage__result mono">
-              ${p.abTest.result} · ${p.beforeAfter.before} → ${p.beforeAfter.after}
-            </p>
+            <!-- El antes → después salió de aquí a la cara de la tarjeta. -->
+            <p class="backstage__result mono">${p.abTest.result}</p>
           </div>
         </div>
 
@@ -90,6 +89,17 @@ export function renderProjects() {
               <p class="project-card__kpi-label mono">${p.kpi2.label}</p>
             </div>
           </div>
+          <!-- Antes → después. La cifra más persuasiva del caso vivía solo dentro
+               del backstage, o sea detrás de un clic que la mayoría no da. Aquí
+               se lee sin abrir nada; el backstage se queda con el resultado del
+               test A/B, que sí es material de trastienda.
+               La flecha es decorativa: el nombre accesible lo lleva el <p>. -->
+          <p class="project-card__delta mono"
+             aria-label="${t('projects.delta', { before: p.beforeAfter.before, after: p.beforeAfter.after })}">
+            <span>${p.beforeAfter.before}</span>
+            <span class="project-card__delta-arrow" aria-hidden="true">→</span>
+            <span class="project-card__delta-after">${p.beforeAfter.after}</span>
+          </p>
           <p class="project-card__desc">${p.desc}</p>
           <button type="button" class="project-card__more mono"
                   aria-expanded="false" aria-controls="bs-${p.id}">${t('projects.backstage')}</button>

@@ -1,0 +1,89 @@
+/* ============================================================
+   MOBILE-CTA.CSS — la barra de acción fija por debajo de 768px.
+
+   Ver PROPUESTAS-NIVEL.md §C3 y el porqué largo en js/ui/mobile-cta.js.
+   Aquí solo lo visual, y sin un hex suelto: todo sale de tokens.css.
+   ============================================================ */
+
+/* En escritorio no existe: el menú en píldoras ya lleva «Contacto» a la vista
+   permanentemente, y una segunda llamada a lo mismo resta en vez de sumar. */
+.mobile-cta {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobile-cta {
+    position: fixed;
+    left: 1rem;
+    right: 1rem;
+    /* Sobre la barra del navegador en iOS. Sin el env() la zona de pulsación se
+       come el indicador de inicio y el primer toque no llega nunca. */
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    z-index: var(--z-header);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    /* 44px de alto útil: el mínimo de toque de las HIG y de las WCAG 2.2. */
+    min-height: 2.75rem;
+    padding: 0.75rem 1.25rem;
+
+    /* OPACA, no translúcida. Detrás pasan seis planos de parallax, las tarjetas
+       y el grano; un `backdrop-filter` la dejaría ilegible justo en las
+       secciones con más imagen, que son en las que hay que poder pulsarla. */
+    background: var(--surface);
+    border: 1px solid var(--line-gold);
+    border-radius: var(--radius);
+    box-shadow: var(--glow-gold);
+
+    color: var(--text);
+    font-size: var(--fs-label);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+
+    /* Estado de reposo. `visibility` y no solo `opacity`: oculta pero enfocable
+       sería una trampa para quien navega con teclado o con control por voz. */
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(140%);
+    transition:
+      opacity var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out),
+      visibility 0s linear var(--dur-fast);
+  }
+
+  .mobile-cta.is-visible {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0s;
+  }
+
+  .mobile-cta__arrow {
+    color: var(--gold);
+  }
+
+  /* El pie tiene su propio «Volver arriba» abajo del todo. La barra ya se ha
+     apartado para entonces (se oculta al entrar #contacto), pero el colchón
+     evita que se toquen durante el propio cruce. */
+  .footer__bottom {
+    padding-bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Sin movimiento: aparece y desaparece, que es lo que la barra tiene que
+   comunicar. Se conserva el fundido porque un salto seco a mitad de scroll se
+   lee como un fallo de pintado, no como una decisión. */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-cta {
+    transform: none;
+    transition:
+      opacity var(--dur-fast) linear,
+      visibility 0s linear var(--dur-fast);
+  }
+  .mobile-cta.is-visible {
+    transform: none;
+  }
+}

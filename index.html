@@ -667,6 +667,25 @@
       </section>
     </main>
 
+    <!-- Barra de acción en móvil (PROPUESTAS-NIVEL.md §C3).
+         Por debajo de 768px el CTA de contacto queda a 16.000px de scroll: quien
+         se convence en «Planes» tiene que seguir bajando media página para poder
+         escribir. Esta barra le da la salida ahí mismo.
+
+         Va en el HTML y no la crea el JS a propósito, por dos motivos del propio
+         proyecto: `[data-scroll]` lo enlaza initLenis() UNA vez al arrancar —un
+         elemento inyectado después no tendría scroll suave— y su rótulo entra en
+         `npm run check:i18n`, que solo vigila lo que está escrito en el markup.
+
+         Es UNA sola cosa, opaca y de 44px de alto: el HUD retirado el 2026-08-16
+         vivía justo aquí y competía con el pulgar. Su visibilidad la gobierna
+         ui/mobile-cta.js — aparece pasado el hero y desaparece en #contacto,
+         donde el CTA de verdad ya está en pantalla. -->
+    <a class="mobile-cta mono" href="#contacto" data-scroll>
+      <span class="mobile-cta__text">Escríbeme</span>
+      <span class="mobile-cta__arrow" aria-hidden="true">→</span>
+    </a>
+
     <!-- FOOTER -->
     <footer class="footer">
       <div class="footer__marquee marquee marquee--reverse" aria-hidden="true">

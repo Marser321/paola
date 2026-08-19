@@ -60,6 +60,9 @@ const PAREJAS = [
   ['calc__label', ['spend', 'roas', 'ticket'].map((k) => D.calc?.fields?.[k])],
   ['calc__viz-label', [D.calc?.viz?.spend, D.calc?.rows?.profit]],
   ['faq__q', (D.faq?.items || []).map((f) => f.q)],
+  ['contact-form__label', ['name', 'email', 'plan', 'message'].map((k) => D.contact?.form?.[k])],
+  ['contact-form__submit', [D.contact?.form?.submit]],
+  ['mobile-cta__text', [D.contact?.mobileCta]],
 ]
 
 // ⚠ NO se comprueban los bloques con etiquetas DENTRO del texto

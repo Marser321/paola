@@ -407,6 +407,20 @@
   font-family: var(--font-mono); font-size: 1.5rem; font-weight: 500;
 }
 .project-card__kpi-label { color: var(--muted); font-size: 0.65rem; }
+
+/* Antes → después. Es un dato de la misma familia que los KPI de arriba, así que
+   comparte la mono y se cuelga del mismo bloque en vez de abrir una caja nueva:
+   lo que cambia es el PESO. El estado de partida va en `--muted` porque es el
+   punto del que se sale; el de llegada, en color de texto, porque es el que hay
+   que leer. Sin acento: el oro está reservado para los titulares y para el CTA,
+   y seis tarjetas con él encendido lo apagarían en todo el sitio. */
+.project-card__delta {
+  display: flex; align-items: baseline; gap: 0.6rem;
+  margin-top: 0.9rem; font-size: 0.8rem; color: var(--muted);
+}
+.project-card__delta-arrow { opacity: 0.5; }
+.project-card__delta-after { color: var(--text); font-weight: 500; }
+
 .project-card__desc { margin-top: 1.25rem; color: var(--muted); font-size: 0.95rem; }
 
 /* ===== SERVICIOS ===== */

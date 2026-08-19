@@ -38,6 +38,7 @@ export const es = {
   projects: {
     title: 'Proyectos que <span class="accent-text">escalan</span>',
     hint: 'Arrastra el scroll →',
+    delta: 'De {before} a {after}',
     backstage: 'Ver backstage',
     backstageHide: 'Ocultar backstage',
   },
@@ -207,7 +208,33 @@ export const es = {
     ],
   },
 
-  contact: { pre: '¿Tienes un proyecto entre manos?', cta: '¿Escalamos?', time: 'Hora local —' },
+  contact: {
+    pre: '¿Tienes un proyecto entre manos?',
+    cta: '¿Escalamos?',
+    time: 'Hora local —',
+    // Rótulo de la barra fija de móvil (PROPUESTAS-NIVEL.md §C3).
+    mobileCta: 'Escríbeme',
+    // El formulario. Los `value` del <select> NO se traducen — viajan a Netlify y
+    // los lee la clienta, que trabaja en español; lo que cambia de idioma es el
+    // rótulo visible. Ver sections/plans.js, que precualifica por ese mismo value.
+    form: {
+      name: 'Nombre',
+      email: 'Email',
+      plan: 'Qué te interesa',
+      planOptions: ['Todavía no lo sé', 'Auditoría', 'Gestión mensual', 'Sprint de escala'],
+      message: 'Cuéntame el proyecto',
+      // {link} se sustituye por el enlace a la política, que conserva su href.
+      consent: 'He leído y acepto la {link}.',
+      consentLink: 'política de privacidad',
+      submit: 'Enviar mensaje',
+      honeypot: 'No rellenar:',
+    },
+    status: {
+      sending: 'Enviando…',
+      ok: 'Mensaje enviado. Te respondo en menos de 24 h.',
+      error: 'No he podido enviar el formulario. Escríbeme directamente a hola@paola-ads.com.',
+    },
+  },
 
   footer: {
     rights: '© 2026 Paola — Todos los derechos reservados',

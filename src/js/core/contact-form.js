@@ -5,6 +5,8 @@
 // queda porque es el gancho natural para lo que venga (una analítica de verdad,
 // una redirección a gracias) y no cuesta nada.
 
+import { t } from '../../i18n/index.js'
+
 const ENDPOINT = '/' // Netlify recoge el POST en la propia ruta
 
 export function initContactForm() {
@@ -25,12 +27,12 @@ export function initContactForm() {
 
     // Honeypot: si viene relleno es un bot. Se finge éxito y no se envía nada.
     if (form.querySelector('[name="bot-field"]')?.value) {
-      say('Mensaje enviado. Te respondo en menos de 24 h.', 'ok')
+      say(t('contact.status.ok'), 'ok')
       return
     }
 
     submit.disabled = true
-    say('Enviando…', 'pending')
+    say(t('contact.status.sending'), 'pending')
 
     try {
       const response = await fetch(ENDPOINT, {
@@ -41,15 +43,12 @@ export function initContactForm() {
       if (!response.ok) throw new Error(`HTTP ${response.status}`)
 
       form.reset()
-      say('Mensaje enviado. Te respondo en menos de 24 h.', 'ok')
+      say(t('contact.status.ok'), 'ok')
       window.dispatchEvent(new CustomEvent('form:success'))
     } catch {
       // Hasta el deploy en Netlify (t.26) esto SIEMPRE falla en local, y es normal.
       // Nunca se deja al visitante sin salida: se le da el email.
-      say(
-        'No he podido enviar el formulario. Escríbeme directamente a hola@paola-ads.com.',
-        'error'
-      )
+      say(t('contact.status.error'), 'error')
     } finally {
       submit.disabled = false
     }

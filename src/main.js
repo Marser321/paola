@@ -8,12 +8,14 @@ import './styles/process.css'
 import './styles/sale.css'
 import './styles/parallax.css'
 import './styles/seams.css'
+import './styles/mobile-cta.css'
 
 import { initI18n, getLang, t } from './i18n/index.js'
 import { applyStaticTranslations } from './i18n/apply-dom.js'
 import { initPillNav } from './js/ui/pill-nav.js'
 import { initLangSwitch } from './js/ui/lang-switch.js'
 import { initTheme } from './js/ui/theme.js'
+import { initMobileCta } from './js/ui/mobile-cta.js'
 
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -96,6 +98,11 @@ initLangSwitch()
 initTheme(() => t('theme'))  // después del de idioma: los dos se cuelgan de
                              // .site-nav y este va el último de la fila
 initContactForm()  // t.24
+// La barra de acción de móvil. DESPUÉS de initContact(): sus dos ScrollTrigger
+// miden #hero y #contacto, y el segundo tiene reveals propios que ya han
+// declarado su trigger. El enlace en sí lo cableó initLenis() con el resto de
+// `[data-scroll]`, porque está en el HTML estático.
+initMobileCta()
 
 // Cambio de idioma en caliente. El orden importa: primero el DOM estático y
 // luego las cards, que se recrean enteras.
