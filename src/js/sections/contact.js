@@ -1,5 +1,4 @@
 import gsap from 'gsap'
-import { shouldReduceMotion } from '../core/lenis.js'
 import { getLenis } from '../core/lenis.js'
 import { formatLocale } from '../../i18n/index.js'
 import { perfil } from '../../data/perfil.js'
@@ -47,48 +46,5 @@ export function initContact() {
     else window.scrollTo({ top: 0, behavior: 'smooth' })
   })
 
-  // --- Reveal de la sección ---
-  if (!shouldReduceMotion()) {
-    gsap.from('.contact__pre, .contact__cta, .contact__email, .contact__time', {
-      y: 60,
-      opacity: 0,
-      duration: 1,
-      ease: 'power3.out',
-      stagger: 0.12,
-      scrollTrigger: { trigger: '#contacto', start: 'top 70%', once: true },
-    })
-  }
-
-  // --- CTA magnético ---
-  const cta = document.querySelector('[data-magnetic]')
-  if (
-    !cta ||
-    shouldReduceMotion() ||
-    window.matchMedia('(hover: none)').matches
-  ) {
-    return
-  }
-
-  const STRENGTH = 0.35
-  const RADIUS = 120 // px alrededor del elemento
-
-  const xTo = gsap.quickTo(cta, 'x', { duration: 0.4, ease: 'power2.out' })
-  const yTo = gsap.quickTo(cta, 'y', { duration: 0.4, ease: 'power2.out' })
-
-  window.addEventListener('mousemove', (e) => {
-    const r = cta.getBoundingClientRect()
-    const cx = r.left + r.width / 2
-    const cy = r.top + r.height / 2
-    const dx = e.clientX - cx
-    const dy = e.clientY - cy
-    const dist = Math.hypot(dx, dy)
-
-    if (dist < RADIUS + Math.max(r.width, r.height) / 2) {
-      xTo(dx * STRENGTH)
-      yTo(dy * STRENGTH)
-    } else {
-      xTo(0)
-      yTo(0)
-    }
-  })
+  // Contact remains fixed: no entrance transform and no cursor magnet.
 }

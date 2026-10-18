@@ -19,7 +19,10 @@ import { getLang, t } from '../../i18n/index.js'
 // Pasar de una a otra es rellenar un objeto en sectores.js; aquí no se toca nada.
 
 const esc = (s) =>
-  String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
+  String(s).replace(
+    /[&<>"']/g,
+    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
+  )
 
 // «01/04». El total ya no va escrito («/06» lo estuvo): sale de cuántas hay.
 const indice = (i, total) => `${String(i + 1).padStart(2, '0')}/${String(total).padStart(2, '0')}`
@@ -60,7 +63,9 @@ function tarjetaCaso(sector, i, total) {
   const caso = sector.caso
   const titulo = campo(caso, 'titulo')
   const alt = (getLang() === 'en' && caso.en?.alt) || caso.creativo.alt
-  const resultados = (campo(caso, 'resultados') || []).filter((r) => r?.valor && r?.etiqueta).slice(0, 2)
+  const resultados = (campo(caso, 'resultados') || [])
+    .filter((r) => r?.valor && r?.etiqueta)
+    .slice(0, 2)
   const ad = caso.antesDespues
 
   return `
@@ -97,7 +102,7 @@ function tarjetaCaso(sector, i, total) {
                 (r) => `<div>
               <p class="project-card__kpi-value">${esc(r.valor)}</p>
               <p class="project-card__kpi-label mono">${esc(r.etiqueta)}</p>
-            </div>`
+            </div>`,
               )
               .join('')}
           </div>
@@ -138,8 +143,8 @@ function initTilt() {
       const r = card.getBoundingClientRect()
       const px = (e.clientX - r.left) / r.width - 0.5
       const py = (e.clientY - r.top) / r.height - 0.5
-      rotX(-py * 8)
-      rotY(px * 8)
+      rotX(-py * 4)
+      rotY(px * 4)
     })
     card.addEventListener('mouseleave', () => {
       rotX(0)
@@ -157,57 +162,57 @@ export function refreshProjects() {
   initTilt()
 }
 
-// --- Scroll horizontal pinneado (desktop) / reveals (resto) ---
+// Native horizontal exploration: vertical scrolling remains uninterrupted.
 export function initProjects() {
   initTilt()
-  if (shouldReduceMotion()) return
-
-  const mm = gsap.matchMedia()
-
-  mm.add('(min-width: 1024px)', () => {
-    const track = document.querySelector('.projects__track')
-    const viewport = document.querySelector('.projects__viewport')
-    const progress = document.querySelector('.projects__progress-fill')
-
-    // ⚠ Nunca negativa. Con seis tarjetas el track siempre desbordaba; con
-    // cuatro, en una pantalla muy ancha CABEN, y una distancia negativa dejaba
-    // el pin con un `end` anterior a su `start`. A cero, el pin dura cero
-    // píxeles y la sección se lee como una fila quieta, que es lo que es.
-    const distance = () => Math.max(0, track.scrollWidth - viewport.clientWidth)
-
-    const tween = gsap.to(track, {
-      x: () => -distance(),
-      ease: 'none',
-      scrollTrigger: {
-        // Se pinea .projects__cases, NO .projects. La sección incluye la galería
-        // 3D por encima (index.html §proyectos) y pinear la sección entera la
-        // arrastraría al pin: se quedaría congelada y recortada bajo la cabecera
-        // en vez de tener su propio recorrido de scroll.
-        trigger: '.projects__cases',
-        start: 'top top',
-        end: () => `+=${distance()}`,
-        pin: true,
-        scrub: 1,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          progress.style.transform = `scaleX(${self.progress})`
-        },
-      },
+  const viewport = document.querySelector('.projects__viewport')
+  const track = document.querySelector('.projects__track')
+  const progress = document.querySelector('.projects__progress-fill')
+  if (!viewport || !track) return
+  viewport.tabIndex = 0
+  const controls = document.createElement('div')
+  controls.className = 'projects__controls'
+  controls.innerHTML =
+    '<button type="button" data-sector-prev>←</button><button type="button" data-sector-next>→</button>'
+  document.querySelector('.projects__header').append(controls)
+  const previous = controls.querySelector('[data-sector-prev]'),
+    next = controls.querySelector('[data-sector-next]')
+  function labels() {
+    previous.setAttribute('aria-label', t('experience.previous'))
+    next.setAttribute('aria-label', t('experience.following'))
+    viewport.setAttribute('aria-label', t('labels.cases'))
+  }
+  const update = () => {
+    const distance = viewport.scrollWidth - viewport.clientWidth
+    if (progress)
+      progress.style.transform = `scaleX(${distance > 0 ? Math.min(1, viewport.scrollLeft / distance) : 1})`
+    previous.disabled = viewport.scrollLeft < 2
+    next.disabled = viewport.scrollLeft >= distance - 2
+  }
+  function move(direction) {
+    const card = track.querySelector('.project-card')
+    viewport.scrollBy({
+      left: direction * ((card?.getBoundingClientRect().width || 400) + window.innerWidth * 0.04),
+      behavior: shouldReduceMotion() ? 'instant' : 'smooth',
     })
-
-    return () => tween.scrollTrigger?.kill() // cleanup de matchMedia
+  }
+  previous.addEventListener('click', () => move(-1))
+  next.addEventListener('click', () => move(1))
+  viewport.addEventListener('scroll', update, { passive: true })
+  const observer = new ResizeObserver(update)
+  observer.observe(viewport)
+  window.addEventListener('i18n:change', () => {
+    labels()
+    update()
   })
-
-  mm.add('(max-width: 1023px)', () => {
-    document.querySelectorAll('.project-card').forEach((card) => {
-      gsap.from(card, {
-        y: 80,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: card, start: 'top 88%', once: true },
-      })
+  labels()
+  update()
+  if (!shouldReduceMotion())
+    gsap.from(track.querySelectorAll('.project-card'), {
+      y: 35,
+      duration: 0.9,
+      stagger: 0.1,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: viewport, start: 'top 85%', once: true },
     })
-  })
 }

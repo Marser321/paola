@@ -184,11 +184,11 @@
 .pill-nav__panel a.is-active { color: var(--bg); background: var(--gold); }
 
 /* ===== REPARTO POR ANCHO ===== */
-/* Por debajo de 768 el menú entero pasa al desplegable. Antes aquí se ESCONDÍAN
+/* Por debajo de 1024 el menú entero pasa al desplegable. Antes aquí se ESCONDÍAN
    cuatro de los cinco enlaces (`.site-nav a:not(.site-nav__cta){display:none}`)
    y en un teléfono solo se llegaba a Contacto: el resto del sitio no tenía
    navegación, solo scroll. */
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .pill-nav__list { display: none; }
   .pill-nav__toggle { display: flex; }
 }

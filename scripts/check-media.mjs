@@ -19,7 +19,7 @@ const IMG = join(root, 'public', 'img')
 // ⚠ `process` se renombra al importarlo. Tal cual, pisa el `process` global de
 // Node y este script termina con `process.exit()`: el comprobador reventaba en la
 // última línea justo después de imprimir el informe correcto.
-const { portraits, figure, backdrops, sequences, galleries, process: etapas, parallax: parallaxLayers, budgets } = await import(
+const { portraits, figure, backdrops, sequences, galleries, process: etapas, parallax: parallaxLayers, serviceVisuals, serviceStateVisuals, budgets } = await import(
   pathToFileURL(join(root, 'src', 'data', 'media.js')).href
 )
 
@@ -177,6 +177,29 @@ for (const [service, gallery] of Object.entries(galleries || {})) {
 }
 checkBudget('galleries', galleryTotal)
 
+// --- Illustrative service photographs (shared with process) ---
+let serviceTotal = 0
+for (const [id, item] of Object.entries(serviceVisuals || {})) {
+  const { size, missing } = assetSize(item.src)
+  if (size == null) problems.push(`Visual de «${id}»: falta /img/${item.src}`)
+  else serviceTotal += size
+  if (missing.length) problems.push(`Visual de «${id}»: faltan formatos ${missing.join(', ')}`)
+  if (item.generated && !item.illustrative) {
+    problems.push(`Visual de «${id}»: una imagen generada debe declararse ilustrativa`)
+  }
+}
+checkBudget('serviceVisuals', serviceTotal)
+// Additional states are requested on interaction, not in the initial page load.
+for (const [id, sources] of Object.entries(serviceStateVisuals)) {
+  if (new Set(sources).size !== sources.length) problems.push(`Repeated state visual: ${id}`)
+  for (const src of sources) {
+    const { size, missing } = assetSize(src)
+    if (missing.length) problems.push(`State visual ${src}: missing ${missing.join(', ')}`)
+    if (size > 160 * 1024) problems.push(`State visual ${src}: exceeds 160 KB`)
+  }
+}
+
+
 // --- Etapas del método de trabajo ---
 // Mismo trato que las galerías —gradiente mientras no haya foto— con una
 // exigencia más: aquí el `alt` SÍ se comprueba. En las galerías el nombre
@@ -259,6 +282,9 @@ const declared =
   (etapas?.items?.length ? 1 : 0)
 
 console.log(`\n  Manifiesto de medios — ${declared} entrada(s) declarada(s)\n`)
+if (Object.keys(serviceVisuals || {}).length) {
+  console.log(`  ℹ  ${Object.keys(serviceVisuals).length} fotografías editoriales generadas, identificadas como ejemplos ilustrativos; no son casos de clientes.\n`)
+}
 
 if (backdrops?.informe) {
   warnings.push('«#informe» tiene fondo declarado. Va sin imagen a propósito: es el clímax y el único sitio donde aparece el gradiente Meta (MEDIA-BRIEF §criterios)')

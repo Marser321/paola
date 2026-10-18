@@ -1,6 +1,8 @@
 import gsap from 'gsap'
 import { shouldReduceMotion } from '../core/lenis.js'
 import { figure } from '../../data/media.js'
+import { t } from '../../i18n/index.js'
+import { onPointerMove } from '../core/cursor.js'
 
 function splitTitle() {
   const title = document.querySelector('.hero__title')
@@ -42,8 +44,7 @@ function mountFigure() {
   const holder = document.querySelector('[data-figure]')
   if (!holder || !figure?.src || holder.firstChild) return
 
-  holder.innerHTML =
-    `<picture>
+  holder.innerHTML = `<picture>
        <source srcset="/img/${figure.src}.avif" type="image/avif" />
        <source srcset="/img/${figure.src}.webp" type="image/webp" />
        <img src="/img/${figure.src}.webp" alt="" width="${figure.width}"
@@ -69,34 +70,52 @@ function enter() {
     return
   }
 
-  gsap.timeline()
-    .from(label, { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' })
+  gsap
+    .timeline()
+    .from(label, { opacity: 0, y: 20, duration: 0.45, ease: 'power3.out' })
     // La figura entra ANTES que el nombre y desde más lejos: es el sujeto de la
     // escena, y el nombre se monta sobre ella, no al revés.
-    .from(fig, { opacity: 0, duration: 1.6, ease: 'power3.out' }, 0)
-    .from(figImg, {
-      yPercent: 4, scale: 1.05, transformOrigin: 'bottom center',
-      duration: 1.8, ease: 'power3.out',
-    }, 0)
-    .from(chars, {
-      yPercent: 110,
-      duration: 1.2,
-      ease: 'power3.out',
-      stagger: 0.04,
-    }, '-=0.5')
-    .from([subtitle, meta], {
-      opacity: 0,
-      y: 30,
-      duration: 1,
-      ease: 'power3.out',
-      stagger: 0.1,
-    }, '-=0.8')
+    .from(fig, { opacity: 0, duration: 0.65, ease: 'power3.out' }, 0)
+    .from(
+      figImg,
+      {
+        yPercent: 5,
+        scale: 1.04,
+        transformOrigin: 'bottom center',
+        duration: 1.2,
+        ease: 'power3.out',
+      },
+      0,
+    )
+    .from(
+      chars,
+      {
+        yPercent: 105,
+        duration: 0.9,
+        ease: 'power3.out',
+        stagger: 0.045,
+      },
+      '-=0.5',
+    )
+    .from(
+      [subtitle, meta],
+      {
+        opacity: 0,
+        y: 30,
+        duration: 0.5,
+        ease: 'power3.out',
+        stagger: 0.1,
+      },
+      '-=0.8',
+    )
     .from(scroll, { opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.4')
 }
 
 export function initHero() {
   splitTitle()
   mountFigure()
+  mountRoute()
+  initDepth()
   // initPreloader() corre ANTES que initHero() y en reduced-motion despacha
   // 'app:ready' de forma síncrona: si el preloader ya no está, el evento ya pasó.
   if (!document.getElementById('preloader')) {
@@ -104,4 +123,67 @@ export function initHero() {
     return
   }
   window.addEventListener('app:ready', enter, { once: true })
+}
+
+function refreshRoute() {
+  const route = document.querySelector('.hero-route')
+  if (!route) return
+  route.querySelector('.hero-route__label').textContent = t('experience.heroRouteLabel')
+  route
+    .querySelectorAll('.hero-route__name')
+    .forEach((el, i) => (el.textContent = t('experience.heroRoute')[i]))
+}
+function mountRoute() {
+  const route = document.createElement('div')
+  route.className = 'hero-route'
+  route.innerHTML =
+    '<p class="hero-route__label mono"></p><ol>' +
+    [0, 1, 2]
+      .map(
+        (i) =>
+          `<li><span class="hero-route__point" aria-hidden="true">0${i + 1}</span><span class="hero-route__name"></span></li>`,
+      )
+      .join('') +
+    '</ol>'
+  document.querySelector('.hero__meta').before(route)
+  refreshRoute()
+  window.addEventListener('i18n:change', refreshRoute)
+  if (shouldReduceMotion()) return
+  const play = () =>
+    gsap.fromTo(
+      route.querySelectorAll('li'),
+      { y: 15, opacity: 0.3 },
+      { y: 0, opacity: 1, duration: 0.9, stagger: 0.15, ease: 'power3.out' },
+    )
+  if (!document.getElementById('preloader')) play()
+  else window.addEventListener('app:ready', play, { once: true })
+}
+function initDepth() {
+  if (shouldReduceMotion()) return
+  gsap.matchMedia().add('(min-width:1024px) and (hover:hover)', () => {
+    const hero = document.querySelector('.hero'),
+      picture = hero.querySelector('.hero__figure picture')
+    const setX = gsap.quickTo(picture, 'x', { duration: 0.9, ease: 'power3.out' }),
+      setY = gsap.quickTo(picture, 'y', { duration: 0.9, ease: 'power3.out' })
+    let enabled = true
+    onPointerMove((event) => {
+      if (!enabled || window.scrollY > hero.offsetHeight) return
+      const r = hero.getBoundingClientRect()
+      setX((event.clientX / window.innerWidth - 0.5) * 20)
+      setY(((event.clientY - r.top) / r.height - 0.5) * 20)
+    })
+    gsap.fromTo(
+      hero.querySelector('.hero__figure img'),
+      { y: 0 },
+      {
+        y: 28,
+        ease: 'none',
+        scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 1 },
+      },
+    )
+    return () => {
+      enabled = false
+      gsap.set(picture, { clearProps: 'transform' })
+    }
+  })
 }

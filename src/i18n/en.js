@@ -7,6 +7,38 @@
 // Premiere, Canva) ni las siglas del oficio (CPL, CAPI, TOFU-MOFU-BOFU).
 
 export const en = {
+  serviceStateAlts: [
+  [
+    "Gold hoop earrings on paper: the product featured in the example ad.",
+    "A jewelry page on a laptop: the ad proposal continues on the website.",
+    "A customer and an adviser discuss the earrings at the counter."
+  ],
+  [
+    "Phone and notebook ready to record a new inquiry.",
+    "A follow-up conversation on a phone beside a notebook.",
+    "An appointment planner with a marked day to confirm the meeting."
+  ],
+  [
+    "A person submits an inquiry form on a tablet.",
+    "An on-screen calendar with a selected and confirmed appointment.",
+    "Received events verified with confirmation indicators on screen."
+  ],
+  [
+    "Consultation space presenting the service on the example page.",
+    "Mobile booking page with a form and a photograph of the consultation space.",
+    "Booking confirmation on a phone with a calendar symbol."
+  ],
+  [
+    "Amber bottle on stone: the opening scene introduces the product.",
+    "Close-up of a dropper and a drop: the second scene demonstrates product use.",
+    "Amber bottle and packaging: the closing product presentation."
+  ],
+  [
+    "Event testing screen with a pending event: illustrative evidence of incomplete tracking.",
+    "Two printed creatives showing different products: an example of an inconsistent proposal.",
+    "A follow-up workflow with an incomplete stage: an inquiry without a next step."
+  ]
+],
   htmlLang: 'en-US',
   title: 'Paola Parra — Paid Media Manager · Meta Ads, funnels & CRM',
   description:
@@ -57,7 +89,7 @@ export const en = {
 
   projects: {
     title: 'Four industries, <span class="accent-text">{pct}%</span> of the spend',
-    hint: 'Drag the scroll →',
+    hint: 'Explore the industries →',
     invested: 'invested in Meta Ads',
     share: '{pct}% of the total',
     delta: 'From {antes} to {despues}',
@@ -84,12 +116,376 @@ export const en = {
     title: 'What I do',
     toggle: 'See samples of this work',
     items: [
-      { title: 'Meta Ads strategy and campaigns', desc: 'Campaigns by funnel stage, optimized for booked appointments and clients, not for cheap leads.', tags: 'Facebook · Instagram · TOFU-MOFU-BOFU' },
-      { title: 'GoHighLevel CRM and automations', desc: 'Every lead lands in the CRM at its stage and gets automatic follow-up by text and email, so none of them is left waiting.', tags: 'GoHighLevel · Pipelines · SMS and email' },
-      { title: 'Measurement: pixel, events and Conversions API', desc: 'Events that match across the site, the CRM and Meta; the Conversions API tells Meta which leads became appointments.', tags: 'Pixel · Events · CAPI' },
-      { title: 'Landing pages and funnels', desc: 'Pages built for a single action —book, call or get a quote— and connected to the CRM from day one.', tags: 'GHL · WordPress · Shopify' },
-      { title: 'AI pieces, scripts and video editing', desc: 'Creative with a hypothesis behind it: script, hook and edit, so new angles get tested without waiting for a big production.', tags: 'AI · Scripts · Premiere · Canva' },
-      { title: 'Account audit', desc: 'What is broken in your account and in what order to fix it, with a 90-day plan you can run with me or without me.', tags: 'Account · Measurement · Roadmap' },
+  {
+    "title": "Meta Ads: from ad to inquiry",
+    "desc": "Campaigns that connect your offer with people who can message, call or book.",
+    "tags": "Facebook · Instagram · TOFU-MOFU-BOFU"
+  },
+  {
+    "title": "CRM: follow up on every inquiry",
+    "desc": "I organize your contacts and automate messages so every inquiry has a next step.",
+    "tags": "GoHighLevel · Pipelines · SMS and email"
+  },
+  {
+    "title": "Measurement: connect your website, CRM and Meta",
+    "desc": "I connect actions on your website with team follow-up and the signals Meta receives.",
+    "tags": "Pixel · Events · CAPI"
+  },
+  {
+    "title": "Landing pages: one page, one clear action",
+    "desc": "I design pages that explain your service and make it easy to get in touch on any screen.",
+    "tags": "GHL · WordPress · Shopify"
+  },
+  {
+    "title": "Creative: from script to finished piece",
+    "desc": "I develop scripts and creative with AI and video editing to test different messages.",
+    "tags": "AI · Scripts · Premiere · Canva"
+  },
+  {
+    "title": "Account audit: what to fix and where to start",
+    "desc": "I review the account, measurement and contact journey to prioritize the next decisions.",
+    "tags": "Account · Measurement · Roadmap"
+  }
+],
+  },
+
+  experience: {
+  "explore": "Explore how it works",
+  "replay": "Replay journey",
+  "next": "Move inquiry forward",
+  "previous": "Previous industry",
+  "following": "Next industry",
+  "servicesNav": "Explore services",
+  "desktop": "Desktop",
+  "mobile": "Mobile",
+  "proposal": "Your offer",
+  "form": "Contact details",
+  "reserve": "Book an appointment",
+  "contact": "Example inquiry",
+  "message": "Follow-up message",
+  "appointment": "Organized appointment",
+  "priority": "Priority",
+  "finding": "Example finding",
+  "action": "Next action",
+  "deliverable": "What moves us forward",
+  "system": "Your acquisition",
+  "systemSub": "Every part connects",
+  "processHint": "Choose a stage to see how the work moves forward.",
+  "heroRoute": [
+    "Ad",
+    "Inquiry",
+    "Appointment"
+  ],
+  "heroRouteLabel": "From attention to conversation",
+  "details": [
+    [
+      "The ad presents a specific offer.",
+      "The page expands on the same offer and makes contact easy.",
+      "The person can message, call or book."
+    ],
+    [
+      "The inquiry enters the CRM with its source identified.",
+      "Follow-up is organized through SMS and email.",
+      "The contact moves toward an appointment with the team."
+    ],
+    [
+      "The website records the action the person takes.",
+      "The CRM connects the inquiry with what happened next.",
+      "Meta receives signals to guide the next decisions."
+    ],
+    [
+      "An offer that is clear at first glance.",
+      "Only the details needed to continue the conversation.",
+      "One primary action, visible on mobile too."
+    ],
+    [
+      "An angle and a hook to open the piece.",
+      "A shot that presents the offer directly.",
+      "Pacing, message and call to action in one piece."
+    ],
+    [
+      "Check that the meaningful action is being measured.",
+      "Connect the ad with the offer on the page.",
+      "Organize how each inquiry is answered and followed up."
+    ]
+  ],
+  "findings": [
+    "Event to check",
+    "Disconnected message",
+    "Pending follow-up"
+  ],
+  "actions": [
+    "Check the event before changing the budget.",
+    "Align the ad, page and call to action.",
+    "Define owners, messages and CRM stages."
+  ],
+  "deliverables": [
+    "Diagnosis and priorities",
+    "Hypotheses and investment allocation",
+    "Creative ready to test",
+    "Campaign and measurement connected",
+    "Decisions with an explanation",
+    "A plan to expand what works"
+  ],
+  "chapters": [
+    "The beginning in digital communication.",
+    "The move into advertising campaign management.",
+    "Strategy connects the parts of the journey.",
+    "Advertising leadership and team coordination."
+  ],
+  "chapterLabel": "Career",
+  "sceneLabels": [
+    "Campaign",
+    "Follow-up",
+    "Connected signals",
+    "Landing page",
+    "Editing desk",
+    "Work priorities"
+  ]
+},
+
+  studio: {
+  "metrics": {
+    "title": "Investment, in perspective.",
+    "intro": "Explore the distribution by industry.",
+    "select": "Select an industry",
+    "replay": "Replay entrance",
+    "share": "of the recorded total",
+    "scale": "Shared scale · USD",
+    "total": "Recorded investment",
+    "chart": "Investment distribution across nine industries",
+    "hint": "Tap a bar or choose an industry."
+  },
+  "demo": "Interactive demonstration",
+  "example": "Illustrative example",
+  "play": "Play",
+  "pause": "Pause",
+  "replay": "Replay",
+  "next": "Advance inquiry",
+  "restart": "Back to start",
+  "device": "Page preview",
+  "desktop": "Desktop",
+  "mobile": "Mobile",
+  "inquiry": "Inquiry",
+  "appointment": "Appointment",
+  "send": "Send event",
+  "received": "Event received by Meta",
+  "origin": "Source · Meta Ads",
+  "contact": "Example inquiry",
+  "message": "Hi, we received your inquiry. The team will help you choose an appointment.",
+  "confirmed": "Appointment arranged",
+  "reserve": "Try booking",
+  "reserved": "Request received",
+  "reservedNote": "This is how the next step is confirmed. This demo does not send data.",
+  "back": "View page",
+  "proposal": "Your next appointment starts here",
+  "proposalNote": "Discover the service and find a time to talk.",
+  "promise": "A clear proposal",
+  "question": "One small detail.",
+  "answer": "See how it fits your routine.",
+  "closing": "Discover the product.",
+  "evidence": "What we found",
+  "action": "What we do",
+  "roadmap": "90-day plan",
+  "days": [
+    "Days 1–30",
+    "Days 31–60",
+    "Days 61–90"
+  ],
+  "titles": [
+    "Meta Ads: from ad to inquiry",
+    "CRM: follow up on every inquiry",
+    "Measurement: connect your website, CRM and Meta",
+    "Landing pages: one page, one clear action",
+    "Creative: from script to finished piece",
+    "Account audit: what to fix and where to start"
+  ],
+  "descriptions": [
+    "Campaigns that connect your offer with people who can message, call or book.",
+    "I organize your contacts and automate messages so every inquiry has a next step.",
+    "I connect actions on your website with team follow-up and the signals Meta receives.",
+    "I design pages that explain your service and make it easy to get in touch on any screen.",
+    "I develop scripts and creative with AI and video editing to test different messages.",
+    "I review the account, measurement and contact journey to prioritize the next decisions."
+  ],
+  "deliverables": [
+    [
+      "Campaign strategy",
+      "Ads for each stage",
+      "Appointment-led optimization"
+    ],
+    [
+      "CRM stages",
+      "SMS and email",
+      "Contact follow-up"
+    ],
+    [
+      "Pixel and events",
+      "CRM connection",
+      "Conversions API"
+    ],
+    [
+      "Responsive design",
+      "Clear primary action",
+      "CRM connection"
+    ],
+    [
+      "Script and hook",
+      "Creative to test",
+      "Editing and closing"
+    ],
+    [
+      "Account diagnosis",
+      "Explained priorities",
+      "90-day plan"
+    ]
+  ],
+  "hints": [
+    "Choose a stage and follow the journey.",
+    "Advance the inquiry to see what happens.",
+    "Choose an action and send its event.",
+    "Switch screens and try booking.",
+    "Play the piece or explore its three scenes.",
+    "Open a finding to see how it is resolved."
+  ],
+  "stages": [
+    [
+      "Ad",
+      "Page",
+      "Inquiry"
+    ],
+    [
+      "New",
+      "Follow-up",
+      "Appointment"
+    ],
+    [
+      "Website",
+      "CRM",
+      "Meta"
+    ],
+    [
+      "Offer",
+      "Action",
+      "Confirmation"
+    ],
+    [
+      "Hook",
+      "Message",
+      "Close"
+    ],
+    [
+      "Measurement",
+      "Offer",
+      "Follow-up"
+    ]
+  ],
+  "evidenceItems": [
+    "The primary action has no verified event.",
+    "The ad and page present different offers.",
+    "An inquiry arrives without an owner or next step."
+  ],
+  "auditActions": [
+    "Verify events and establish a measurement baseline.",
+    "Align the ad, page and call to action.",
+    "Connect owners, messages and CRM stages."
+  ]
+},
+
+  processTour: {
+  "play": "Resume tour",
+  "pause": "Pause tour",
+  "previous": "Previous stage",
+  "next": "Next stage",
+  "auto": "Automatic tour",
+  "paused": "Manual exploration",
+  "hover": "Paused while you explore",
+  "reduced": "Explore each stage",
+  "hint": "Six connected stages. Choose one to see what we do.",
+  "nextLabel": "Up next",
+  "cycle": "A cycle of improvement",
+  "pieces": [
+    [
+      "Account",
+      "Journey",
+      "Priorities"
+    ],
+    [
+      "Objective",
+      "Audiences",
+      "Investment"
+    ],
+    [
+      "Hook",
+      "Message",
+      "Creative"
+    ],
+    [
+      "Events",
+      "Campaign",
+      "Activation"
+    ],
+    [
+      "Review",
+      "Test",
+      "Decision"
+    ],
+    [
+      "Capacity",
+      "Budget",
+      "Expansion"
+    ]
+  ]
+},
+  polish: {
+  "campaignTitles": [
+    "Make your offer visible",
+    "Keep the message connected",
+    "Start a conversation"
+  ],
+  "campaignDescriptions": [
+    "An ad with a clear next step.",
+    "The page continues your promise.",
+    "The inquiry arrives with its source."
+  ],
+  "campaignFoot": [
+    "Discover",
+    "Explore the service",
+    "Get in touch"
+  ],
+  "crmSlots": [
+    "Identify the source",
+    "Send a follow-up",
+    "Confirm the next step"
+  ],
+  "crmReady": "Next in the journey",
+  "crmDone": "Stage completed",
+  "crmCurrent": "Now",
+  "pageAddress": "your-business / booking",
+  "pageBenefits": [
+    "Clear service",
+    "Personal attention",
+    "Simple booking"
+  ],
+  "signalNotes": [
+    "Action recorded",
+    "Contact identified",
+    "Conversion signal"
+  ],
+  "eventRoute": "Event journey",
+  "auditStage": "Work priority"
+},
+
+  serviceVisuals: {
+    label: 'Illustrative example',
+    intro: 'From the first ad to the appointment. Each part connects your investment to a clear next step.',
+    items: [
+      { alt: 'Gold hoop earrings on paper: the product featured in the example ad.', heading: 'Every ad has a next step', stages: ['Ad', 'Landing page', 'Inquiry'], note: 'The campaign leads to a specific action: message, call or book.' },
+      { alt: 'Phone and notebook ready to record a new inquiry.', heading: 'An inquiry that keeps moving', stages: ['New inquiry', 'Follow-up', 'Appointment booked'], note: 'The CRM organizes each contact; messages keep the conversation going.' },
+      { alt: 'A person submits an inquiry form on a tablet.', heading: 'Connect what happens in each place', stages: ['Website', 'CRM', 'Meta'], note: 'Information flows back to the campaign to show which inquiries become appointments.' },
+      { alt: 'Consultation space presenting the service on the example page.', heading: 'One page, one main action', stages: ['Clear offer', 'Short form', 'Book an appointment'], note: 'The ad and the page tell the same story, including on a phone.' },
+      { alt: 'Amber bottle on stone: the opening scene introduces the product.', heading: 'From an idea to a creative you can test', stages: ['Script and hook', 'Filming', 'Editing'], note: 'Each creative tests a specific message and ends with a call to action.' },
+      { alt: 'Event testing screen with a pending event: illustrative evidence of incomplete tracking.', heading: 'Know what to fix first', stages: ['Find the problem', 'Set priorities', 'Define the action'], note: 'A diagnosis with practical steps for the next 90 days.' },
     ],
   },
 

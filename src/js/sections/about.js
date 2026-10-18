@@ -2,6 +2,8 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { shouldReduceMotion } from '../core/lenis.js'
 import { portraits } from '../../data/media.js'
+import { t } from '../../i18n/index.js'
+import { escape as esc } from '../motion/settings.js'
 
 /**
  * Respaldo: monta el retrato solo si el HTML no lo trae ya.
@@ -24,7 +26,7 @@ function mountPortrait() {
        <source srcset="/img/${portrait.src}.webp" type="image/webp" />
        <img src="/img/${portrait.src}.webp" alt="${portrait.alt || ''}"
             width="1000" height="1250" loading="lazy" decoding="async" />
-     </picture>`
+     </picture>`,
   )
   holder.classList.add('has-photo')
   // El nombre accesible pasa a darlo el alt del <img>. Dejar además el
@@ -33,47 +35,65 @@ function mountPortrait() {
   holder.removeAttribute('aria-label')
 }
 
+let current = 0
+export function refreshAbout() {
+  const list = document.querySelector('.about__cv')
+  if (!list) return
+  list.querySelectorAll('li').forEach((li, i) => {
+    const [year, ...rest] = t('about.cv')[i].split(' — ')
+    li.innerHTML = `<span class="about__chapter-year">${year}</span><h3>${esc(rest.join(' — '))}</h3><p>${esc(t('experience.chapters')[i])}</p>`
+    li.classList.toggle('is-active', i === current)
+  })
+  const label = document.querySelector('.about__folio-label')
+  if (label) label.textContent = t('experience.chapterLabel')
+}
 export function initAbout() {
   mountPortrait()
-
   const about = document.querySelector('.about')
-  if (!about || shouldReduceMotion()) return
-
-  gsap.from('.about__content > *', {
-    y: 40,
-    opacity: 0,
-    duration: 1,
-    ease: 'power3.out',
-    stagger: 0.08,
-    scrollTrigger: { trigger: about, start: 'top 70%', once: true },
+  if (!about) return
+  const folio = document.createElement('div')
+  folio.className = 'about__folio'
+  folio.setAttribute('aria-hidden', 'true')
+  folio.innerHTML =
+    '<span class="about__folio-label mono"></span><span class="about__folio-year">2017</span><span class="about__folio-progress"><i></i></span>'
+  about.querySelector('.about__media').append(folio)
+  refreshAbout()
+  const chapters = [...about.querySelectorAll('.about__cv li')]
+  chapters.forEach((chapter, i) => {
+    ScrollTrigger.create({
+      trigger: chapter,
+      start: 'top 65%',
+      end: 'bottom 65%',
+      onEnter: () => activate(i),
+      onEnterBack: () => activate(i),
+    })
   })
-
-  // ⚠ Solo `y`, NUNCA la opacidad. Con `opacity: 0` de salida, el retrato no
-  // existía para nadie que no hiciera scroll hasta aquí: ni para una captura de
-  // página entera, ni para un visor de enlaces. Que se mueva al entrar, sí; que
-  // se esconda hasta entonces, no.
-  gsap.from('.about__media', {
-    y: 60,
-    duration: 1.2,
+  function activate(i) {
+    current = i
+    chapters.forEach((chapter, j) => chapter.classList.toggle('is-active', i === j))
+    folio.querySelector('.about__folio-year').textContent = t('about.cv')[i].split(' — ')[0]
+    folio.querySelector('i').style.transform = `scaleX(${(i + 1) / chapters.length})`
+  }
+  activate(0)
+  if (shouldReduceMotion()) return
+  gsap.from('.about__content > .about__text', {
+    y: 24,
+    duration: 0.9,
+    stagger: 0.1,
     ease: 'power3.out',
     scrollTrigger: { trigger: about, start: 'top 75%', once: true },
   })
-
-  // Parallax de hover sobre el retrato (DESIGN.md: "imagen con hover parallax").
-  const media = document.querySelector('.about__media')
-  const img = document.querySelector('.about__img')
-  if (!media || !img || window.matchMedia('(hover: none)').matches) return
-
-  const moveX = gsap.quickTo(img, 'x', { duration: 0.6, ease: 'power2.out' })
-  const moveY = gsap.quickTo(img, 'y', { duration: 0.6, ease: 'power2.out' })
-
-  media.addEventListener('mousemove', (e) => {
-    const r = media.getBoundingClientRect()
-    moveX(((e.clientX - r.left) / r.width - 0.5) * 24)
-    moveY(((e.clientY - r.top) / r.height - 0.5) * 24)
-  })
-  media.addEventListener('mouseleave', () => {
-    moveX(0)
-    moveY(0)
+  gsap.matchMedia().add('(min-width:1024px)', () => {
+    const image = about.querySelector('.about__picture img')
+    gsap.fromTo(
+      image,
+      { y: -20, scale: 1.045 },
+      {
+        y: 20,
+        scale: 1.045,
+        ease: 'none',
+        scrollTrigger: { trigger: about, start: 'top bottom', end: 'bottom top', scrub: 1 },
+      },
+    )
   })
 }

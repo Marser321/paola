@@ -2,9 +2,9 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { shouldReduceMotion } from '../core/lenis.js'
 
-const DURATION_DESKTOP = 22
-const DURATION_MOBILE = 34 // más lento en móvil (DESIGN.md §8)
-const MAX_BOOST = 5
+const DURATION_DESKTOP = 26
+const DURATION_MOBILE = 36 // más lento en móvil (DESIGN.md §8)
+const MAX_BOOST = 2
 
 export function initMarquee() {
   const marquees = [...document.querySelectorAll('.marquee')]
@@ -31,6 +31,19 @@ export function initMarquee() {
       repeat: -1,
     })
   }).filter(Boolean)
+
+  const visible=new Set()
+  const visibility=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting)visible.add(entry.target);else visible.delete(entry.target)
+    })
+    syncVisibility()
+  },{rootMargin:'15% 0px'})
+  function syncVisibility(){
+    loops.forEach((loop,i)=>loop.paused(!visible.has(marquees[i])||document.hidden))
+  }
+  marquees.forEach(el=>visibility.observe(el))
+  document.addEventListener('visibilitychange',syncVisibility)
 
   // Velocidad ∝ scroll. La velocidad la da ScrollTrigger (no hay listener de
   // 'scroll' propio, PLAN.md §9.8) y decae sola hasta 1.

@@ -20,18 +20,18 @@ import { shouldReduceMotion } from '../core/lenis.js'
 // Oscuro: --gold-deep #8A6A1F · --gold #D4AF37 · --gold-soft #F2DFA6
 // Claro:  --gold-deep #5C4512 · --gold #8A6A1F · --gold-soft #B08D2E
 const PALETTE = {
-  dark: { a: '#8A6A1F', b: '#D4AF37', c: '#F2DFA6', push: 1, alpha: 0.55 },
+  dark: { a: '#8A6A1F', b: '#D4AF37', c: '#F2DFA6', push: 1, alpha: 0.32 },
   // Alfa más baja que en oscuro: sobre negro un punto claro se lee como estrella,
   // pero sobre crema un punto oscuro se lee como mota de suciedad. A 0.28 la
   // nube da profundidad sin ensuciar el papel.
-  light: { a: '#5C4512', b: '#8A6A1F', c: '#B08D2E', push: 0, alpha: 0.28 },
+  light: { a: '#5C4512', b: '#8A6A1F', c: '#B08D2E', push: 0, alpha: 0.18 },
 }
 
 const currentTheme = () =>
   document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'
 
-const COUNT = 6000
-const REPEL_RADIUS = 9
+const COUNT = 3000
+const REPEL_RADIUS = 7
 
 const vertexShader = /* glsl */ `
   uniform float uTime;
@@ -255,7 +255,7 @@ async function mountHeroScene(hero, canvas) {
 
   // Único RAF del sitio: gsap.ticker (PLAN.md §9.8)
   const render = (time) => {
-    if (!isVisible) return
+    if (!isVisible || document.hidden) return
     mouse.lerp(targetMouse, 0.08)
     material.uniforms.uTime.value = time
     material.uniforms.uMouse.value.copy(mouse)

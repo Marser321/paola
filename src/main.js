@@ -9,6 +9,9 @@ import './styles/sale.css'
 import './styles/parallax.css'
 import './styles/seams.css'
 import './styles/mobile-cta.css'
+import './styles/services-visual.css'
+import './styles/experience.css'
+import './styles/studio.css'
 
 import { initI18n, t } from './i18n/index.js'
 import { applyStaticTranslations } from './i18n/apply-dom.js'
@@ -28,11 +31,12 @@ import { initHeroScene } from './js/webgl/hero-scene.js'
 import { initCardDistortion } from './js/webgl/card-distortion.js'
 import { initProjectsGallery } from './js/webgl/projects-gallery.js'
 import { initMarquee } from './js/sections/marquee.js'
+import { initMetricsExperience } from './js/sections/metrics-experience.js'
 import { initMetrics } from './js/sections/metrics.js'
 import { renderProjects, initProjects, refreshProjects } from './js/sections/projects.js'
 import { initServices, refreshServices } from './js/sections/services.js'
-import { initProcess } from './js/sections/process.js'
-import { initAbout } from './js/sections/about.js'
+import { initProcess, refreshProcess } from './js/sections/process.js'
+import { initAbout, refreshAbout } from './js/sections/about.js'
 import { initBackdrops } from './js/sections/backdrops.js'
 import { initSequences } from './js/sections/sequence.js'
 import { renderTestimonials, initTestimonials } from './js/sections/testimonials.js'
@@ -41,7 +45,6 @@ import { initCalculator } from './js/sections/calculator.js'
 import { initFaq } from './js/sections/faq.js'
 import { initContact } from './js/sections/contact.js'
 import { initContactForm } from './js/core/contact-form.js'
-import { initScramble } from './js/fx/scramble.js'
 import { initSplitTitles } from './js/fx/split-titles.js'
 import { initNeon, refreshNeon } from './js/fx/neon.js'
 import { initParallax } from './js/fx/parallax.js'
@@ -68,6 +71,7 @@ initHero()
 initHeroScene()
 initMarquee()
 initMetrics()
+initMetricsExperience()
 initProjects()
 // initCardDistortion()  // t.20 — DESACTIVADO, ver tasks/BLOCKERS.md §B-02
 // La galería 3D es la salida que el propio B-02 proponía: UN renderer para las
@@ -117,7 +121,9 @@ initAvailability()
 window.addEventListener('i18n:change', () => {
   applyStaticTranslations()
   refreshProjects()
-  refreshServices()  // los pies de las muestras se leen al renderizar, no se traducen solos
+  refreshServices()
+  refreshProcess()
+  refreshAbout()
   // refreshProjects() reescribe el track entero, así que las fichas vuelven
   // SIN clase .neon y sin halo. Sin esto se quedan sin borde al cambiar de
   // idioma, y en silencio.
@@ -131,7 +137,7 @@ window.addEventListener('i18n:change', () => {
 // fondos puestos.
 initSeams()
 initSplitTitles()
-initScramble()
+// Text stays readable throughout navigation; no character scrambling.
 // El neón va DESPUÉS de todo: recorre el DOM buscando sus superficies y necesita
 // que las cards ya estén renderizadas y las secciones ya tengan su fondo.
 initNeon()

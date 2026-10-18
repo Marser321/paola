@@ -1,233 +1,174 @@
 import gsap from 'gsap'
-import { shouldReduceMotion } from '../core/lenis.js'
-import { galleries } from '../../data/media.js'
-import { refreshNeon } from '../fx/neon.js'
-import { initCollapse } from '../ui/collapse.js'
 import { t } from '../../i18n/index.js'
+import { shouldReduceMotion, getLenis } from '../core/lenis.js'
+import { enterPanel } from '../motion/settings.js'
+import { createServiceDemo } from './service-demos.js'
 
-// Galería de muestras por servicio.
-//
-// UNA sola superficie, y la misma para todo el mundo: un <button aria-expanded>
-// por renglón que despliega una tira en línea. Funciona con teclado, con lector
-// de pantalla y con el dedo. Reutiliza el patrón que DESIGN.md §13 ya define para
-// el backstage de los anuncios.
-//
-// El problema que resuelve: los renglones dicen «Funnels & CRO» y quien no es del
-// oficio no sabe qué es eso. Si la explicación viviera solo en el hover, seguiría
-// sin saberlo la mitad de las visitas.
-//
-// La tira es una GALERÍA ELÁSTICA: pulsar una muestra la expande y encoge a las
-// otras dos; volver a pulsarla las devuelve al mismo reparto (estilos en
-// sections.css §GALERÍA ELÁSTICA).
-//
-// ⚠ RETIRADO 2026-08-16: había además un panel flotante de escritorio que seguía
-// al cursor (`mountHoverPreview`). Era `aria-hidden` —atrezo que duplicaba lo que
-// el botón ya expone— y con la tira convertida en galería interactiva pasó a
-// estorbar: aparecía justo al acercar el puntero al renglón y tapaba la galería
-// que se quería desplegar. Con él se fueron su CSS y el uso de `onPointerMove`.
-
-/**
- * Miniatura: imagen real si está declarada, gradiente dorado si no.
- * Mismo <picture> de tres líneas que projects.js: con `src` en el manifiesto se
- * sirve la muestra real, sin él el gradiente del sistema.
- *
- * El contenido va dentro de un <button>, no de un <div> con onclick: la muestra
- * es la superficie que abre y cierra la galería elástica, y este módulo entero
- * se construyó alrededor de que la vía real funcione con teclado (ver cabecera).
- *
- * `alt` VACÍO en la imagen y `aria-hidden` en el gradiente a propósito: el pie ya
- * está en el botón, que es quien da el nombre accesible. Repetir la descripción
- * en la imagen la haría sonar dos veces seguidas.
- */
-function thumb(item, caption, index) {
-  const visual = item.src
-    ? `<picture>
-         <source srcset="/img/${item.src}.avif" type="image/avif" />
-         <source srcset="/img/${item.src}.webp" type="image/webp" />
-         <img src="/img/${item.src}.webp" alt=""
-              width="1000" height="1250" loading="lazy" decoding="async" />
-       </picture>`
-    : `<span class="sample__gradient" aria-hidden="true"
-             style="background: linear-gradient(135deg, ${item.gradient[0]}, ${item.gradient[1]})"></span>`
-
-  const n = String(index + 1).padStart(2, '0')
-  return `<li class="sample">
-    <button type="button" class="sample__button" aria-expanded="false">
-      ${visual}
-      <span class="sample__index mono" aria-hidden="true">${n}</span>
-      <span class="sample__caption mono">${caption}</span>
-    </button>
-  </li>`
-}
-
-/** Las muestras de un <li class="service">, o null si no hay galería declarada. */
-function samplesFor(li) {
-  const gallery = galleries[li.dataset.service]
-  if (!gallery?.items?.length) return null
-  const index = [...li.parentElement.children].indexOf(li)
-  const captions = t('services.items')?.[index]?.samples || []
-  return gallery.items.map((item, i) => thumb(item, captions[i] || '', i)).join('')
-}
-
-// Puntero fino. En táctil no hay hover y la elasticidad va por pulsación.
-const punteroFino = () => window.matchMedia('(hover: hover)').matches
-
-/** Abre una muestra y cierra las demás. `null` deja la tira sin ninguna abierta. */
-function abrir(strip, sample) {
-  for (const el of strip.querySelectorAll('.sample')) {
-    const activa = el === sample
-    el.classList.toggle('is-open', activa)
-    el.querySelector('.sample__button')?.setAttribute('aria-expanded', String(activa))
-  }
-}
-
-/**
- * Galería elástica, como el componente del que sale: SIEMPRE hay una muestra
- * abierta y el reparto de ancho sigue al puntero.
- *
- * · La tira nace con la primera abierta. Sin eso se veía plana —tres muestras
- *   del mismo ancho— y no se leía como una galería elástica hasta que alguien
- *   acertaba a pulsar. Aparecer ya en 4:1:1 es lo que enseña que se puede jugar
- *   con ella.
- * · En escritorio el ancho sigue al HOVER, que es de donde viene la sensación de
- *   elasticidad: al cruzar la tira, las muestras se expanden y se encogen en
- *   cadena. Con solo el clic el efecto se sentía rígido.
- * · Al salir el puntero de la tira vuelve a la primera, en vez de quedarse
- *   clavada en la última que se rozó de pasada.
- * · En táctil manda la pulsación, y volver a pulsar la abierta la recoge.
- *
- * Todo con listeners DELEGADOS en la tira —`mouseover` y `mouseout` burbujean—,
- * como el backstage de projects.js: son 15 muestras en cinco tiras y no hacen
- * falta 45 listeners.
- */
-function initElastic(strip) {
-  const primera = () => strip.querySelector('.sample')
-
-  strip.addEventListener('click', (event) => {
-    const button = event.target.closest('.sample__button')
-    if (!button || !strip.contains(button)) return
-    const sample = button.closest('.sample')
-    // Con puntero fino el hover ya la abrió: el clic solo puede recogerla. En
-    // táctil el clic es la única vía, así que alterna.
-    abrir(strip, sample.classList.contains('is-open') ? null : sample)
-    // Aquí NO hace falta ScrollTrigger.refresh(): el acordeón solo reparte ancho
-    // dentro de una tira de altura fija. El que sí cambia la altura de la sección
-    // es el botón del renglón, y ese remide al terminar su transición.
+let rows = [],
+  scenes = [],
+  stage,
+  active = 0
+let desktop = false,
+  navigationTarget = null
+const demos = new WeakMap()
+function show(index) {
+  if (navigationTarget !== null && index !== navigationTarget) return
+  active = index
+  rows.forEach((row, i) => row.classList.toggle('is-active', i === index))
+  scenes.forEach((scene, i) => {
+    const wasHidden = scene.hidden
+    scene.hidden = desktop && i !== index
+    const bounds = scene.getBoundingClientRect()
+    demos
+      .get(scene)
+      ?.setVisible(
+        !scene.hidden && bounds.bottom > 0 && bounds.top < innerHeight,
+      )
+    if (desktop && i === index && wasHidden) enterPanel(scene)
   })
-
-  if (!punteroFino() || shouldReduceMotion()) return
-
-  strip.addEventListener('mouseover', (event) => {
-    const sample = event.target.closest?.('.sample')
-    if (sample && strip.contains(sample)) abrir(strip, sample)
-  })
-
-  strip.addEventListener('mouseout', (event) => {
-    // `mouseout` salta también al pasar de una muestra a su vecina. Solo cuenta
-    // como salida si el puntero acabó FUERA de la tira; sin esta guarda la
-    // galería volvería a la primera en cada salto entre muestras.
-    if (strip.contains(event.relatedTarget)) return
-    abrir(strip, primera())
-  })
+  stage
+    ?.querySelectorAll('[data-service-jump]')
+    .forEach((b, i) => b.setAttribute('aria-pressed', String(i === index)))
 }
-
-/**
- * Vía accesible: un botón por renglón que despliega la tira en línea.
- * Se monta siempre — también en escritorio, o la galería sería inalcanzable sin
- * ratón — y se rellena en el primer despliegue, no antes: cinco tiras montadas de
- * salida son quince nodos de imagen que nadie ha pedido todavía.
- */
-function mountToggles(rows) {
-  rows.forEach((li, i) => {
-    if (!galleries[li.dataset.service]) return
-
-    const id = `service-samples-${i}`
-    const button = document.createElement('button')
-    button.className = 'service__toggle mono'
-    button.type = 'button'
-    button.textContent = t('services.toggle') || '+'
-    // `aria-expanded` y `aria-controls` los pone initCollapse (ui/collapse.js).
-
-    // El colapso envuelve a la tira. El estado vive AQUÍ, no en un `hidden` sobre
-    // la tira: `hidden` no la ocultaba —el `display: flex` de la hoja lo anulaba—
-    // y además impediría animar el despliegue. Ver sections.css §CONTENEDOR DE
-    // COLAPSO.
-    const collapse = document.createElement('div')
-    collapse.className = 'service__collapse'
-    collapse.id = id
-
-    const strip = document.createElement('ul')
-    strip.className = 'service__strip'
-
-    collapse.append(strip)
-    li.append(button, collapse)
-    initElastic(strip)
-
-    // El estado, el `inert` y la remedida de ScrollTrigger —que aquí hace falta
-    // de verdad: la tira cambia la altura de la sección y .services__header es
-    // sticky con triggers ya medidos— los lleva el contrato compartido con el
-    // acordeón de la FAQ (ui/collapse.js). Aquí solo queda lo que es de esta
-    // sección: rellenar la tira en el primer despliegue.
-    initCollapse(button, collapse, {
-      onOpen: () => {
-        if (strip.childElementCount) return
-        strip.innerHTML = samplesFor(li) || ''
-        // Las muestras nacen aquí, en el primer despliegue, mucho después de
-        // initNeon(). Sin este aviso se quedarían sin borde de foco.
-        refreshNeon()
-        // La tira se muestra YA en 4:1:1, no plana: es lo que enseña que la
-        // galería es elástica sin tener que descubrirlo pulsando.
-        abrir(strip, strip.querySelector('.sample'))
-      },
-    })
-  })
-}
-
-/**
- * Cambio de idioma en caliente. Los pies de las muestras se leen del diccionario
- * al RENDERIZAR, así que una tira ya montada se quedaría en el idioma anterior.
- * Se vacía para que se regenere al volver a abrirla, y se retraduce el botón.
- * Mismo papel que refreshProjects() con las cards.
- */
 export function refreshServices() {
-  document.querySelectorAll('.service__toggle').forEach((button) => {
-    button.textContent = t('services.toggle') || '+'
+  const intro = document.querySelector('.services__intro')
+  if (intro) intro.textContent = t('serviceVisuals.intro')
+  rows.forEach((row, i) => {
+    let list = row.querySelector('.service__deliverables')
+    if (!list) {
+      list = document.createElement('ul')
+      list.className = 'service__deliverables'
+      for (let j = 0; j < 3; j++) list.append(document.createElement('li'))
+      row.querySelector('.service__copy').append(list)
+    }
+    ;[...list.children].forEach(
+      (li, j) => (li.textContent = t('studio.deliverables')[i][j]),
+    )
+    let hint = row.querySelector('.service__hint')
+    if (!hint) {
+      hint = document.createElement('p')
+      hint.className = 'service__hint'
+      row.querySelector('.service__copy').append(hint)
+    }
+    hint.textContent = t('studio.hints')[i]
+    demos.get(scenes[i])?.refresh()
   })
-  document.querySelectorAll('.service__strip').forEach((strip) => {
-    // El estado está en el contenedor de colapso, no en la tira.
-    if (!strip.parentElement.classList.contains('is-open')) strip.innerHTML = ''
-    else {
-      const li = strip.closest('.service')
-      strip.innerHTML = samplesFor(li) || ''
-      // Muestras recreadas = muestras sin clase .neon ni halo. Sin esto, cambiar
-      // de idioma con la tira abierta deja las tarjetas sin borde, en silencio.
-      refreshNeon()
-      // Y sin ninguna abierta, que es como sale del render.
-      abrir(strip, strip.querySelector('.sample'))
+  stage
+    ?.querySelector('.service-stage__nav')
+    ?.setAttribute('aria-label', t('experience.servicesNav'))
+  stage
+    ?.querySelectorAll('[data-service-jump]')
+    .forEach((b, i) =>
+      b.setAttribute('aria-label', t('services.items')[i].title),
+    )
+  show(active)
+}
+export function initServices() {
+  const header = document.querySelector('.services__header')
+  if (!header) return
+  rows = [...document.querySelectorAll('.service')]
+  const intro = document.createElement('p')
+  intro.className = 'services__intro'
+  header.append(intro)
+  const shell = document.createElement('div')
+  shell.className = 'services__experience'
+  const list = document.querySelector('.services__list')
+  list.before(shell)
+  shell.append(list)
+  stage = document.createElement('div')
+  stage.className = 'service-stage'
+  stage.innerHTML = `<div class="service-stage__sticky"><div class="service-stage__scenes"></div><div class="service-stage__nav" role="group">${rows.map((_, i) => `<button type="button" data-service-jump="${i}"><span class="mono">0${i + 1}</span></button>`).join('')}</div></div>`
+  shell.append(stage)
+  scenes = rows.map((row, i) => {
+    row.id = `service-${row.dataset.service}`
+    row.querySelector('.service__fallback')?.remove()
+    const copy = document.createElement('div')
+    copy.className = 'service__copy'
+    copy.append(...row.children)
+    const scene = document.createElement('div')
+    scene.className = `service-scene service-scene--${row.dataset.service}`
+    scene.dataset.serviceIndex = i
+    scene.id = `service-scene-${i}`
+    row.append(copy, scene)
+    return scene
+  })
+  scenes.forEach((scene, i) =>
+    demos.set(scene, createServiceDemo(scene, i, rows[i].dataset.service)),
+  )
+  refreshServices()
+  shell.addEventListener('click', (event) => {
+    const jump = event.target.closest('[data-service-jump]')
+    if (jump) {
+      const i = Number(jump.dataset.serviceJump)
+      navigationTarget = i
+      const finish = () => {
+        navigationTarget = null
+        show(i)
+      }
+      const lenis = getLenis()
+      if (lenis)
+        lenis.scrollTo(rows[i], {
+          offset: -(window.innerHeight - rows[i].offsetHeight) / 2,
+          duration: 0.8,
+          onComplete: finish,
+        })
+      else {
+        rows[i].scrollIntoView({
+          behavior: shouldReduceMotion() ? 'instant' : 'smooth',
+          block: 'center',
+        })
+        setTimeout(finish, shouldReduceMotion() ? 0 : 800)
+      }
+      show(i)
+      return
     }
   })
-}
-
-export function initServices() {
-  const list = document.querySelector('.services__list')
-  if (!list) return
-
-  const rows = [...list.querySelectorAll('.service')]
-  mountToggles(rows) // botón + tira elástica: la misma vía para todo el mundo
-
-  if (shouldReduceMotion()) return
-
-  // El header es sticky por CSS (tarea 02): aquí solo entran los items.
-  gsap.from('.service', {
-    y: 60,
-    opacity: 0,
-    duration: 1,
-    ease: 'power3.out',
-    stagger: 0.12,
-    scrollTrigger: {
-      trigger: list,
-      start: 'top 80%',
-      once: true,
-    },
+  gsap.matchMedia().add('(min-width: 1024px) and (min-height: 700px)', () => {
+    desktop = true
+    scenes.forEach((scene) =>
+      stage.querySelector('.service-stage__scenes').append(scene),
+    )
+    const triggers = rows.map((row, i) =>
+      gsap.to(
+        {},
+        {
+          scrollTrigger: {
+            trigger: row,
+            start: 'top 50%',
+            end: 'bottom 50%',
+            onEnter: () => show(i),
+            onEnterBack: () => show(i),
+          },
+        },
+      ),
+    )
+    show(active)
+    return () => {
+      triggers.forEach((tween) => tween.scrollTrigger?.kill())
+      desktop = false
+      scenes.forEach((scene, i) => rows[i].append(scene))
+      show(active)
+    }
+  })
+  const observer = new IntersectionObserver(
+    (entries) =>
+      entries.forEach((entry) => {
+        demos
+          .get(entry.target)
+          ?.setVisible(entry.isIntersecting && !entry.target.hidden)
+      }),
+    { threshold: 0.3 },
+  )
+  scenes.forEach((scene) => observer.observe(scene))
+  document.addEventListener('visibilitychange', () => {
+    scenes.forEach((scene) => {
+      const bounds = scene.getBoundingClientRect()
+      const visible =
+        !document.hidden &&
+        !scene.hidden &&
+        bounds.bottom > 0 &&
+        bounds.top < innerHeight
+      demos.get(scene)?.setVisible(visible)
+    })
   })
 }

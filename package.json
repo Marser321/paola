@@ -11,11 +11,12 @@
     "build": "vite build && node scripts/check-contenido.mjs",
     "preview": "vite preview",
     "og": "node scripts/og/build-og.mjs",
-    "check": "npm run check:i18n && npm run check:media && npm run test:contacto",
+    "check": "npm run check:i18n && npm run check:media && npm run test:contacto && npm run test:metrics",
     "check:media": "node scripts/check-media.mjs",
     "check:i18n": "node scripts/check-i18n.mjs",
     "check:contenido": "node scripts/check-contenido.mjs",
-    "test:contacto": "node scripts/test-contacto.mjs"
+    "test:contacto": "node scripts/test-contacto.mjs",
+    "test:metrics": "node --test scripts/test-metrics-layout.mjs"
   },
   "devDependencies": {
     "vite": "^8.2.0"

@@ -33,7 +33,7 @@ import { onPointerMove } from '../core/cursor.js'
 // `.report__panel` y `.hud` salieron de aquí el 2026-08-16 con el concepto
 // «la campaña eres tú»; sus superficies las heredan las del bloque de venta.
 const SURFACES =
-  '.project-card, .contact-form, .testimonial, .sample, .plan-card, .calc__panel, .faq__item'
+  '.project-card, .testimonial, .sample, .plan-card, .calc__panel, .faq__item'
 
 // Observer del gate de la floración. En scope de módulo para que refreshNeon()
 // pueda observar las superficies nuevas sin montar un segundo observer.

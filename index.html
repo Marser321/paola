@@ -66,6 +66,12 @@
     <link rel="preload" href="/fonts/ClashDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/JetBrainsMono-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <noscript><style>
+      #preloader, .hero__scroll { display: none !important; }
+      .services__list .service, .process__steps .step { display: block; }
+      .service__title, .service__desc, .service__tags, .service__fallback, .step__title, .step__desc { margin-top: 1rem; }
+      .process__steps .step { padding-block: 1.5rem; }
+    </style></noscript>
   </head>
   <body>
     <!-- PRELOADER — arranque de campaña (CONTENT.md §1) -->
@@ -208,7 +214,7 @@
               <span class="section-label__name">Sectores</span>
             </p>
             <h2 class="section-title">Cuatro sectores, <span class="accent-text">%PCT_DESTACADOS%%</span> de la inversión</h2>
-            <p class="projects__hint mono">Arrastra el scroll →</p>
+            <p class="projects__hint mono">Explora los sectores →</p>
             <div class="projects__progress"><span class="projects__progress-fill"></span></div>
           </div>
           <div class="projects__viewport">
@@ -232,40 +238,46 @@
           <ul class="services__list">
             <li class="service" data-hover data-service="meta-ads">
               <span class="service__index mono">01</span>
-              <h3 class="service__title">Estrategia y campañas en Meta Ads</h3>
-              <p class="service__desc">Campañas por etapa del embudo que se optimizan por citas y clientes, no por leads baratos.</p>
+              <h3 class="service__title">Meta Ads: del anuncio a la consulta</h3>
+              <p class="service__desc">Campañas que conectan tu propuesta con personas que pueden escribir, llamar o reservar.</p>
               <span class="service__tags mono">Facebook · Instagram · TOFU-MOFU-BOFU</span>
-            </li>
+            <picture class="service__fallback"><source srcset="/img/servicio-meta-ads-v5.avif" type="image/avif"/><img src="/img/servicio-meta-ads-v5.webp" alt="Aretes dorados sobre papel: producto presentado en el anuncio de ejemplo." width="1200" height="800" loading="lazy" decoding="async"/></picture>
+</li>
             <li class="service" data-hover data-service="crm-ghl">
               <span class="service__index mono">02</span>
-              <h3 class="service__title">CRM y automatizaciones en GoHighLevel</h3>
-              <p class="service__desc">Cada lead entra al CRM en su etapa y recibe seguimiento automático por SMS y correo, para que ninguno se quede sin respuesta.</p>
+              <h3 class="service__title">CRM: cada consulta, con seguimiento</h3>
+              <p class="service__desc">Organizo tus contactos y automatizo los mensajes para que cada consulta tenga un siguiente paso.</p>
               <span class="service__tags mono">GoHighLevel · Pipelines · SMS y correo</span>
-            </li>
+            <picture class="service__fallback"><source srcset="/img/servicio-crm-ghl-v5.avif" type="image/avif"/><img src="/img/servicio-crm-ghl-v5.webp" alt="Teléfono y libreta para registrar una nueva consulta." width="1200" height="800" loading="lazy" decoding="async"/></picture>
+</li>
             <li class="service" data-hover data-service="medicion">
               <span class="service__index mono">03</span>
-              <h3 class="service__title">Medición: píxel, eventos y API de Conversiones</h3>
-              <p class="service__desc">Eventos que cuadran entre la web, el CRM y Meta; la API de Conversiones le devuelve a Meta qué leads se volvieron citas.</p>
+              <h3 class="service__title">Medición: conecta la web, el CRM y Meta</h3>
+              <p class="service__desc">Conecto las acciones de tu página con el seguimiento del equipo y las señales que recibe Meta.</p>
               <span class="service__tags mono">Píxel · Eventos · CAPI</span>
-            </li>
+            <picture class="service__fallback"><source srcset="/img/servicio-medicion-consulta-v6.avif" type="image/avif"/><img src="/img/servicio-medicion-consulta-v6.webp" alt="Una persona envía una consulta desde un formulario en una tableta." width="1200" height="800" loading="lazy" decoding="async"/></picture>
+</li>
             <li class="service" data-hover data-service="landings">
               <span class="service__index mono">04</span>
-              <h3 class="service__title">Landing pages y embudos</h3>
-              <p class="service__desc">Páginas hechas para una sola acción —agendar, llamar o cotizar— y conectadas al CRM desde el primer día.</p>
+              <h3 class="service__title">Landing pages: una página, una acción clara</h3>
+              <p class="service__desc">Diseño páginas que explican tu servicio y facilitan el contacto desde cualquier pantalla.</p>
               <span class="service__tags mono">GHL · WordPress · Shopify</span>
-            </li>
+            <picture class="service__fallback"><source srcset="/img/servicio-landings-v5.avif" type="image/avif"/><img src="/img/servicio-landings-v5.webp" alt="Espacio de consulta que presenta el servicio de la página de ejemplo." width="1200" height="800" loading="lazy" decoding="async"/></picture>
+</li>
             <li class="service" data-hover data-service="ia-video">
               <span class="service__index mono">05</span>
-              <h3 class="service__title">Piezas con IA, guiones y edición de video</h3>
-              <p class="service__desc">Creativos con una hipótesis detrás: guion, gancho y edición, para probar ángulos sin esperar a una gran producción.</p>
+              <h3 class="service__title">Creativos: del guion a la pieza</h3>
+              <p class="service__desc">Desarrollo guiones y piezas con IA y edición de video para probar distintos mensajes.</p>
               <span class="service__tags mono">IA · Guiones · Premiere · Canva</span>
-            </li>
+            <picture class="service__fallback"><source srcset="/img/servicio-ia-video-v5.avif" type="image/avif"/><img src="/img/servicio-ia-video-v5.webp" alt="Frasco ámbar sobre piedra: primera escena para presentar el producto." width="1200" height="800" loading="lazy" decoding="async"/></picture>
+</li>
             <li class="service" data-hover data-service="auditoria">
               <span class="service__index mono">06</span>
-              <h3 class="service__title">Auditoría de cuenta</h3>
-              <p class="service__desc">Qué está fallando en tu cuenta y en qué orden arreglarlo, con un plan de 90 días que puedes ejecutar conmigo o sin mí.</p>
+              <h3 class="service__title">Auditoría: qué corregir y por dónde empezar</h3>
+              <p class="service__desc">Reviso la cuenta, la medición y el recorrido de contacto para ordenar las próximas decisiones.</p>
               <span class="service__tags mono">Cuenta · Medición · Roadmap</span>
-            </li>
+            <picture class="service__fallback"><source srcset="/img/servicio-auditoria-medicion-v6.avif" type="image/avif"/><img src="/img/servicio-auditoria-medicion-v6.webp" alt="Pantalla de comprobación con un evento pendiente: evidencia ilustrativa de una medición incompleta." width="1200" height="800" loading="lazy" decoding="async"/></picture>
+</li>
           </ul>
         </div>
       </section>
@@ -632,7 +644,7 @@
                El destino lo escribe vite.config.js: el correo de perfil.js si lo
                hay, y si no, el formulario de aquí abajo. -->
           <h2 class="contact__cta-heading">
-            <a %CTA_CONTACTO% class="contact__cta" data-hover data-magnetic>
+            <a %CTA_CONTACTO% class="contact__cta" data-hover>
               <span class="contact__cta-text">¿Escalamos?</span>
             </a>
           </h2>

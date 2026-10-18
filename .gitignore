@@ -47,3 +47,7 @@ Selección/
 ENTREGA-ANIMACION/**/*.png
 ENTREGA-ANIMACION/**/*.jpg
 ENTREGA-ANIMACION/**/*.mp4
+
+# macOS filesystem metadata
+._*
+output/

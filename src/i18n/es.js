@@ -11,6 +11,38 @@
 // 4.2x», «+$2M gestionados», seis clientes y tres testimonios que no existían.
 
 export const es = {
+  serviceStateAlts: [
+  [
+    "Aretes dorados sobre papel: producto presentado en el anuncio de ejemplo.",
+    "Página de joyería en un portátil: la propuesta del anuncio continúa en la web.",
+    "Una clienta y una asesora conversan sobre los aretes en el mostrador."
+  ],
+  [
+    "Teléfono y libreta para registrar una nueva consulta.",
+    "Conversación de seguimiento en el teléfono junto a una libreta de notas.",
+    "Agenda de citas con un día señalado para confirmar el encuentro."
+  ],
+  [
+    "Una persona envía una consulta desde un formulario en una tableta.",
+    "Calendario en pantalla con una cita seleccionada y confirmada.",
+    "Verificación de eventos recibidos con indicadores de confirmación en pantalla."
+  ],
+  [
+    "Espacio de consulta que presenta el servicio de la página de ejemplo.",
+    "Versión para celular de una página de reservas con formulario y fotografía del espacio.",
+    "Confirmación de una reserva en un teléfono con símbolo de calendario."
+  ],
+  [
+    "Frasco ámbar sobre piedra: primera escena para presentar el producto.",
+    "Detalle de un gotero y una gota: segunda escena para mostrar el uso del producto.",
+    "Frasco ámbar y su empaque: escena final de presentación del producto."
+  ],
+  [
+    "Pantalla de comprobación con un evento pendiente: evidencia ilustrativa de una medición incompleta.",
+    "Dos piezas impresas con productos distintos: ejemplo de una propuesta que pierde coherencia.",
+    "Proceso de seguimiento con una etapa sin completar: ejemplo de una consulta sin próximo paso."
+  ]
+],
   htmlLang: 'es-US',
   title: 'Paola Parra — Paid Media Manager · Meta Ads, embudos y CRM',
   description:
@@ -73,7 +105,7 @@ export const es = {
     // {pct} lo calcula apply-dom.js desde sectores.js: la cifra no se escribe a mano.
     // Sin espacio antes del %, como lo escribe Intl en es-US (y como se lee en EE. UU.).
     title: 'Cuatro sectores, <span class="accent-text">{pct}%</span> de la inversión',
-    hint: 'Arrastra el scroll →',
+    hint: 'Explora los sectores →',
     invested: 'invertidos en Meta Ads',
     share: '{pct}% del total',
     delta: 'De {antes} a {despues}',
@@ -105,12 +137,376 @@ export const es = {
     // pie (que hace también de `alt`) va en `samples` de cada servicio.
     toggle: 'Ver muestras de este trabajo',
     items: [
-      { title: 'Estrategia y campañas en Meta Ads', desc: 'Campañas por etapa del embudo que se optimizan por citas y clientes, no por leads baratos.', tags: 'Facebook · Instagram · TOFU-MOFU-BOFU' },
-      { title: 'CRM y automatizaciones en GoHighLevel', desc: 'Cada lead entra al CRM en su etapa y recibe seguimiento automático por SMS y correo, para que ninguno se quede sin respuesta.', tags: 'GoHighLevel · Pipelines · SMS y correo' },
-      { title: 'Medición: píxel, eventos y API de Conversiones', desc: 'Eventos que cuadran entre la web, el CRM y Meta; la API de Conversiones le devuelve a Meta qué leads se volvieron citas.', tags: 'Píxel · Eventos · CAPI' },
-      { title: 'Landing pages y embudos', desc: 'Páginas hechas para una sola acción —agendar, llamar o cotizar— y conectadas al CRM desde el primer día.', tags: 'GHL · WordPress · Shopify' },
-      { title: 'Piezas con IA, guiones y edición de video', desc: 'Creativos con una hipótesis detrás: guion, gancho y edición, para probar ángulos sin esperar a una gran producción.', tags: 'IA · Guiones · Premiere · Canva' },
-      { title: 'Auditoría de cuenta', desc: 'Qué está fallando en tu cuenta y en qué orden arreglarlo, con un plan de 90 días que puedes ejecutar conmigo o sin mí.', tags: 'Cuenta · Medición · Roadmap' },
+  {
+    "title": "Meta Ads: del anuncio a la consulta",
+    "desc": "Campañas que conectan tu propuesta con personas que pueden escribir, llamar o reservar.",
+    "tags": "Facebook · Instagram · TOFU-MOFU-BOFU"
+  },
+  {
+    "title": "CRM: cada consulta, con seguimiento",
+    "desc": "Organizo tus contactos y automatizo los mensajes para que cada consulta tenga un siguiente paso.",
+    "tags": "GoHighLevel · Pipelines · SMS y correo"
+  },
+  {
+    "title": "Medición: conecta la web, el CRM y Meta",
+    "desc": "Conecto las acciones de tu página con el seguimiento del equipo y las señales que recibe Meta.",
+    "tags": "Píxel · Eventos · CAPI"
+  },
+  {
+    "title": "Landing pages: una página, una acción clara",
+    "desc": "Diseño páginas que explican tu servicio y facilitan el contacto desde cualquier pantalla.",
+    "tags": "GHL · WordPress · Shopify"
+  },
+  {
+    "title": "Creativos: del guion a la pieza",
+    "desc": "Desarrollo guiones y piezas con IA y edición de video para probar distintos mensajes.",
+    "tags": "IA · Guiones · Premiere · Canva"
+  },
+  {
+    "title": "Auditoría: qué corregir y por dónde empezar",
+    "desc": "Reviso la cuenta, la medición y el recorrido de contacto para ordenar las próximas decisiones.",
+    "tags": "Cuenta · Medición · Roadmap"
+  }
+],
+  },
+
+  experience: {
+  "explore": "Explora cómo funciona",
+  "replay": "Repetir recorrido",
+  "next": "Avanzar consulta",
+  "previous": "Sector anterior",
+  "following": "Sector siguiente",
+  "servicesNav": "Explorar servicios",
+  "desktop": "Escritorio",
+  "mobile": "Celular",
+  "proposal": "Tu propuesta",
+  "form": "Datos de contacto",
+  "reserve": "Reservar una cita",
+  "contact": "Consulta de ejemplo",
+  "message": "Mensaje de seguimiento",
+  "appointment": "Cita organizada",
+  "priority": "Prioridad",
+  "finding": "Hallazgo de ejemplo",
+  "action": "Siguiente acción",
+  "deliverable": "Con qué avanzamos",
+  "system": "Tu captación",
+  "systemSub": "Cada parte conecta",
+  "processHint": "Elige una etapa para ver cómo avanza el trabajo.",
+  "heroRoute": [
+    "Anuncio",
+    "Consulta",
+    "Cita"
+  ],
+  "heroRouteLabel": "De la atención a la conversación",
+  "details": [
+    [
+      "El anuncio presenta una propuesta concreta.",
+      "La página amplía la misma propuesta y facilita el contacto.",
+      "La persona puede escribir, llamar o reservar."
+    ],
+    [
+      "La consulta entra al CRM con su origen identificado.",
+      "Se organiza el seguimiento por SMS y correo.",
+      "El contacto avanza a una cita con el equipo."
+    ],
+    [
+      "La web registra la acción que realiza la persona.",
+      "El CRM conecta la consulta con lo que pasó después.",
+      "Meta recibe señales para orientar las siguientes decisiones."
+    ],
+    [
+      "Una propuesta que se entiende al primer vistazo.",
+      "Solo los datos necesarios para continuar la conversación.",
+      "Una acción principal, visible también desde el celular."
+    ],
+    [
+      "Un ángulo y un gancho para abrir la pieza.",
+      "Una toma que muestra la propuesta de forma directa.",
+      "Ritmo, mensaje y llamada a la acción en una misma pieza."
+    ],
+    [
+      "Revisar que se mida la acción que importa.",
+      "Conectar el anuncio con la propuesta de la página.",
+      "Ordenar cómo se responde y se acompaña cada consulta."
+    ]
+  ],
+  "findings": [
+    "Evento sin revisar",
+    "Mensaje desconectado",
+    "Seguimiento pendiente"
+  ],
+  "actions": [
+    "Comprobar el evento antes de cambiar el presupuesto.",
+    "Alinear anuncio, página y llamada a la acción.",
+    "Definir responsables, mensajes y etapas del CRM."
+  ],
+  "deliverables": [
+    "Diagnóstico y prioridades",
+    "Hipótesis y distribución de inversión",
+    "Piezas listas para probar",
+    "Campaña y medición conectadas",
+    "Decisiones con una explicación",
+    "Plan para ampliar lo que funciona"
+  ],
+  "chapters": [
+    "El comienzo en comunicación digital.",
+    "El paso a la gestión de campañas publicitarias.",
+    "La estrategia conecta las piezas del recorrido.",
+    "Dirección de publicidad y coordinación del equipo."
+  ],
+  "chapterLabel": "Trayectoria",
+  "sceneLabels": [
+    "Campaña",
+    "Seguimiento",
+    "Señales conectadas",
+    "Página de destino",
+    "Mesa de edición",
+    "Orden de trabajo"
+  ]
+},
+
+  studio: {
+  "metrics": {
+    "title": "La inversión toma forma.",
+    "intro": "Explora la distribución por industria.",
+    "select": "Selecciona una industria",
+    "replay": "Repetir entrada",
+    "share": "del total registrado",
+    "scale": "Escala común · USD",
+    "total": "Inversión registrada",
+    "chart": "Distribución de inversión en nueve industrias",
+    "hint": "Toca una barra o elige una industria."
+  },
+  "demo": "Demostración interactiva",
+  "example": "Ejemplo ilustrativo",
+  "play": "Reproducir",
+  "pause": "Pausar",
+  "replay": "Repetir",
+  "next": "Avanzar consulta",
+  "restart": "Volver al inicio",
+  "device": "Vista de la página",
+  "desktop": "Escritorio",
+  "mobile": "Celular",
+  "inquiry": "Consulta",
+  "appointment": "Cita",
+  "send": "Enviar evento",
+  "received": "Evento recibido en Meta",
+  "origin": "Origen · Meta Ads",
+  "contact": "Consulta de ejemplo",
+  "message": "Hola, recibimos tu consulta. El equipo te ayudará a elegir una cita.",
+  "confirmed": "Cita organizada",
+  "reserve": "Probar reserva",
+  "reserved": "Solicitud recibida",
+  "reservedNote": "Así se confirma el siguiente paso. Esta demostración no envía datos.",
+  "back": "Ver página",
+  "proposal": "Tu próxima cita empieza aquí",
+  "proposalNote": "Conoce el servicio y encuentra un momento para hablar.",
+  "promise": "Una propuesta clara",
+  "question": "Un pequeño detalle.",
+  "answer": "Así se incorpora a tu rutina.",
+  "closing": "Conoce el producto.",
+  "evidence": "Qué encontramos",
+  "action": "Qué hacemos",
+  "roadmap": "Plan de 90 días",
+  "days": [
+    "Días 1–30",
+    "Días 31–60",
+    "Días 61–90"
+  ],
+  "titles": [
+    "Meta Ads: del anuncio a la consulta",
+    "CRM: cada consulta, con seguimiento",
+    "Medición: conecta la web, el CRM y Meta",
+    "Landing pages: una página, una acción clara",
+    "Creativos: del guion a la pieza",
+    "Auditoría: qué corregir y por dónde empezar"
+  ],
+  "descriptions": [
+    "Campañas que conectan tu propuesta con personas que pueden escribir, llamar o reservar.",
+    "Organizo tus contactos y automatizo los mensajes para que cada consulta tenga un siguiente paso.",
+    "Conecto las acciones de tu página con el seguimiento del equipo y las señales que recibe Meta.",
+    "Diseño páginas que explican tu servicio y facilitan el contacto desde cualquier pantalla.",
+    "Desarrollo guiones y piezas con IA y edición de video para probar distintos mensajes.",
+    "Reviso la cuenta, la medición y el recorrido de contacto para ordenar las próximas decisiones."
+  ],
+  "deliverables": [
+    [
+      "Estrategia de campaña",
+      "Anuncios por etapa",
+      "Optimización por citas"
+    ],
+    [
+      "Etapas del CRM",
+      "SMS y correo",
+      "Seguimiento de contactos"
+    ],
+    [
+      "Píxel y eventos",
+      "Conexión con el CRM",
+      "API de Conversiones"
+    ],
+    [
+      "Diseño adaptable",
+      "Acción principal clara",
+      "Conexión al CRM"
+    ],
+    [
+      "Guion y gancho",
+      "Piezas para probar",
+      "Edición y cierre"
+    ],
+    [
+      "Diagnóstico de cuenta",
+      "Prioridades explicadas",
+      "Plan de 90 días"
+    ]
+  ],
+  "hints": [
+    "Elige una etapa y sigue el recorrido.",
+    "Avanza la consulta para ver qué sucede.",
+    "Elige una acción y envía su evento.",
+    "Cambia de pantalla y prueba la reserva.",
+    "Reproduce la pieza o explora sus tres escenas.",
+    "Abre un hallazgo para ver cómo se resuelve."
+  ],
+  "stages": [
+    [
+      "Anuncio",
+      "Página",
+      "Consulta"
+    ],
+    [
+      "Ingreso",
+      "Seguimiento",
+      "Cita"
+    ],
+    [
+      "Web",
+      "CRM",
+      "Meta"
+    ],
+    [
+      "Propuesta",
+      "Acción",
+      "Confirmación"
+    ],
+    [
+      "Gancho",
+      "Mensaje",
+      "Cierre"
+    ],
+    [
+      "Medición",
+      "Propuesta",
+      "Seguimiento"
+    ]
+  ],
+  "evidenceItems": [
+    "La acción principal no tiene un evento comprobado.",
+    "El anuncio y la página presentan propuestas distintas.",
+    "Una consulta entra sin responsable ni próximo paso."
+  ],
+  "auditActions": [
+    "Comprobar eventos y establecer una base de medición.",
+    "Alinear anuncio, página y llamada a la acción.",
+    "Conectar responsables, mensajes y etapas del CRM."
+  ]
+},
+
+  processTour: {
+  "play": "Reanudar recorrido",
+  "pause": "Pausar recorrido",
+  "previous": "Etapa anterior",
+  "next": "Etapa siguiente",
+  "auto": "Recorrido automático",
+  "paused": "Exploración manual",
+  "hover": "En pausa mientras exploras",
+  "reduced": "Explora cada etapa",
+  "hint": "Seis etapas conectadas. Elige una para ver qué hacemos.",
+  "nextLabel": "Después",
+  "cycle": "Un ciclo de mejora",
+  "pieces": [
+    [
+      "Cuenta",
+      "Recorrido",
+      "Prioridades"
+    ],
+    [
+      "Objetivo",
+      "Audiencias",
+      "Inversión"
+    ],
+    [
+      "Gancho",
+      "Mensaje",
+      "Pieza"
+    ],
+    [
+      "Eventos",
+      "Campaña",
+      "Activación"
+    ],
+    [
+      "Lectura",
+      "Prueba",
+      "Decisión"
+    ],
+    [
+      "Capacidad",
+      "Presupuesto",
+      "Expansión"
+    ]
+  ]
+},
+  polish: {
+  "campaignTitles": [
+    "Tu propuesta, visible",
+    "Un mensaje conectado",
+    "La conversación empieza"
+  ],
+  "campaignDescriptions": [
+    "Un anuncio con una acción clara.",
+    "La página continúa lo que prometiste.",
+    "La consulta llega con su origen."
+  ],
+  "campaignFoot": [
+    "Descubrir",
+    "Conocer el servicio",
+    "Iniciar contacto"
+  ],
+  "crmSlots": [
+    "Identificar el origen",
+    "Enviar seguimiento",
+    "Confirmar el siguiente paso"
+  ],
+  "crmReady": "Por aquí continúa",
+  "crmDone": "Etapa recorrida",
+  "crmCurrent": "Ahora",
+  "pageAddress": "tu-negocio / reserva",
+  "pageBenefits": [
+    "Servicio claro",
+    "Atención personal",
+    "Reserva sencilla"
+  ],
+  "signalNotes": [
+    "Acción registrada",
+    "Contacto identificado",
+    "Señal de conversión"
+  ],
+  "eventRoute": "Recorrido del evento",
+  "auditStage": "Prioridad de trabajo"
+},
+
+  serviceVisuals: {
+    label: 'Ejemplo ilustrativo',
+    intro: 'Del primer anuncio a la cita. Así conecto cada parte para que tu inversión tenga un siguiente paso claro.',
+    items: [
+      { alt: 'Aretes dorados sobre papel: producto presentado en el anuncio de ejemplo.', heading: 'Cada anuncio tiene un siguiente paso', stages: ['Anuncio', 'Página de destino', 'Consulta'], note: 'La campaña lleva a una acción concreta: escribir, llamar o reservar.' },
+      { alt: 'Teléfono y libreta para registrar una nueva consulta.', heading: 'Una consulta que sigue avanzando', stages: ['Nueva consulta', 'Seguimiento', 'Cita agendada'], note: 'El CRM organiza cada contacto; los mensajes mantienen la conversación.' },
+      { alt: 'Una persona envía una consulta desde un formulario en una tableta.', heading: 'Conectar lo que pasa en cada lugar', stages: ['Web', 'CRM', 'Meta'], note: 'La información vuelve a la campaña para saber qué consultas llegan a ser citas.' },
+      { alt: 'Espacio de consulta que presenta el servicio de la página de ejemplo.', heading: 'Una página, una acción principal', stages: ['Propuesta clara', 'Formulario breve', 'Reservar una cita'], note: 'El anuncio y la página hablan de lo mismo, también desde el teléfono.' },
+      { alt: 'Frasco ámbar sobre piedra: primera escena para presentar el producto.', heading: 'De una idea a una pieza que se puede probar', stages: ['Guion y gancho', 'Grabación', 'Edición'], note: 'Cada pieza prueba un mensaje concreto y termina con una llamada a la acción.' },
+      { alt: 'Pantalla de comprobación con un evento pendiente: evidencia ilustrativa de una medición incompleta.', heading: 'Saber qué arreglar primero', stages: ['Detectar el problema', 'Ordenar prioridades', 'Definir la acción'], note: 'Un diagnóstico con pasos concretos para los próximos 90 días.' },
     ],
   },
 

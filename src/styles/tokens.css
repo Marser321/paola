@@ -71,12 +71,20 @@
    leer custom properties.
    ============================================================ */
 :root {
+  /* Embedded creative preview keeps its own photographic contrast in both themes. */
+  --studio-film-bg: #171713;
+  --studio-film-text: #ffffff;
+  --studio-film-gold: #eacb8f;
+  --studio-film-track: #ffffff30;
+  --studio-film-shade: linear-gradient(90deg, rgba(12,12,10,.85), rgba(12,12,10,.1));
+
   /* Color */
   --bg: #0E0E0E;
+  --header-surface: rgba(14, 14, 14, 0.96);
   --surface: #161616;
   --line: rgba(243, 242, 242, 0.08);
   --text: #F3F2F2;
-  --muted: #8A8A8A;
+  --muted: #AAAAAA;
   /* Contorno tipográfico (apellido del hero, marquee). Separado de --muted
      porque en claro necesita más cuerpo del que tiene el gris de texto menor. */
   --text-outline: #8A8A8A;
@@ -160,10 +168,18 @@
   --container: min(92vw, 1440px);
   --section-pad: clamp(6rem, 12vw, 10rem);
   --radius: 1.25rem;
+  --radius-sm: 0.6rem;
+  --fs-example: 0.875rem;
+  --accent-surface: rgba(212, 175, 55, 0.08);
+  --control-line: rgba(243, 242, 242, 0.24);
+  --on-gold: #17140F;
 
   /* Movimiento */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --dur-fast: 0.3s;
+  --dur-fast: 0.2s;
+  --motion-response: 0.2s;
+  --motion-scene: 0.6s;
+  --motion-entrance: 0.9s;
   --dur-med: 0.6s;
   /* Para lo que acompaña de fondo a un cambio de layout y no debe competir con
      él: el zoom de la muestra bajo el acordeón de servicios. Se usaba antes de
@@ -200,11 +216,22 @@
    dos escalones y pasa a ser bronce, que sobre hueso sigue leyéndose como oro.
    ============================================================ */
 [data-theme='light'] {
+  /* Embedded creative preview keeps its own photographic contrast in both themes. */
+  --studio-film-bg: #171713;
+  --studio-film-text: #ffffff;
+  --studio-film-gold: #eacb8f;
+  --studio-film-track: #ffffff30;
+  --studio-film-shade: linear-gradient(90deg, rgba(12,12,10,.85), rgba(12,12,10,.1));
+
+  --accent-surface: rgba(138, 106, 31, 0.08);
+  --control-line: rgba(26, 22, 15, 0.3);
+  --on-gold: #FFFFFF;
   --bg: #F2EEE6;
+  --header-surface: rgba(242, 238, 230, 0.96);
   --surface: #FBF8F2;
   --line: rgba(26, 22, 15, 0.14);
   --text: #17140F;
-  --muted: #6A6154;
+  --muted: #62594C;
   --text-outline: rgba(23, 20, 15, 0.42);
   --overlay: rgba(251, 248, 242, 0.78);
   --veil-media: rgba(251, 248, 242, 0.88);
@@ -221,7 +248,7 @@
   --selection-bg: #E6D9B4;
   --selection-fg: #17140F;
 
-  --gold: #8A6A1F;
+  --gold: #80621D;
   --gold-soft: #B08D2E;
   --gold-deep: #5C4512;
   --gradient-gold: linear-gradient(90deg, #5C4512, #8A6A1F, #B08D2E);

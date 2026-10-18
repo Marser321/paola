@@ -1,290 +1,553 @@
-/* ============================================================
-   PROCESS.CSS — el método de trabajo como carrusel.
-
-   Port del FeatureCarousel de 21st.dev. El original es React + Tailwind +
-   TypeScript + Framer Motion + @hugeicons; aquí no hay ninguno de los cinco, así
-   que lo que se porta es la COMPOSICIÓN —columna de fichas que rota a un lado,
-   baraja de tarjetas al otro— y no el componente. La mecánica está en
-   src/js/sections/process.js, con GSAP en lugar de Framer.
-
-   TRES COSAS DEL ORIGINAL QUE NO SE CONSERVAN, y por qué:
-
-   · El azul #62B2FE del panel. Aquí el color de marca es el oro y no hay hex
-     fuera de tokens.css. Pero el panel TAMPOCO se pinta de oro: el oro es el
-     acento del sitio, no su campo. Un bloque dorado de 40% de ancho lo
-     convertiría en fondo y dejaría sin fuerza a todo lo que sí lo usa como
-     acento (filetes, foco, la ficha activa de aquí mismo). El panel va en
-     --surface y el oro se queda donde marca: en la etapa en la que estás.
-
-   · Los iconos de @hugeicons. Este sitio no tiene sistema de iconos —ninguno, en
-     ninguna sección— y meter una librería para seis pictogramas sería la
-     dependencia peor amortizada del proyecto. El proceso YA tenía su signo: los
-     números 01–06 en mono, que además dicen algo que un icono no dice, que es el
-     ORDEN. Es lo que se conserva.
-
-   · El texto en mayúsculas de las fichas se queda, porque coincide con el .mono
-     del sitio, pero con su cuerpo y su interletraje, no con los del original.
-   ============================================================ */
-
-/* ===== EL PANEL ES DE VIDRIO =====
-   La sección tiene detrás su plato fotográfico (`bg-proceso`, el pasillo) y su
-   capa de haz. Hasta el 2026-08-16 el carrusel iba opaco —`--surface` en la
-   rueda, `--bg` en la baraja— y las tapaba enteras: se generaron dos imágenes
-   para esta sección y no se veía ninguna.
-
-   Ahora el panel es un vidrio: deja pasar el fondo en reposo y se ESPESA cuando
-   lo tocas, que es lo que le da el protagonismo al interactuar sin quitarle aire
-   cuando solo pasas de largo. Ver §HOVER abajo.
-
-   ⚠ Las dos variables van juntas y no se pueden separar: `--vidrio` pinta el
-   panel y `--velo` los desvanecidos de la rueda, y un velo que no sea del mismo
-   color que su panel se ve como una banda gris. */
-.process__carousel {
-  /* Alto de cada ficha. Lo comparten el CSS y el JS: el JS coloca las fichas en
-     `y = distancia × esta medida`, así que si se cambia aquí y no allí, la
-     columna se desalinea. Por eso es una variable y no un número suelto. */
-  --ficha-h: 4rem;
-  --vidrio: color-mix(in srgb, var(--surface) 46%, transparent);
-  --velo: color-mix(in srgb, var(--surface) 72%, transparent);
-  /* El MISMO color del velo con alfa 0, escrito y no `transparent`. Es el final
-     del degradado, y declararlo aparte impide que se separe del principio: si el
-     velo cambia de color y su final no, el desvanecido tira al color viejo. */
-  --velo-fin: color-mix(in srgb, var(--surface) 0%, transparent);
-  margin-top: 4rem;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  overflow: clip;
-  background: var(--vidrio);
-  backdrop-filter: blur(14px) saturate(115%);
-  transition: background-color var(--dur-med) var(--ease-out),
-              border-color var(--dur-med) var(--ease-out);
+/* A readable orbital system: fixed labels, a moving signal and a controllable tour. */
+.process-system {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 2rem clamp(2rem, 4vw, 4rem);
+  margin-top: 3rem;
 }
-
-/* ===== HOVER: LA SECCIÓN SE ACERCA =====
-   Con el puntero encima o el foco dentro, el vidrio se espesa y el filete se
-   pone dorado. Es el mismo gesto que ya hace la galería elástica de servicios
-   —tocar algo lo trae al frente— y además resuelve un problema real: en cuanto
-   se lee, el texto necesita más campo detrás que cuando solo se mira.
-
-   `:focus-within` no es un extra: quien navega con teclado entra en la rueda por
-   las fichas y tiene que recibir exactamente el mismo panel. */
-.process__carousel:hover,
-.process__carousel:focus-within {
-  --vidrio: color-mix(in srgb, var(--surface) 78%, transparent);
-  --velo: color-mix(in srgb, var(--surface) 92%, transparent);
-  border-color: var(--line-gold);
-}
-
-/* ===== PANEL IZQUIERDO: LAS ETAPAS ===== */
-.process__stages {
+.process-map {
   position: relative;
-  /* Cinco fichas de alto: la activa, dos arriba y dos abajo. Con menos, la
-     rotación no se entiende; con más, la columna compite con la tarjeta. */
-  height: calc(var(--ficha-h) * 5);
-  overflow: clip;
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 650px;
+  min-width: 0;
+  margin-inline: auto;
+  isolation: isolate;
 }
-
-/* Los dos velos que desvanecen la columna por arriba y por abajo. Son la pieza
-   que hace que la lista se lea como una rueda y no como una lista recortada a
-   hacha: las fichas de los extremos se van apagando en vez de cortarse. */
-.process__stages::before,
-.process__stages::after {
+.process-map::before {
   content: '';
   position: absolute;
-  inset-inline: 0;
-  height: var(--ficha-h);
-  z-index: 2;
+  inset: 12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-surface), transparent 68%);
+  z-index: -1;
+}
+.process-map__connections {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: var(--line-gold);
+  stroke-width: 0.2;
+}
+.process-map__ticks {
+  stroke: var(--gold);
+  opacity: 0.28;
+  stroke-width: 0.18;
+}
+.process-map__orbit {
+  stroke: var(--line-gold);
+  stroke-width: 0.25;
+}
+.process-map__active-arc {
+  stroke: var(--gold);
+  stroke-width: 0.45;
+  stroke-dasharray: 0.08 0.92;
+  opacity: 0.65;
+}
+.process-map__link {
+  stroke-dasharray: 1;
+  transition:
+    stroke 0.2s,
+    opacity 0.2s;
+  opacity: 0.5;
+}
+.process-map__link.is-active,
+.process-map__link.is-preview {
+  stroke: var(--gold);
+  stroke-width: 0.4;
+  opacity: 1;
+}
+.process-map__satellite {
+  fill: var(--gold-soft);
+  stroke: var(--gold);
+  stroke-width: 0.35;
+}
+.process-map__center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 33%;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  text-align: center;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 32% 22%,
+    var(--accent-surface),
+    var(--surface) 62%,
+    var(--bg)
+  );
+  box-shadow:
+    inset 0 0 30px var(--glow-warm),
+    0 12px 50px -28px var(--gold);
+}
+.process-core__globe {
+  position: absolute;
+  inset: -7%;
+  width: 114%;
+  height: 114%;
+  max-width: none;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 0.35;
   pointer-events: none;
 }
-.process__stages::before {
-  top: 0;
-  background: linear-gradient(to bottom, var(--velo), var(--velo-fin));
+.process-core__meridians {
+  opacity: 0.18;
+  transform-origin: 50px 50px;
+  animation: process-meridians 22s linear infinite;
+  animation-play-state: paused;
 }
-.process__stages::after {
-  bottom: 0;
-  background: linear-gradient(to top, var(--velo), var(--velo-fin));
+.process-core__progress {
+  stroke-width: 1;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  stroke: var(--gold-soft);
 }
-
-.process__rueda {
+.process-core__globe > circle:first-child {
+  opacity: 0.5;
+}
+.process-core__icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: var(--gold);
+  background: var(--surface);
+  border-radius: 50%;
+  z-index: 1;
+}
+.process-core__icon svg {
+  width: 22px;
+  height: 22px;
+}
+.process-map__index {
+  font: 500 clamp(1.1rem, 2.2vw, 2.2rem)/1 var(--font-display);
+  color: var(--gold);
+  z-index: 1;
+}
+.process-map__center strong {
+  font-size: clamp(0.7rem, 1.1vw, 1rem);
+  font-weight: 500;
+  z-index: 1;
+}
+.process-map__center .mono {
+  font-size: 0.5rem;
+  line-height: 1.4;
+  max-width: 15ch;
+  z-index: 1;
+}
+.process-map .process__steps {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
-
-/* Cada ficha va ABSOLUTA y centrada en la rueda; el desplazamiento lo pone GSAP.
-   Si estuvieran en flujo, el reparto lo decidiría el navegador y no se podría
-   animar la posición de cada una respecto a la activa. */
-.step {
+.process-map .step {
   position: absolute;
-  height: var(--ficha-h);
+  left: var(--node-x);
+  top: var(--node-y);
+  transform: translate(-50%, -50%);
+  width: 28%;
+  padding: 0;
+  border: 0;
+  display: block;
+}
+.step__chip {
   display: flex;
   align-items: center;
-  width: max-content;
-  max-width: 100%;
-  padding-inline: 1.5rem;
-}
-
-.step__chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.9rem;
-  padding: 0.85rem 1.4rem;
+  justify-content: flex-start;
+  gap: 0.65rem;
+  min-height: 76px;
+  width: 100%;
+  padding: 0.9rem 0.7rem;
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 999px;
-  background: none;
+  border-radius: 14px;
   color: var(--muted);
   text-align: left;
-  max-width: 100%;
-  transition: color var(--dur-fast) var(--ease-out),
-              border-color var(--dur-fast) var(--ease-out),
-              background-color var(--dur-fast) var(--ease-out);
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    transform 0.3s,
+    box-shadow 0.5s;
 }
-.step__chip:hover { color: var(--text); border-color: var(--line-gold); }
-
-/* La etapa en la que estás. Mismo relleno dorado con texto del color del fondo
-   que la píldora activa del menú (pill-nav.css): es el mismo gesto —«esto es lo
-   que estás mirando»— y tiene que pintarse igual en los dos sitios. */
-.step[data-estado='activa'] .step__chip {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: var(--bg);
+.step__icon {
+  flex: 0 0 26px;
+  color: var(--gold);
+  opacity: 0.65;
 }
-.step[data-estado='activa'] .step__number { color: var(--bg); opacity: 0.65; }
-
+.step__icon svg {
+  width: 26px;
+  height: 26px;
+}
+.step__label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
 .step__number {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-  flex-shrink: 0;
+  font: 400 0.6rem var(--font-mono);
+  color: var(--gold);
 }
 .step__title {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font: 500 clamp(0.7rem, 1.1vw, 0.95rem)/1.3 var(--font-body);
+  text-transform: none;
 }
-
-/* ===== PANEL DERECHO: LA BARAJA ===== */
-/* Sin fondo propio: el de la baraja es el vidrio del carrusel, y por debajo el
-   pasillo de la foto. Llevaba `--bg`, que es opaco y era la mitad del problema. */
-.process__deck {
+.step__chip:hover,
+.step__chip:focus-visible {
+  border-color: var(--gold);
+  color: var(--text);
+  transform: translateY(-3px);
+}
+.step[data-estado='activa'] .step__chip {
+  border-color: var(--gold);
+  color: var(--text);
+  background: var(--accent-surface);
+  box-shadow: 0 8px 28px -18px var(--gold);
+}
+.step[data-estado='activa'] .step__icon {
+  opacity: 1;
+}
+.process-system__hint {
+  position: absolute;
+  bottom: -1rem;
+  inset-inline: 3%;
+  font-size: 0.72rem;
+  text-align: center;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.process-system__panels {
+  display: grid;
+  align-items: start;
+  min-width: 0;
+  perspective: 1000px;
+}
+.process__card {
+  grid-area: 1/1;
+  border: 1px solid var(--line-gold);
+  border-radius: 20px;
+  background: var(--surface);
+  padding: clamp(1.2rem, 2.4vw, 2rem);
+  overflow: hidden;
+  min-width: 0;
+}
+/* Hidden panels participate in sizing to avoid layout shifts during the tour. */
+.process__card[hidden] {
+  display: block;
+  visibility: hidden;
+  pointer-events: none;
+}
+.process__card-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--line);
+}
+.process__card-number {
+  font: 600 clamp(2.5rem, 4.5vw, 4.8rem)/0.9 var(--font-display);
+  color: var(--gold);
+}
+.process__card-tag {
+  color: var(--gold);
+  font-size: 0.68rem;
+}
+.process__card-icon {
+  margin-left: auto;
+  color: var(--gold);
+  opacity: 0.7;
+}
+.process__card-icon svg {
+  width: 30px;
+  height: 30px;
+}
+.process__card-body {
+  padding-block: 1.2rem;
+}
+.process__card .step__desc {
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+  line-height: 1.7;
+  color: var(--text);
+}
+.process__pieces {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-bottom: 1.2rem;
+}
+.process__pieces > span {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  border-left: 1px solid var(--line-gold);
+  padding: 0.25rem 0.55rem;
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+.process__pieces i {
+  font: 400 0.55rem var(--font-mono);
+  color: var(--gold);
+}
+.process__deliverable {
+  position: relative;
+  border-top: 1px solid var(--line);
+  padding: 1rem 1.5rem 0 0;
+}
+.process__deliverable .mono {
+  font-size: 0.58rem;
+  color: var(--muted);
+}
+.process__deliverable p {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--gold);
+  line-height: 1.5;
+}
+.process__deliverable > span:last-child {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  color: var(--gold);
+}
+.process__card-route {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 1.3rem;
+}
+.process__card-route i {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+}
+.process__card-route .is-done {
+  background: var(--gold);
+}
+.process-tour {
+  grid-column: 1/-1;
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: clamp(2rem, 6vw, 4rem);
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.3rem 0 1rem;
   border-top: 1px solid var(--line);
+  margin-top: 1rem;
 }
-.process__stack {
-  position: relative;
-  width: 100%;
-  max-width: 26rem;
-  aspect-ratio: 4 / 5;
+.process-tour__status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
 }
-
-.process__card {
+.process-tour__status .mono {
+  font-size: 0.62rem;
+  color: var(--gold);
+}
+.process-tour__status > span:last-child {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.process-tour__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.process-tour__controls button {
+  min-height: 44px;
+  min-width: 44px;
+  border: 1px solid var(--line-gold);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.75rem;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.process-tour__controls button:hover {
+  background: var(--accent-surface);
+  border-color: var(--gold);
+}
+.process-tour__controls button:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+.process-tour__controls > span {
+  font-size: 0.65rem;
+  padding-left: 0.65rem;
+  white-space: nowrap;
+}
+.process-tour__progress {
   position: absolute;
-  inset: 0;
-  border-radius: calc(var(--radius) * 1.2);
-  overflow: hidden;
-  background: var(--surface);
-  transform-origin: center;
-  /* Las tarjetas que no son la activa no reciben ni puntero ni tabulador: están
-     ahí como profundidad, no como contenido. El JS también las marca `inert`. */
-  will-change: transform, opacity;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--line);
 }
-.process__card img,
-.process__card .process__card-gradient {
+.process-tour__progress i {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: filter var(--dur-slow) var(--ease-out);
+  background: var(--gold);
+  transform: scaleX(var(--tour-progress, 0));
+  transform-origin: left;
 }
-/* Las de los lados van en gris y desenfocadas: es lo que hace que la del centro
-   se lea como la que está en foco, igual que en la galería elástica. */
-.process__card[data-estado='lado'] :is(img, .process__card-gradient) {
-  filter: grayscale(1) blur(2px) brightness(0.7);
+.is-running .process-core__meridians {
+  animation-play-state: running;
 }
-
-/* Marca de agua mientras no hay foto: el número enorme de la etapa sobre su
-   gradiente. No es un hueco esperando — se lee como diseño hasta que llegue la
-   imagen, que es la condición para que el manifiesto pueda ir entregándolas de
-   una en una (src/data/media.js §ETAPAS). */
-.process__card-gradient {
-  display: grid;
-  place-items: center;
-}
-.process__card-ghost {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(6rem, 22vw, 12rem);
-  line-height: 1;
-  letter-spacing: -0.04em;
-  color: var(--bg);
-  opacity: 0.22;
-}
-
-/* Pie de la tarjeta activa: el velo, la píldora con número y nombre, y la
-   descripción de la etapa — que es el texto que ya existía en el <li>. */
-.process__card-body {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  z-index: 2;
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  padding-top: 8rem;
-  background: linear-gradient(to top, var(--veil-media), transparent);
-  pointer-events: none;
-}
-.process__card-tag {
-  display: inline-block;
-  margin-bottom: 0.9rem;
-  padding: 0.35rem 0.8rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--bg);
-  color: var(--text);
-}
-.step__desc {
-  color: var(--text);
-  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-}
-
-/* ===== ESCRITORIO: LAS DOS COLUMNAS ===== */
-@media (min-width: 1024px) {
-  .process__carousel { flex-direction: row; align-items: stretch; }
-  .process__stages {
-    width: 40%;
-    height: auto;              /* lo estira la fila */
-    flex-shrink: 0;
+@keyframes process-meridians {
+  from {
+    transform: rotate(-15deg);
   }
-  .process__rueda { justify-content: flex-start; }
-  .step { padding-inline: clamp(2rem, 4vw, 4rem); }
-  .process__deck {
-    flex: 1;
-    border-top: 0;
-    border-left: 1px solid var(--line);
+  to {
+    transform: rotate(345deg);
   }
 }
-
-/* La línea vertical dorada del proceso antiguo NO se recupera aquí: marcaba un
-   recorrido en una lista que se leía de arriba abajo, y esto ya no lo es. Su
-   trabajo —decir por dónde vas— lo hace ahora la ficha dorada. */
-
+@media (max-width: 1023px) {
+  .process-system {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .process-map {
+    max-width: 550px;
+  }
+  .process-system__panels {
+    max-width: 650px;
+    width: 100%;
+    margin: auto;
+  }
+  .step__title {
+    font-size: 0.9rem;
+  }
+  .process-map__center strong {
+    font-size: 0.95rem;
+  }
+  .process-map__index {
+    font-size: 1.8rem;
+  }
+  .process-tour {
+    margin-top: 0;
+  }
+}
+@media (max-width: 599px) {
+  .process-system {
+    margin-top: 1.5rem;
+    gap: 2rem;
+  }
+  .process-map .step {
+    width: 29%;
+  }
+  .step__chip {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.3rem;
+    min-height: 68px;
+    padding: 0.55rem 0.2rem;
+    border-radius: 10px;
+    text-align: center;
+  }
+  .step__label {
+    gap: 0.1rem;
+  }
+  .step__icon {
+    flex-basis: auto;
+  }
+  .step__icon svg {
+    width: 18px;
+    height: 18px;
+  }
+  .step__number {
+    font-size: 0.48rem;
+  }
+  .step__title {
+    font-size: clamp(0.6rem, 2.5vw, 0.8rem);
+  }
+  .process-map__center {
+    width: 32%;
+    gap: 0.15rem;
+  }
+  .process-map__index {
+    font-size: 1.1rem;
+  }
+  .process-map__center strong {
+    font-size: 0.63rem;
+  }
+  .process-map__center .mono {
+    display: none;
+  }
+  .process-core__icon {
+    width: 22px;
+    height: 22px;
+  }
+  .process-core__icon svg {
+    width: 17px;
+    height: 17px;
+  }
+  .process-system__hint {
+    bottom: -1.4rem;
+    font-size: 0.65rem;
+  }
+  .process__card {
+    padding: 1.1rem;
+  }
+  .process__card-top {
+    gap: 0.7rem;
+  }
+  .process__pieces > span {
+    font-size: 0.65rem;
+    padding-inline: 0.4rem;
+  }
+  .process-tour {
+    flex-direction: column;
+    align-items: stretch;
+    padding-top: 1rem;
+    gap: 0.8rem;
+  }
+  .process-tour__status {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+  .process-tour__status > span:last-child {
+    font-size: 0.65rem;
+  }
+  .process-tour__status .mono {
+    font-size: 0.52rem;
+  }
+  .process-tour__controls {
+    justify-content: space-between;
+    gap: 0.35rem;
+  }
+  .process-tour__controls button {
+    padding: 0.5rem;
+    font-size: 0.65rem;
+  }
+  .process-tour__controls > span {
+    padding-left: 0;
+    font-size: 0.6rem;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
-  .process__card :is(img, .process__card-gradient) { transition: none; }
+  .process-system *,
+  .process-system *::before {
+    animation: none !important;
+    transition: none !important;
+  }
 }

@@ -58,10 +58,10 @@ export function initSplitTitles() {
     if (!words.length) return
 
     gsap.from(words, {
-      yPercent: 110,
-      duration: 1,
+      yPercent: 100,
+      duration: 0.9,
       ease: 'power3.out',
-      stagger: 0.07,
+      stagger: 0.04,
       scrollTrigger: { trigger: title, start: 'top 85%', once: true },
     })
   })

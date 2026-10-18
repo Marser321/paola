@@ -198,7 +198,13 @@ export function initCalculator() {
     }, 700)
   }
 
-  Object.values(inputs).forEach((input) => input.addEventListener('input', pintar))
+  let highlightTimer
+  Object.entries(inputs).forEach(([key,input]) => input.addEventListener('input', () => {
+    pintar()
+    section.dataset.adjusting=key
+    clearTimeout(highlightTimer)
+    highlightTimer=setTimeout(()=>delete section.dataset.adjusting,900)
+  }))
 
   // El idioma cambia el formato de los números y la frase de la palanca, no los números.
   window.addEventListener('i18n:change', () => {

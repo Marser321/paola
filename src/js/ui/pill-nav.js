@@ -166,7 +166,7 @@ function montarPanel(nav, enlaces) {
   document.addEventListener('keydown', (e) => e.key === 'Escape' && cerrar())
   // Al ensanchar la ventana el panel se queda abierto e invisible detrás del menú
   // de escritorio, con sus enlaces todavía tabulables. Se recoge.
-  window.matchMedia('(min-width: 768px)').addEventListener('change', cerrar)
+  window.matchMedia('(min-width: 1024px)').addEventListener('change', cerrar)
 }
 
 export function initPillNav() {
@@ -215,7 +215,7 @@ export function initPillNav() {
       const label = a.querySelector('.pill__label')
       const hover = a.querySelector('.pill__label--hover')
       // `medir` devuelve null si la píldora no ocupa nada, que es lo que pasa
-      // mientras la lista está en `display: none` por debajo de 768px.
+      // mientras la lista está en `display: none` por debajo de 1024px.
       const h = medir(a, circle)
       if (h == null) continue
 

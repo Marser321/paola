@@ -5,3 +5,7 @@ src-assets
 *.md
 !README.md
 .claude
+
+output
+**/._*
+ENTREGA-ANIMACION

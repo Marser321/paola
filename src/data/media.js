@@ -93,48 +93,23 @@ export const figure = {
 // el 1% de píxeles más claros de la banda, el techo por sección es:
 //   metricas 0,28 · servicios 0,18 · proceso 0,15 · testimonios 0,18 · contacto 0,13
 // Varios de los valores de abajo ya están por encima. No se suben: el fondo que
-// faltaba en móvil era superficie, no opacidad, y eso se arregló en media.css
+// faltaba en celular era superficie, no opacidad, y eso se arregló en media.css
 // (§MÓVIL: EL PLATO DEJA DE ESCALARSE AL ANCHO).
 //
 // En CLARO la foto OSCURECE el papel, así que empuja el contraste del texto hacia
 // arriba en vez de hacia abajo: ahí no hay techo de legibilidad y el límite es de
 // gusto — que no se enturbie el crema. Por eso el tema claro sí sube, del 0,72 del
 // valor oscuro al 0,85.
+// Photographs are contained visuals, not backgrounds underneath reading surfaces.
 export const backdrops = {
-  // Los monitores con las gráficas. Es la única foto del set que enseña
-  // literalmente aquello de lo que habla la sección.
   metricas: {
     side: 'right',
-    layers: [{ src: 'bg-metricas', depth: 0.12, opacity: [0.34, 0.29] }],
+    layers: [{ src: 'bg-metricas', depth: 0, opacity: [0.12, 0.08] }],
   },
-  // La cabecera de servicios va en sticky arriba a la izquierda: el hueco tiene
-  // que caer a la izquierda y Paola entra por la derecha.
-  servicios: {
-    side: 'right',
-    layers: [{ src: 'bg-servicios', depth: 0.08, opacity: [0.42, 0.36] }],
-  },
-  // El pasillo. Un método es un recorrido, y es la única foto con dirección de
-  // marcha.
-  proceso: {
-    side: 'right',
-    layers: [{ src: 'bg-proceso', depth: 0.14, opacity: [0.42, 0.36] }],
-  },
-  // El sillón: registro conversado, que es el de un testimonio.
   testimonios: {
     side: 'right',
-    layers: [{ src: 'bg-testimonios', depth: 0.06, opacity: [0.26, 0.22] }],
+    layers: [{ src: 'bg-testimonios', depth: 0, opacity: [0.16, 0.12] }],
   },
-  // La ventana. La sección que cierra el sitio mira afuera. Va la más baja de
-  // las cinco: el CTA de contacto es tipografía enorme y centrada, y no admite
-  // competencia detrás.
-  contacto: {
-    side: 'left',
-    layers: [{ src: 'bg-contacto', depth: 0.06, opacity: [0.22, 0.19] }],
-  },
-  //
-  // `formats` es opcional y por defecto es ['avif', 'webp']. Si solo entregas uno,
-  // DECLÁRALO — image-set() elige por tipo soportado, no cae al otro si falta:
-  //   { src: 'bg-x', formats: ['webp'], depth: 0.1 }
 }
 
 /**
@@ -142,7 +117,7 @@ export const backdrops = {
  * Los frames van en public/img/<dir>/0001.<ext> … numerados desde 1 con 4 dígitos.
  *
  * `still` es el frame fijo que se pinta INMEDIATAMENTE mientras carga la
- * secuencia — y el único que se ve en móvil y con reduced-motion. Es el que
+ * secuencia — y el único que se ve en celular y con reduced-motion. Es el que
  * cuenta para el LCP, así que es el que hay que optimizar a muerte.
  *
  * `trigger/start/end` son opcionales: solo si hay que salirse del comportamiento
@@ -223,49 +198,60 @@ export const galleries = {}
  * `alt` NO es opcional y no describe la foto: describe la ETAPA. Es lo que
  * escucha quien navega con lector de pantalla en lugar de la imagen.
  */
+// Generated editorial illustrations: never evidence of a client engagement.
+// Each demonstration state has its own visual; generated scenes are illustrative.
+export const serviceVisuals = {
+  'meta-ads': { src: 'servicio-meta-ads-v5', generated: true, illustrative: true },
+  'crm-ghl': { src: 'servicio-crm-ghl-v5', generated: true, illustrative: true },
+  medicion: { src: 'servicio-medicion-consulta-v6', generated: true, illustrative: true },
+  landings: { src: 'servicio-landings-v5', generated: true, illustrative: true },
+  'ia-video': { src: 'servicio-ia-video-v5', generated: true, illustrative: true },
+  auditoria: { src: 'servicio-auditoria-medicion-v6', generated: true, illustrative: true },
+}
+
+// State order matches the demonstration controls. Assets stay separate from UI state.
+export const serviceStateVisuals = {
+  "meta-ads": [
+    "servicio-meta-ads-v5",
+    "servicio-meta-ads-pagina-v6",
+    "servicio-meta-ads-consulta-v6"
+  ],
+  "crm-ghl": [
+    "servicio-crm-ghl-v5",
+    "servicio-crm-ghl-seguimiento-v6",
+    "servicio-crm-ghl-cita-v6"
+  ],
+  "medicion": [
+    "servicio-medicion-consulta-v6",
+    "servicio-medicion-cita-v6",
+    "servicio-medicion-confirmada-v6"
+  ],
+  "landings": [
+    "servicio-landings-v5",
+    "servicio-landings-movil-v6",
+    "servicio-landings-confirmacion-v6"
+  ],
+  "ia-video": [
+    "servicio-ia-video-v5",
+    "servicio-ia-video-mensaje-v6",
+    "servicio-ia-video-cierre-v6"
+  ],
+  "auditoria": [
+    "servicio-auditoria-medicion-v6",
+    "servicio-auditoria-mensaje-v6",
+    "servicio-auditoria-seguimiento-v6"
+  ]
+}
+
 export const process = {
-  placeholder: true,
+  illustrative: true,
   items: [
-    {
-      // 01 · Auditoría — el diagnóstico. Antes de tocar nada, mirar.
-      src: 'proceso-01-auditoria',
-      gradient: ['#4A3A10', '#8A6A1F'],
-      alt: 'Revisión de una cuenta publicitaria existente en busca de fugas de presupuesto',
-    },
-    {
-      // 02 · Estrategia — el plan sobre la mesa. Papel, no pantalla: aquí
-      // todavía se decide, no se ejecuta.
-      src: 'proceso-02-estrategia',
-      gradient: ['#6E5514', '#A8905A'],
-      alt: 'Planificación de la estructura de campañas y el reparto de presupuesto por fase del embudo',
-    },
-    {
-      // 03 · Creatividades — la producción. Es la etapa más física de las seis y
-      // la que mejor admite una foto con manos dentro.
-      src: 'proceso-03-creativos',
-      gradient: ['#8A6A1F', '#D4AF37'],
-      alt: 'Producción de anuncios: grabación y montaje de piezas UGC, estáticas y de video',
-    },
-    {
-      // 04 · Lanzamiento — el momento de publicar. Tensión, no celebración: lo
-      // que se celebra viene en la 06.
-      src: 'proceso-04-lanzamiento',
-      gradient: ['#A8905A', '#EBD48A'],
-      alt: 'Puesta en marcha de las campañas con el seguimiento técnico ya configurado',
-    },
-    {
-      // 05 · Optimización — la iteración semanal. Repetición y ajuste fino.
-      src: 'proceso-05-optimizacion',
-      gradient: ['#C9A227', '#F2DFA6'],
-      alt: 'Iteración semanal sobre las campañas: se retiran las que no rinden y se refuerzan las que sí',
-    },
-    {
-      // 06 · Escala — el crecimiento. La única de las seis que puede permitirse
-      // amplitud y aire: es a donde lleva todo lo anterior.
-      src: 'proceso-06-escala',
-      gradient: ['#D4AF37', '#FFF4A5'],
-      alt: 'Crecimiento sostenido de la inversión hacia más canales y más mercados manteniendo la rentabilidad',
-    },
+    { ...serviceVisuals.auditoria, serviceIndex: 5, alt: 'Revisión de informes y anotación de prioridades' },
+    { ...serviceVisuals['meta-ads'], serviceIndex: 0, alt: 'Planificación de anuncios y enfoques creativos' },
+    { ...serviceVisuals['ia-video'], serviceIndex: 4, alt: 'Grabación de una pieza de producto con teléfono' },
+    { ...serviceVisuals.landings, serviceIndex: 3, alt: 'Revisión de una página y su formulario en celular y portátil' },
+    { ...serviceVisuals.medicion, serviceIndex: 2, alt: 'Comparación de informes para ajustar las campañas' },
+    { ...serviceVisuals['crm-ghl'], serviceIndex: 1, alt: 'Organización del seguimiento de consultas y citas' },
   ],
 }
 
@@ -329,97 +315,9 @@ export const process = {
 export const parallax = {
   hero: {
     layers: [
-      // Atmósfera de fondo. La que menos viaja —lo que está lejos se desplaza
-      // poco— y la que más opacidad admite, porque no pasa por delante de nada.
-      { id: 'bruma', src: 'hero-capa-bruma', alt: '', depth: 0.05, plane: 'back', opacity: [0.14, 0.08] },
-      // A la altura de la figura, para que la luz parezca de la escena y no
-      // pegada encima. Empata en z-index con ella y el DOM decide: la figura va
-      // después, así que el destello queda justo DETRÁS. Es lo que se quiere —
-      // una luz por delante de la cara la velaría.
-      { id: 'destello', src: 'hero-capa-destello', alt: '', depth: 0.10, plane: 'mid', opacity: [0.10, 0.06] },
-      // POR DELANTE de la figura: de ahí sale la profundidad. La más viajera y la
-      // más tenue — pasa sobre una persona, y si pesa la ensucia.
-      { id: 'polvo', src: 'hero-capa-polvo', alt: '', depth: 0.16, plane: 'front', opacity: [0.09, 0.05] },
+      { id: 'bruma', src: 'hero-capa-bruma', alt: '', depth: 0.015, plane: 'back', opacity: [0.06, 0.03] },
     ],
   },
-
-  // El pasillo del fondo es la única foto del set con dirección de marcha, y un
-  // método es un recorrido: el haz refuerza eso en vez de decorar. Es la capa que
-  // más aporta de las que están fuera del hero.
-  proceso: {
-    layers: [
-      { id: 'haz', src: 'proceso-capa-haz', alt: '', depth: 0.14, plane: 'mid', opacity: [0.24, 0.14] },
-    ],
-  },
-
-  // ⚠ #servicios SE QUEDÓ SIN CAPA el 2026-08-16, y a petición expresa.
-  //
-  // Tenía una de humo dorado (`servicios-capa-humo`, back, depth 0,05). No
-  // gustaba y no aportaba: por debajo del plato fotográfico, a una velocidad casi
-  // idéntica a la suya, lo único que se percibía era una neblina sucia sobre la
-  // sección. Su PNG sigue en `Selección/generated-parallax/` y los archivos
-  // servidos se borraron; para recuperarla haría falta `build-media.py parallax`,
-  // pero antes habría que resolver el problema de fondo, que era la velocidad.
-  //
-  // La sección se queda con su plato (`bg-servicios`, 0,08) y con la galería
-  // elástica de muestras, que es donde está su interés de verdad.
-
-  // ── RESPLANDORES ──────────────────────────────────────────────────────────
-  // Las cuatro secciones que no tenían más que un plano. Son capas `glow`: un
-  // radial por tokens, sin archivo y sin un solo KB, que ya sabía pintar
-  // fx/parallax.js §pintarGlow y que no usaba nadie.
-  //
-  // ⚠ TODOS van del lado del plato fotográfico, nunca del lado del texto. Un
-  // radial dorado detrás de una columna de lectura le come contraste; puesto
-  // donde ya está la foto, se lee como la luz de esa escena derramándose sobre la
-  // sección, y encima viaja a otra velocidad que ella — que es exactamente lo que
-  // produce la sensación de profundidad.
-  //
-  // La opacidad efectiva es la del token por la de la capa: `--glow-warm` es
-  // rgba(212,175,55,.22), así que un 0,55 deja el pico en ~0,12 de alfa. Por
-  // debajo del techo de cualquiera de estas secciones (ver §backdrops).
-  metricas: {
-    layers: [
-      { id: 'resplandor', glow: { x: '80%', y: '30%', size: '55% 55%' },
-        depth: 0.04, plane: 'back', opacity: [0.55, 0.35] },
-    ],
-  },
-
-  // La única sección del sitio sin NADA detrás: ni plato ni capas. El resplandor
-  // va tras el retrato, que ocupa la columna izquierda.
-  'sobre-mi': {
-    layers: [
-      { id: 'resplandor', glow: { x: '28%', y: '45%', size: '50% 60%' },
-        depth: 0.06, plane: 'back', opacity: [0.5, 0.32] },
-    ],
-  },
-
-  testimonios: {
-    layers: [
-      { id: 'resplandor', glow: { x: '78%', y: '55%', size: '55% 50%' },
-        depth: 0.04, plane: 'back', opacity: [0.45, 0.3] },
-    ],
-  },
-
-  // ⚠ El más bajo de los cuatro, por el mismo motivo por el que su plato es el
-  // más bajo de los cinco: el CTA es tipografía enorme y centrada y no admite
-  // competencia detrás.
-  //
-  // Aquí hubo una capa de IMAGEN descartada (`contacto-capa-ventana`, su PNG
-  // sigue en Selección/): medida, la opacidad máxima que no le quitaba fuerza al
-  // CTA era 0,03, y a ese valor no se veía — 78 KB para nada. El resplandor
-  // resuelve lo mismo sin pesar: no hay archivo que cargar.
-  contacto: {
-    layers: [
-      { id: 'resplandor', glow: { x: '20%', y: '60%', size: '50% 50%' },
-        depth: 0.03, plane: 'back', opacity: [0.4, 0.26] },
-    ],
-  },
-
-  // ⚠ #proyectos NO lleva capa, y es la única exclusión deliberada que queda.
-  // Ya tiene el track horizontal pinneado y la galería 3D en WebGL: una capa más
-  // sería la tercera imagen compitiendo en la misma sección. Mismo criterio que
-  // el que la deja fuera de los platos fotográficos (§backdrops).
 }
 
 export const budgets = {
@@ -431,6 +329,7 @@ export const budgets = {
   // real (420px) para que aguanten pantallas de densidad 2. Se cargan en
   // diferido salvo la primera, así que no tocan la entrada.
   process: 620,
+  serviceVisuals: 620, // same six files; reused by process, not a second download
   'seq/hero': 1800,
   'seq/hero-still': 120,      // ← en la ruta crítica: es el LCP
   'seq/proyectos': 1200,
@@ -454,4 +353,4 @@ export const budgets = {
   galleries: 800,
 }
 
-export const media = { portraits, figure, backdrops, sequences, galleries, budgets }
+export const media = { portraits, figure, backdrops, sequences, galleries, serviceVisuals, budgets }
