@@ -1,5 +1,10 @@
 # CONTENT.md — Copy deck (español) + datos
 
+> ⚠ **DOCUMENTO HISTÓRICO desde el 2026-10-17.** Es el copy de la plantilla original
+> (Barcelona, e-commerce, clientes y cifras de ejemplo) y **ya no es la fuente de nada**.
+> El contenido vigente vive en `src/i18n/es.js` / `en.js` (textos) y en `src/data/`
+> (`perfil.js`, `sectores.js`, `testimonios.js`). Ver `MAINTENANCE.md` §0.
+
 > **ÚNICA fuente de textos visibles.** El agente ejecutor copia literalmente de aquí.
 > Todo es placeholder profesional: la persona reemplazará nombre, cifras y enlaces.
 > Marcas de reemplazo: buscar `«...»` al final del proyecto (tarea 16 incluye checklist).

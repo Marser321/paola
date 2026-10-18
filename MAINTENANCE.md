@@ -6,6 +6,72 @@
 
 ---
 
+## 0. Contenido real: dónde vive cada dato (desde el 2026-10-17)
+
+La auditoría del 17 oct 2026 (`Ajustes_Web_Paola_Parra.pdf`) encontró una web de
+plantilla: clientes, testimonios, años y cifras inventados. Desde entonces **cada
+dato tiene un solo sitio**, y lo que está vacío no se publica (el mismo contrato que
+`src/data/availability.js`: el modo de fallo es el silencio).
+
+| Qué | Dónde se edita | Qué pasa si está vacío |
+|---|---|---|
+| Cifras (inversión, cuentas, marcas, años, equipo) | `src/data/perfil.js` → `cifras`, y la fila del hero en `src/i18n/es.js` / `en.js` | El build falla si no cuadran (`check:contenido`) |
+| Correo, LinkedIn, ciudad, zona horaria | `src/data/perfil.js` → `contacto` | No hay mailto, ni redes en el pie, ni reloj |
+| Inversión por industria | `src/data/sectores.js` | — |
+| Casos de clientes | `src/data/sectores.js` → `caso` de cada sector (plantilla en [`CASOS-FICHA.md`](CASOS-FICHA.md)) | La ficha de sector se queda como está; ni tarjeta, ni `caso.html`, ni galería 3D |
+| Testimonios | `src/data/testimonios.js` (con `permiso: true`) | `#testimonios` no se pinta |
+| Muestras de cada servicio | `src/data/media.js` → `galleries` | No sale el botón «Ver muestras» |
+| Textos | `src/i18n/es.js` (canónico) + `en.js` + `index.html` | `npm run check:i18n` avisa de la deriva |
+
+Lo que va escrito en el HTML a partir de esos datos (las cuatro cifras, las barras
+por industria, el JSON-LD, el correo y las redes) lo genera el plugin `sitio` de
+`vite.config.js` al construir. **No se edita a mano en `index.html`.**
+
+Cuando cambien las cifras o la frase del hero, hay que regenerar la imagen para
+compartir: `npm run og` (necesita Chrome; ver §5).
+
+### El formulario de contacto
+
+Lo entrega `api/contacto.js`, una función de Vercel que envía un correo con
+[Resend](https://resend.com). Necesita tres variables en Vercel → Settings →
+Environment Variables:
+
+| Variable | Qué es |
+|---|---|
+| `RESEND_API_KEY` | La clave de la cuenta de Resend |
+| `CONTACT_TO` | Quién recibe los mensajes (varios, separados por comas) |
+| `CONTACT_FROM` | Remitente de un dominio **verificado** en Resend: `Web Paola Parra <web@su-dominio.com>` |
+
+Sin ellas la función responde 503 y el formulario enseña su aviso de error. En
+`npm run dev` el envío falla siempre, y es normal: Vite no ejecuta `/api`. La función
+se prueba con `npm run test:contacto`; el envío real, en un preview de Vercel.
+
+### Dominio propio
+
+Ninguna URL absoluta está escrita a mano: el plugin de `vite.config.js` usa
+`VERCEL_PROJECT_PRODUCTION_URL`, que Vercel inyecta en cada build. Para conectar un
+dominio:
+
+1. Vercel → Project → Settings → Domains → añadir el dominio y seguir los pasos de DNS.
+2. Lanzar un deploy nuevo: canonical, `og:url`, `og:image`, JSON-LD, `robots.txt` y
+   `sitemap.xml` salen ya con el dominio nuevo.
+3. Verificar el mismo dominio en Resend y cambiar `CONTACT_FROM` a una dirección suya.
+4. Compartir el enlace en WhatsApp y LinkedIn y comprobar que sale la imagen.
+
+### Comprobaciones
+
+```bash
+npm run check   # check:i18n + check:media + test:contacto
+npm run build   # vite build + check:contenido (el candado de honestidad)
+```
+
+`check:contenido` revisa `dist/` —lo que se publica— y **hace fallar el build**, también
+en Vercel, si reaparece un cliente o una cifra de la plantilla, un enlace a «#», un
+dominio o correo inexistente, el símbolo ®, un locale es-ES o léxico de España. Si salta,
+se corrige el contenido; no se relaja el candado.
+
+---
+
 ## 1. Antes de tocar nada
 
 ```bash
@@ -75,10 +141,12 @@ El tracker es la parte del sitio que puede envejecer mal en silencio. Cada trime
 
 ## 3. Contenido
 
-- [ ] ¿Los KPIs del hero y de Resultados siguen siendo verdad? Un ROAS de hace dos años
-      presentado en presente envejece mal.
+- [ ] ¿Las cifras de `src/data/perfil.js` siguen siendo verdad? Son un corte de Meta Ads
+      (1 ene 2025 – 17 oct 2026): cada trimestre, sacar uno nuevo, actualizar `cifras`,
+      `sectores.js`, la fila del hero y la línea de fuente de `#metricas`, y `npm run og`.
 - [ ] ¿El año del footer y del CV están al día?
-- [ ] ¿Los casos siguen siendo los seis que mejor representan el trabajo actual?
+- [ ] ¿Los casos publicados siguen teniendo permiso del cliente? ¿Hay casos nuevos que
+      pasar por la ficha ([`CASOS-FICHA.md`](CASOS-FICHA.md))?
 - [ ] ¿Los testimonios siguen vigentes y con permiso?
 
 ## 4. Salud técnica
@@ -103,10 +171,11 @@ El tracker es la parte del sitio que puede envejecer mal en silencio. Cada trime
 ## 5. Certificado, dominio y despliegue
 
 - [ ] Dominio renovado y con fecha de caducidad conocida.
-- [ ] Certificado TLS vigente (Netlify lo renueva solo, pero conviene mirarlo).
-- [ ] `robots.txt` y `sitemap.xml` apuntan al dominio real, no al placeholder.
-- [ ] `og:image` y `og:url` activos y con URL absoluta correcta.
+- [ ] Certificado TLS vigente (Vercel lo renueva solo, pero conviene mirarlo).
+- [ ] `robots.txt`, `sitemap.xml`, `og:image` y el canonical salen con el dominio real
+      (los genera `vite.config.js`; ver §0 «Dominio propio»).
 - [ ] Compartir el enlace en un chat y comprobar que la previsualización sale bien.
+- [ ] Mandar un mensaje de prueba por el formulario de producción y comprobar que llega.
 
 ## 6. Accesibilidad
 
