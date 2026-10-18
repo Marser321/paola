@@ -404,39 +404,36 @@ def build_backdrops():
         save(out, name, max_kb=budget)
 
 
-def build_galerias():
-    """Las 15 muestras de las galerías de servicio.
+def build_respaldos():
+    """Respaldo universal del retrato (JPG) y de la figura (PNG con alfa).
 
-    Vienen ya compuestas de la tanda V2 (ver PROMPTS-TARJETAS-V2.md), en 4:5 y
-    nacidas oscuras, así que aquí NO se les aplica el graduado cálido ni el
-    desvanecido de borde de los fondos: eso es para los platos fotográficos, que
-    llevan texto encima y tienen que apagarse. Estas son el contenido, se ven a
-    tamaño grande al abrirse el acordeón, y retocarlas solo las ensuciaría.
+    El <img> de los dos <picture> de index.html. Lo descargan solo los navegadores
+    que no leen ni AVIF ni WebP —visores de enlaces, capturadores de página—, y
+    eran justo quienes no veían la foto: la auditoría del 17 oct 2026 encontró el
+    texto alternativo donde tenía que estar el retrato. Para el resto del mundo
+    estos archivos no existen: el <picture> elige el AVIF antes.
 
-    1000×1250 y no los 1122×1402 del original: es el ancho que necesita la
-    tarjeta abierta de la galería elástica (~780 px CSS, el doble en pantalla 2×)
-    y bajar un punto desde el original afila en vez de emborronar.
+    Sale del WebP ya publicado y no del original de Selección/: es exactamente la
+    imagen que se ve, con su mismo encuadre y su mismo graduado, sin rehacer nada.
     """
-    origen = SRC / "generated-v2"
-    if not origen.is_dir():
-        print(f"  · sin {origen.relative_to(ROOT)}/ — se omiten las galerías")
-        return
+    retrato = OUT / "paola-retrato-4x5.webp"
+    if retrato.exists():
+        im = Image.open(retrato).convert("RGB")
+        im.save(OUT / "paola-retrato-4x5.jpg", quality=82, optimize=True, progressive=True)
+        print(f"  ✓ paola-retrato-4x5.jpg  ({(OUT / 'paola-retrato-4x5.jpg').stat().st_size // 1024} KB)")
+    else:
+        print("  ⚠ falta paola-retrato-4x5.webp: se omite su respaldo")
 
-    total = 0
-    for servicio in ("meta-ads", "paid-social", "funnels-cro", "ugc", "auditorias"):
-        for i in (1, 2, 3):
-            nombre = f"sample-{servicio}-{i}"
-            src = origen / f"{nombre}.png"
-            if not src.exists():
-                print(f"  ⚠ falta {src.name}")
-                continue
-            im = crop_ratio(Image.open(src).convert("RGB"), 4 / 5)
-            im = im.resize((1000, 1250), Image.LANCZOS)
-            # El presupuesto se controla en conjunto (budgets.galleries), no una
-            # a una: son quince y lo que importa es lo que suman.
-            save(im, nombre)
-            total += 1
-    print(f"  {total} muestras de galería")
+    figura = OUT / "paola-figura.webp"
+    if figura.exists():
+        im = Image.open(figura).convert("RGBA")
+        # PNG de 32 bits, sin paleta. Con 256 colores pesaba la sexta parte, pero
+        # el fundido de los pies salía en escalones: la paleta no tiene alfas de
+        # sobra. Pesa más (~430 KB) y da igual: solo lo pide quien no lee WebP.
+        im.save(OUT / "paola-figura.png", optimize=True)
+        print(f"  ✓ paola-figura.png  ({(OUT / 'paola-figura.png').stat().st_size // 1024} KB)")
+    else:
+        print("  ⚠ falta paola-figura.webp: se omite su respaldo")
 
 
 def build_proceso():
@@ -457,17 +454,20 @@ def build_proceso():
         print(f"  · sin {origen.relative_to(ROOT)}/ — se omiten las etapas del proceso")
         return
 
+    # (original en Selección/, nombre publicado). La etapa 03 se publica como
+    # «creativos» desde el 2026-10-17 —español neutro, como el resto del sitio—,
+    # pero su original se sigue llamando como se generó.
     etapas = (
-        "proceso-01-auditoria",
-        "proceso-02-estrategia",
-        "proceso-03-creatividades",
-        "proceso-04-lanzamiento",
-        "proceso-05-optimizacion",
-        "proceso-06-escala",
+        ("proceso-01-auditoria", "proceso-01-auditoria"),
+        ("proceso-02-estrategia", "proceso-02-estrategia"),
+        ("proceso-03-creatividades", "proceso-03-creativos"),
+        ("proceso-04-lanzamiento", "proceso-04-lanzamiento"),
+        ("proceso-05-optimizacion", "proceso-05-optimizacion"),
+        ("proceso-06-escala", "proceso-06-escala"),
     )
     total = 0
-    for nombre in etapas:
-        src = origen / f"{nombre}.png"
+    for original, nombre in etapas:
+        src = origen / f"{original}.png"
         if not src.exists():
             print(f"  ⚠ falta {src.name}")
             continue
@@ -566,9 +566,13 @@ if __name__ == "__main__":
         "retrato": build_retrato,
         "figura": build_figura,
         "fondos": build_backdrops,
-        "galerias": build_galerias,
+        # «galerias» se retiró el 2026-10-17 con las quince muestras IA: generaba
+        # ilustraciones de los casos de plantilla y, corriendo el script entero,
+        # las habría vuelto a publicar. Las muestras reales no pasan por aquí.
         "proceso": build_proceso,
         "parallax": build_parallax,
+        # Después de retrato y figura: sale de sus WebP.
+        "respaldos": build_respaldos,
     }
     # Con argumento se ejecuta UN paso. Sin él, todos. Importa poder ir por
     # partes: regenerar los fondos cuando solo han llegado muestras nuevas es

@@ -13,7 +13,7 @@
 // inglés— y «octubre» / «October» se resuelven solos al cambiar de idioma.
 
 import { availability, CADUCIDAD_DIAS } from '../../data/availability.js'
-import { t, getLang } from '../../i18n/index.js'
+import { t, formatLocale } from '../../i18n/index.js'
 
 const DIA_MS = 24 * 60 * 60 * 1000
 
@@ -64,7 +64,7 @@ export function initAvailability() {
       el.textContent = ''
       return
     }
-    const lang = getLang() === 'en' ? 'en-GB' : 'es-ES'
+    const lang = formatLocale()
     const nombreMes = new Intl.DateTimeFormat(lang, { month: 'long' }).format(dato.inicioMes)
     const clave = dato.plazas === 1 ? 'contact.availabilityOne' : 'contact.availabilityMany'
     el.textContent = t(clave, { plazas: dato.plazas, mes: nombreMes })

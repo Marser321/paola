@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es-US">
+  <head>
+    <meta charset="UTF-8" />
+    <title>OG image — plantilla 1200×630</title>
+    <!--
+      PLANTILLA de public/og.jpg. No se publica: hasta el 2026-10-17 vivía en
+      public/ y se servía en /og.html con «La campaña eres tú» y «ROAS medio
+      4.2x · +$2M gestionados».
+
+      NO SE ABRE A MANO. La rellena y la captura scripts/og/build-og.mjs
+      (`npm run og`): cambia cada hueco entre llaves dobles por el texto del hero
+      (i18n/es.js) y
+      por las fuentes y la figura de Paola en data: URI, porque desde file:// el
+      navegador bloquea las @font-face. Así la imagen dice siempre lo mismo que la
+      portada: si cambian las cifras, se vuelve a correr y ya.
+
+      EXCEPCIÓN DOCUMENTADA de PLAN.md §9.2: hardcodea los colores del sistema
+      (tokens.css). Es una plantilla suelta que no puede importar el CSS del sitio.
+    -->
+    <style>
+      @font-face {
+        font-family: 'Clash Display';
+        src: url('{{font-clash}}') format('woff2');
+        font-weight: 700; font-display: block;
+      }
+      @font-face {
+        font-family: 'Satoshi';
+        src: url('{{font-satoshi}}') format('woff2');
+        font-weight: 500; font-display: block;
+      }
+      @font-face {
+        font-family: 'JetBrains Mono';
+        src: url('{{font-mono}}') format('woff2');
+        font-weight: 400 500; font-display: block;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1200px; height: 630px; overflow: hidden; background: #0E0E0E; }
+
+      .og {
+        position: relative;
+        width: 1200px; height: 630px;
+        background: #0E0E0E;              /* --bg */
+        color: #F3F2F2;                   /* --text */
+        overflow: hidden;
+      }
+      /* El oro a ras de suelo, detrás de la figura: la misma luz del hero. */
+      .og__glow {
+        position: absolute; right: -120px; bottom: -220px;
+        width: 760px; height: 760px; border-radius: 50%;
+        background: radial-gradient(closest-side, rgba(212,175,55,.30), rgba(212,175,55,0) 70%);
+      }
+      .og__figura {
+        position: absolute; right: 36px; bottom: 0;
+        height: 600px; width: auto;
+      }
+      .og__texto {
+        position: relative; z-index: 1;
+        width: 760px; height: 100%;
+        padding: 64px 0 56px 72px;
+        display: flex; flex-direction: column;
+      }
+      .og__label {
+        font-family: 'JetBrains Mono', monospace; font-size: 20px;
+        text-transform: uppercase; letter-spacing: .08em;
+        color: #8A8A8A;                   /* --muted */
+      }
+      .og__nombre {
+        margin-top: 34px;
+        font-family: 'Clash Display', sans-serif; font-weight: 700;
+        font-size: 132px; line-height: .9; letter-spacing: -.02em;
+        text-transform: uppercase;
+      }
+      .og__nombre span { display: block; }
+      .og__nombre .is-outline { color: transparent; -webkit-text-stroke: 2px #8A8A8A; }
+      .og__frase {
+        margin-top: 30px; max-width: 600px;
+        font-family: 'Satoshi', sans-serif; font-weight: 500;
+        font-size: 31px; line-height: 1.25;
+      }
+      .accent-text {
+        background: linear-gradient(90deg, #8A6A1F, #D4AF37, #F2DFA6);  /* --gradient-gold */
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent; color: transparent;
+      }
+      .og__cifras {
+        margin-top: auto;
+        font-family: 'JetBrains Mono', monospace; font-size: 20px;
+        text-transform: uppercase; letter-spacing: .06em;
+        color: #F3F2F2;
+      }
+      .og__bar {
+        position: absolute; left: 0; right: 0; bottom: 0; height: 6px; z-index: 2;
+        background: linear-gradient(90deg, #8A6A1F, #D4AF37, #F2DFA6);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="og">
+      <div class="og__glow"></div>
+      <img class="og__figura" src="{{figura}}" alt="" />
+      <div class="og__texto">
+        <p class="og__label">{{label}}</p>
+        <h1 class="og__nombre"><span>Paola</span><span class="is-outline">Parra</span></h1>
+        <p class="og__frase">{{frase}}</p>
+        <p class="og__cifras">{{cifras}}</p>
+      </div>
+      <div class="og__bar"></div>
+    </div>
+  </body>
+</html>

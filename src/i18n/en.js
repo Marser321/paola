@@ -1,69 +1,95 @@
 // Diccionario EN. Misma forma que es.js; lo que falte aquí cae al español.
 //
-// NO se traducen: "PAOLA", los nombres de cliente y los tags que ya están en
-// inglés (Meta Ads, Paid Social, UGC…).
+// Inglés de EE. UU. —optimize, catalog, every two weeks—, que es el mercado. Hasta
+// el 2026-10-17 estaba en británico (optimise, catalogue, maths, fortnightly).
+//
+// NO se traducen: "PAOLA", los nombres de herramientas (Meta Ads, GoHighLevel,
+// Premiere, Canva) ni las siglas del oficio (CPL, CAPI, TOFU-MOFU-BOFU).
 
 export const en = {
-  htmlLang: 'en',
-  title: 'PAOLA — Meta Ads Specialist · Performance Marketing',
+  htmlLang: 'en-US',
+  title: 'Paola Parra — Paid Media Manager · Meta Ads, funnels & CRM',
   description:
-    'Meta Ads specialist (Facebook and Instagram). Scale your e-commerce or digital business with measurable performance campaigns: 4.2x average ROAS, $2M+ managed.',
+    'Paid Media Manager for Hispanic brands in the US: Meta Ads, funnels and GoHighLevel CRM that turn ad spend into appointments and clients. US$1.1M+ invested.',
 
-  preloader: { label: 'Launching campaign', status: 'Campaign 2026 · Objective: conversion', delivering: 'Delivering impression' },
+  preloader: { label: 'Launching campaign', status: 'Campaign 2026 · Objective: leads', delivering: 'Delivering impression' },
 
-  nav: { projects: 'Work', services: 'Services', process: 'Process', plans: 'Plans', about: 'About', contact: 'Contact' },
+  nav: { projects: 'Industries', services: 'Services', process: 'Process', plans: 'Plans', about: 'About', contact: 'Contact' },
 
   hero: {
-    label: 'Meta Ads Specialist — Performance Marketing',
-    meta: ['4.2x average ROAS', '$2M+ managed', 'FB · IG'],
+    label: 'Paid Media Manager · Meta Ads, funnels & CRM',
+    subtitle: 'I turn ad spend into <span class="accent-text">appointments and clients</span> for Hispanic brands in the US.',
+    meta: ['US$1.1M+ invested', '40+ brands', '9+ years'],
     scroll: 'Scroll',
   },
 
-  variants: {
-    A: 'I turn ad budget into <span class="accent-text">measurable growth</span>.',
-    B: 'Every dollar you invest has to <span class="accent-text">come back with company</span>.',
-  },
-
   labels: {
-    results: 'Results', cases: 'Creatives',
+    results: 'By the numbers', cases: 'Industries',
     services: 'Services', process: 'Process',
     about: 'Who runs it', testimonials: 'Social proof',
     plans: 'Working together', calculator: 'Calculator', faq: 'Questions',
     contact: 'Contact',
   },
 
-  metrics: ['Average ROAS', 'Ad spend managed', 'Client retention', 'Campaigns launched'],
-
-  projects: {
-    title: 'Work that <span class="accent-text">scales</span>',
-    hint: 'Drag the scroll →',
-    delta: 'From {before} to {after}',
-    backstage: 'View backstage',
-    backstageHide: 'Hide backstage',
+  metrics: {
+    labels: [
+      'Invested in Meta Ads',
+      'Ad accounts with spend',
+      'Accounts above US$10,000',
+      'Hispanic brands in the US',
+    ],
+    sectoresTitulo: 'Where the money went, by industry',
+    fuente:
+      'Source: Meta Ads, spend per account from Jan 1, 2025 to Oct 17, 2026 (USD accounts). Accounts in other currencies and disabled accounts are not included, so the real figure is higher.',
   },
 
-  backstage: {
-    title: 'Backstage', audience: 'Audience', budget: 'Budget',
-    objective: 'Objective', test: 'A/B test', winner: 'Winner',
-    sponsored: 'Sponsored',
+  sectores: {
+    joyeria: { nombre: 'Jewelry & e-commerce', conversion: 'Online sales and store visits' },
+    salud: { nombre: 'Health, aesthetics & dental', conversion: 'Consultation bookings' },
+    credito: { nombre: 'Credit, finance & tax', conversion: 'Phone consultations' },
+    seguros: { nombre: 'Insurance', conversion: 'Quotes by phone' },
+    tramites: { nombre: 'Paperwork services' },
+    viajes: { nombre: 'Travel & boating' },
+    'bienes-raices': { nombre: 'Real estate' },
+    educacion: { nombre: 'Education' },
+    otras: { nombre: 'Other, unclassified' },
+  },
+
+  projects: {
+    title: 'Four industries, <span class="accent-text">{pct}%</span> of the spend',
+    hint: 'Drag the scroll →',
+    invested: 'invested in Meta Ads',
+    share: '{pct}% of the total',
+    delta: 'From {antes} to {despues}',
+    caseLink: 'Read the case',
+  },
+
+  backstage: { sponsored: 'Sponsored' },
+
+  caso: {
+    title: '{titulo} — Case · Paola Parra',
+    reto: 'The challenge',
+    queHicimos: 'What we did',
+    resultado: 'Result',
+    ficha: 'Fact sheet',
+    periodo: 'Period',
+    inversion: 'Spend',
+    stack: 'Tools',
+    cta: 'Ad CTA',
+    antesDespues: 'Before / after',
+    otros: 'Other cases',
   },
 
   services: {
     title: 'What I do',
-    // `samples` = caption for each gallery item. It doubles as the image `alt`,
-    // so it describes WHAT IS SHOWN, not the service in the abstract.
     toggle: 'See samples of this work',
     items: [
-      { title: 'Meta Ads', desc: 'Campaigns that do not hang on one lucky creative: structure by stage, bids that get reviewed, and scaling that holds when the budget goes up.', tags: 'FB · IG · Advantage+',
-        samples: ['Campaign structure by funnel stage', 'Catalogue ad running as a Reel', 'Scaling dashboard with ROAS per ad set'] },
-      { title: 'Paid Social', desc: 'Leaving Meta only when the numbers ask for it, and doing it with pieces built natively for each platform instead of recycling the same ones.', tags: 'TikTok · Pinterest · LinkedIn',
-        samples: ['One campaign adapted to three platforms', 'Natively built TikTok creative', 'Cost per channel, side by side'] },
-      { title: 'Funnels &amp; CRO', desc: 'So what you pay to bring in does not fall over on arrival: measurement without holes, pages that get tested, and the exact point where the sale is lost.', tags: 'Landings · A/B · Tracking',
-        samples: ['Landing page before and after the redesign', 'Funnel with drop-off by step', 'A/B test with the winning variant'] },
-      { title: 'UGC &amp; Creative', desc: 'New creative every week with a hypothesis behind it, so winning stops depending on having got it right once.', tags: 'Scripts · Hooks · Testing',
-        samples: ['UGC script with its three hooks', 'One week of creative output', 'Angles ranked by retention'] },
-      { title: 'Audits &amp; Consulting', desc: 'Knowing what is broken in your account and in what order to fix it, with a 90-day plan you can run without me.', tags: 'Audit · Roadmap · Mentoring',
-        samples: ['Account diagnosis with the leaks flagged', 'Ninety-day roadmap by priority', 'Event and CAPI review'] },
+      { title: 'Meta Ads strategy and campaigns', desc: 'Campaigns by funnel stage, optimized for booked appointments and clients, not for cheap leads.', tags: 'Facebook · Instagram · TOFU-MOFU-BOFU' },
+      { title: 'GoHighLevel CRM and automations', desc: 'Every lead lands in the CRM at its stage and gets automatic follow-up by text and email, so none of them is left waiting.', tags: 'GoHighLevel · Pipelines · SMS and email' },
+      { title: 'Measurement: pixel, events and Conversions API', desc: 'Events that match across the site, the CRM and Meta; the Conversions API tells Meta which leads became appointments.', tags: 'Pixel · Events · CAPI' },
+      { title: 'Landing pages and funnels', desc: 'Pages built for a single action —book, call or get a quote— and connected to the CRM from day one.', tags: 'GHL · WordPress · Shopify' },
+      { title: 'AI pieces, scripts and video editing', desc: 'Creative with a hypothesis behind it: script, hook and edit, so new angles get tested without waiting for a big production.', tags: 'AI · Scripts · Premiere · Canva' },
+      { title: 'Account audit', desc: 'What is broken in your account and in what order to fix it, with a 90-day plan you can run with me or without me.', tags: 'Account · Measurement · Roadmap' },
     ],
   },
 
@@ -73,35 +99,24 @@ export const en = {
       { title: 'Audit', desc: 'We come out with the list of where the budget is leaking today and what can be recovered in the first two weeks.' },
       { title: 'Strategy', desc: 'You leave knowing how much goes to each funnel stage and which hypothesis that money is buying.' },
       { title: 'Creative', desc: 'Every ad comes from a specific angle, not a loose idea: hook, proof and call to action, ready to be measured on its own.' },
-      { title: 'Launch', desc: 'It goes live with clean measurement: events that add up, a catalogue in order, and a test that can be read without doubts.' },
-      { title: 'Optimisation', desc: 'Every week what does not perform is pulled and what does is reinforced — and you are told why, not just what.' },
-      { title: 'Scale', desc: 'Raising the budget without the return falling: more audiences, more channels and more markets, in that order.' },
+      { title: 'Launch', desc: 'It goes live with clean measurement: events that add up, the CRM connected, and a test that can be read without doubts.' },
+      { title: 'Optimization', desc: 'Every week what does not perform is pulled and what does is reinforced, looking at cost per appointment and not just cost per lead — and you are told why, not just what.' },
+      { title: 'Scale', desc: 'Raising the budget without cost per client shooting up: more audiences, more channels and more markets, in that order.' },
     ],
   },
 
   about: {
     title: "Hi, I'm Paola",
-    imgAlt: 'Portrait of Paola',
-    imgLabel: 'Photo — 4:5',
-    p1: "I've spent more than 6 years running paid social for brands that want to grow on data, not intuition. My obsession: that every dollar invested has a measurable return.",
-    p2: 'I work with a small number of clients so I can be inside every account, every week. No smoke: clear reporting, constant testing and decisions based on numbers.',
+    imgAlt: 'Paola Parra, Paid Media Manager, resting her hand on her cheek and looking at the camera',
+    p1: 'I have more than 9 years in digital marketing. Today I run the Advertising Department at AD Media Solution, with a team of 4 and more than 40 Hispanic brands in the US.',
+    p2: 'My work does not stop at the ad: I connect the campaign to the landing page, the CRM and the follow-up, so what gets measured is appointments and clients, not clicks.',
     cv: [
-      '2019 — Media Buyer · Performance agency (Barcelona)',
-      '2021 — Senior Media Buyer · E-commerce Group',
-      '2023 — Freelance · Meta Ads Specialist',
-      '2026 — 40+ brands supported',
+      '2017 — Community Manager',
+      '2020 — Digital Trafficker · Printex',
+      '2024 — Digital Strategist · Search Media',
+      '2025 — Head of Advertising · AD Media Solution',
     ],
   },
-
-  testimonials: [
-    { quote: '“Paola doubled our ROAS in 90 days and we finally understood which campaigns worked, and why.”', author: 'Marta G. — CEO · Atelier Nord' },
-    { quote: '“Impeccable reporting and a testing speed we had never seen from any agency.”', author: 'Daniel R. — CMO · Flowstack' },
-    { quote: '“We went from burning budget to scaling with full control. Best investment of the year.”', author: 'Lucía P. — Founder · Glow Skin' },
-  ],
-
-  // ⚠ The UI of the "THE CAMPAIGN IS YOU" concept lived here (session panel,
-  // Ads Manager signal glosses, retargeting title and the whole report). It was
-  // retired on 2026-08-16 and replaced by the sales block that starts here.
 
   // --- SALES BLOCK: plans, calculator and questions ---
   plans: {
@@ -116,9 +131,9 @@ export const en = {
         who: 'You have campaigns running and you suspect budget is leaking, but you cannot tell where.',
         list: [
           'Full review of the ad account',
-          'Measurement diagnosis: pixel, CAPI and duplicated events',
-          'Analysis of creative, audiences and structure',
-          'Prioritised 90-day roadmap',
+          'Measurement diagnosis: pixel, events and Conversions API',
+          'Funnel review: ad → landing page → CRM → appointment',
+          'Prioritized 90-day roadmap',
         ],
         take: ' a document with everything that needs fixing, in order and with the weight of each item. It is yours, whether you apply it with me or without me.',
       },
@@ -127,48 +142,50 @@ export const en = {
         title: 'Monthly management',
         who: 'You already spend every month and you want someone inside the account, not a report once the month is over.',
         list: [
-          'Strategy and campaign structure by funnel stage',
-          'Creative testing system with a new batch every week',
-          'Optimisation and scaling that protects ROAS',
-          'Fortnightly review on a call, not in a PDF',
+          'Strategy and campaigns by funnel stage',
+          'New creative with a hypothesis behind it: AI, scripts and video',
+          'Optimization for cost per appointment and per client, not cheap leads',
+          'A review call every two weeks, not a PDF',
         ],
         take: ' an account that grows on explained decisions: what changed, why, and what happened next.',
       },
       {
-        tag: 'One-off · 6 weeks',
-        title: 'Scaling sprint',
-        who: 'The account already works and you want to raise the budget without ROAS falling apart on the way.',
+        tag: 'One-off · per project',
+        title: 'Lead capture system',
+        who: 'Your ads are running, but leads go cold before anyone calls them.',
         list: [
-          'Phased scaling plan, with its ceiling calculated',
-          'Opening up audiences, markets and channels',
-          'A creative refresh system that keeps the pace',
-          'Documented handover to your in-house team',
+          'Landing page or funnel (GoHighLevel, WordPress or Shopify)',
+          'GoHighLevel CRM and automations: follow-up by text and email',
+          'Events and Conversions API connected to the CRM',
+          'Documented handover to your team',
         ],
-        take: ' a scaling method your team keeps using once I am no longer around.',
+        take: ' a system that turns a lead into an appointment without depending on someone remembering to call.',
       },
     ],
   },
 
   calc: {
-    title: 'Do the maths <span class="accent-text">before</span> you spend',
-    intro: 'Move the controls using your own numbers. This predicts nothing: it is the same arithmetic you will see in every report, and it tells you whether what you are aiming for holds up.',
+    title: 'Do the math <span class="accent-text">before</span> you spend',
+    intro: 'Move the controls using your own numbers; the starting ones are just an example. This predicts nothing: it is the same arithmetic you will see in every report, and it tells you whether what you are aiming for holds up.',
     fields: {
       spend: 'Monthly ad spend',
-      roas: 'Target ROAS',
-      ticket: 'Average order value',
+      cpl: 'Cost per lead',
+      agenda: 'Leads who book an appointment',
+      cierre: 'Appointments that become clients',
     },
     rows: {
-      revenue: 'Estimated return',
-      profit: 'Over what you spent',
-      sales: 'Sales per month',
-      cpa: 'Maximum cost per sale',
+      clientes: 'Clients per month',
+      leads: 'Leads per month',
+      citas: 'Appointments per month',
+      costoCita: 'Cost per appointment',
+      costoCliente: 'Cost per client',
     },
-    viz: {
-      spend: 'You put in',
-    },
-    noteStrong: 'Multiplying is the easy part.',
-    note: ' Reaching that ROAS at that order value is everything else on this page: the structure, the creative and the weeks of testing. And the maths runs in your browser — nothing is sent anywhere.',
-    announce: 'With {spend} a month at a ROAS of {roas}: estimated return {revenue}, {sales} sales per month, maximum cost per sale {cpa}.',
+    viz: { leads: 'Leads', citas: 'Appointments', clientes: 'Clients' },
+    leverOne: 'With the same {leads} leads, if 10 more points book ({agenda}), you get 1 more client a month without spending another dollar.',
+    leverMany: 'With the same {leads} leads, if 10 more points book ({agenda}), you get {extra} more clients a month without spending another dollar.',
+    noteStrong: 'Dividing is the easy part.',
+    note: ' Getting those leads to answer, book and show up is everything else on this page: the funnel, the CRM and the follow-up. And the math runs in your browser — nothing is sent anywhere.',
+    announce: 'With {spend} a month at {cpl} per lead: {leads} leads, {citas} appointments and {clientes} clients a month. Cost per appointment {costoCita}, cost per client {costoCliente}.',
   },
 
   faq: {
@@ -176,27 +193,27 @@ export const en = {
     items: [
       {
         q: 'How much do I need to spend for this to make sense?',
-        a: 'Below roughly $3,000 a month in ad spend, the algorithm does not gather enough data to optimise and any test takes weeks to conclude. If you are below that, I will say so on the first call and suggest what to do first.',
+        a: 'There is no fixed minimum. With a small budget, the work focuses on a single campaign and on follow-up that does not let a single lead slip; once cost per appointment holds, the budget goes up. On the first call we look at what makes sense for what you want to invest.',
       },
       {
         q: 'How long before anything shows?',
-        a: 'First signals, two to three weeks: that is how long a batch of creative takes to produce conclusive data. A sustained change of trend, 60 to 90 days. Anyone promising results in week one is talking about luck, not method.',
+        a: 'First signals, two to three weeks: that is how long a round of creative takes to produce conclusive data. A sustained change of trend, 60 to 90 days. Anyone promising results in week one is talking about luck, not method.',
       },
       {
-        q: 'Is there a lock-in?',
+        q: 'Is there a minimum term?',
         a: 'Monthly management asks for a three-month initial commitment, and not to tie you down: in less time there is no room to audit, fix and measure the effect of the fix. From the fourth month on it is month to month, no notice period.',
       },
       {
-        q: 'Do you work with my sector?',
-        a: 'Mostly e-commerce, education and info-products, and services sold online. If you sell offline or with decision cycles of months, the work changes a lot and there are better fits than me: I will tell you before taking the project, not after.',
+        q: 'Do you work with my industry?',
+        a: 'Mostly insurance, credit repair, health and aesthetics, real estate, finance and e-commerce for the Hispanic community in the US.',
       },
       {
         q: 'Who produces the creative?',
-        a: 'The system, the angles and the scripts, me. Production depends on the case: your team, UGC creators or an external producer. What does not change is the criterion — every piece ships with a hypothesis behind it and is measured on its own.',
+        a: 'The angles, the scripts and the testing system, me. The AI pieces and the video editing (Premiere, Canva) come from the team or from your own material. What does not change is the criterion: every piece ships with a hypothesis behind it and is measured on its own.',
       },
       {
         q: 'What do I need in place before we start?',
-        a: 'A working pixel and Conversions API, a catalogue if you sell products, and admin access to your ad account. If something is missing, that is not a problem: the audit starts exactly there.',
+        a: 'Just admin access to your ad account. If you have no pixel, events, Conversions API or CRM, they get set up as part of the work: the audit starts exactly there.',
       },
     ],
   },
@@ -205,10 +222,8 @@ export const en = {
     title: 'What I do not do',
     intro: 'Saying it up front filters out the bad fits and makes everything else credible. If any of this is your case, I tell you on the first call — not in month two.',
     items: [
-      'I do not work below roughly $3,000 a month in ad spend. Below that the algorithm does not gather enough data to optimise and any test takes weeks to conclude.',
-      'I do not take on offline sales or decision cycles measured in months. The work changes a lot and there are better people than me for it.',
-      'I do not do SEO, email marketing or organic social. What I do is the list further up, and I would rather say so than sell you a bundle of everything.',
-      'I do not promise a number before seeing your account. A ROAS promised up front is a made-up number; the first serious one comes out of the audit.',
+      'I do not do SEO or manage organic social. What I do is the list further up, and I would rather say so than sell you a bundle of everything.',
+      'I do not promise a number before seeing your account. A cost per lead promised up front is a made-up number; the first serious one comes out of the audit.',
       'I do not take the project on if it does not fit. The 30-minute call is for that too, and it costs nothing.',
     ],
   },
@@ -216,7 +231,7 @@ export const en = {
   contact: {
     pre: 'Got a project in mind?',
     cta: 'Shall we scale?',
-    time: 'Local time —',
+    time: 'Time in {ciudad} —',
     availabilityOne: 'Taking 1 project for {mes}',
     availabilityMany: 'Taking {plazas} projects for {mes}',
     mobileCta: 'Write to me',
@@ -224,7 +239,7 @@ export const en = {
       name: 'Name',
       email: 'Email',
       plan: 'What you are after',
-      planOptions: ['Not sure yet', 'Audit', 'Monthly management', 'Scaling sprint'],
+      planOptions: ['Not sure yet', 'Audit', 'Monthly management', 'Lead capture system'],
       message: 'Tell me about the project',
       consent: 'I have read and accept the {link}.',
       consentLink: 'privacy policy',
@@ -234,12 +249,14 @@ export const en = {
     status: {
       sending: 'Sending…',
       ok: 'Message sent. I reply within 24 h.',
-      error: 'I could not send the form. Email me directly at hola@paola-ads.com.',
+      errorEmail: 'I could not send the form. Email me directly at {email}.',
+      errorLinkedin: 'I could not send the form. Message me on LinkedIn: {url}',
+      errorRetry: 'I could not send the form. Please try again in a few minutes.',
     },
   },
 
   footer: {
-    rights: '© 2026 Paola — All rights reserved',
+    rights: '© 2026 Paola Parra — All rights reserved',
     top: 'Back to top ↑',
     marquee: ["Let's work together", 'Trabajemos juntos'],
   },

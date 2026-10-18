@@ -78,7 +78,9 @@ function montarSeccion(id, config) {
   // cuyas capas se cargan de inmediato.
   const sobreLaLinea = id === 'hero'
   const capas = config?.layers?.filter((c) => c && (c.src || c.glow)) || []
-  if (!seccion || !capas.length) return
+  // Las secciones ocultas no llevan capas: #testimonios nace `hidden` y solo se
+  // destapa si hay testimonios con permiso (sections/testimonials.js).
+  if (!seccion || seccion.hidden || !capas.length) return
 
   const contenedor = document.createElement('div')
   contenedor.className = 'parallax'

@@ -10,7 +10,7 @@ import './styles/parallax.css'
 import './styles/seams.css'
 import './styles/mobile-cta.css'
 
-import { initI18n, getLang, t } from './i18n/index.js'
+import { initI18n, t } from './i18n/index.js'
 import { applyStaticTranslations } from './i18n/apply-dom.js'
 import { initPillNav } from './js/ui/pill-nav.js'
 import { initLangSwitch } from './js/ui/lang-switch.js'
@@ -21,7 +21,6 @@ import { initAvailability } from './js/ui/availability.js'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { initLenis } from './js/core/lenis.js'
-import { initAbTest, repaintVariant } from './js/core/ab-test.js'
 import { initCursor } from './js/core/cursor.js'
 import { initPreloader } from './js/core/preloader.js'
 import { initHero } from './js/sections/hero.js'
@@ -36,7 +35,7 @@ import { initProcess } from './js/sections/process.js'
 import { initAbout } from './js/sections/about.js'
 import { initBackdrops } from './js/sections/backdrops.js'
 import { initSequences } from './js/sections/sequence.js'
-import { initTestimonials } from './js/sections/testimonials.js'
+import { renderTestimonials, initTestimonials } from './js/sections/testimonials.js'
 import { initPlans } from './js/sections/plans.js'
 import { initCalculator } from './js/sections/calculator.js'
 import { initFaq } from './js/sections/faq.js'
@@ -47,17 +46,22 @@ import { initSplitTitles } from './js/fx/split-titles.js'
 import { initNeon, refreshNeon } from './js/fx/neon.js'
 import { initParallax } from './js/fx/parallax.js'
 import { initSeams } from './js/fx/seams.js'
-import { projects } from './data/projects.js'
+import { destacados, conCaso } from './data/sectores.js'
 
 // i18n va PRIMERO: fija el idioma antes de que nadie pinte nada. Si fuera
 // después, el hero y las cards se montarían en español y parpadearían al inglés.
 initI18n()
-document.documentElement.lang = getLang() === 'en' ? 'en' : 'es-ES'
+// El mismo valor que escribe setLang() al conmutar: un solo origen (`htmlLang`
+// del diccionario) en vez de un es-ES escrito aquí a mano.
+document.documentElement.lang = t('htmlLang')
 applyStaticTranslations()
 
-initLenis()        // 1º — ScrollTrigger depende de esto
-renderProjects()   // 2º — el DOM de las cards debe existir antes de medir
-initAbTest()       // 3º — (a) ANTES de initHero(), o se ve cambiar el texto
+initLenis()           // 1º — ScrollTrigger depende de esto
+renderProjects()      // 2º — el DOM de las fichas debe existir antes de medir
+// 3º — decide si #testimonios existe. ANTES de las capas de imagen y de las
+// costuras: las tres se saltan las secciones `hidden`, así que tienen que saber
+// ya si esta lo está. (Aquí iba initAbTest(), retirado con el test A/B.)
+renderTestimonials()
 initCursor()
 initPreloader()
 initHero()
@@ -112,13 +116,9 @@ initAvailability()
 // luego las cards, que se recrean enteras.
 window.addEventListener('i18n:change', () => {
   applyStaticTranslations()
-  // El subtítulo del hero NO lo alcanza el aplicador estático: lo posee el test
-  // A/B, que decide qué variante se sirve. Se repinta sin animación, igual que
-  // en el arranque, para que no se vea el texto cambiar dos veces.
-  repaintVariant()
   refreshProjects()
   refreshServices()  // los pies de las muestras se leen al renderizar, no se traducen solos
-  // refreshProjects() reescribe el track entero, así que las seis cards vuelven
+  // refreshProjects() reescribe el track entero, así que las fichas vuelven
   // SIN clase .neon y sin halo. Sin esto se quedan sin borde al cambiar de
   // idioma, y en silencio.
   refreshNeon()
@@ -139,5 +139,5 @@ initNeon()
 // Solo en desarrollo: Vite lo elimina del bundle de producción por eliminación de
 // código muerto, así que la consola del sitio publicado queda limpia.
 if (import.meta.env.DEV) {
-  console.log(`[paola] ${projects.length} proyectos cargados · todas las secciones ok`)
+  console.log(`[paola] ${destacados.length} sectores · ${conCaso().length} casos publicables · todas las secciones ok`)
 }

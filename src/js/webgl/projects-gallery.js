@@ -21,17 +21,29 @@
 
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { projects } from '../../data/projects.js'
+import { conCaso } from '../../data/sectores.js'
 import { shouldReduceMotion } from '../core/lenis.js'
+import { getLang, t } from '../../i18n/index.js'
 
 // Profundidad del ciclo. Los planos viven en z ∈ [0, DEPTH_RANGE) y se pintan en
 // worldZ = z - DEPTH_RANGE/2, así que la mitad negativa es la que ve la cámara.
 const DEPTH_RANGE = 50
 const VISIBLE_COUNT = 12
-// Cuántos casos avanza cada plano al dar una vuelta completa. 5 es coprimo con
-// los 6 casos: con un divisor (2, 3, 6) cada plano repetiría siempre la misma
-// creatividad vuelta tras vuelta y el ciclo se leería como un bucle corto.
-const IMAGE_ADVANCE = 5
+// Cuántos casos avanza cada plano al dar una vuelta completa. Tiene que ser
+// COPRIMO con el número de creativos: con un divisor cada plano repetiría
+// siempre el mismo vuelta tras vuelta y el ciclo se leería como un bucle corto.
+// Era un 5 fijo, que solo valía para los seis casos de plantilla; ahora se
+// calcula con los que haya (6 → 5, 4 → 3, 3 → 2).
+const mcd = (a, b) => (b ? mcd(b, a % b) : a)
+function avanceCoprimo(n) {
+  for (let k = n - 1; k > 1; k--) if (mcd(k, n) === 1) return k
+  return 1
+}
+
+// Mínimo de creativos REALES para montar la galería. Con menos, doce planos
+// repetirían una o dos imágenes y se leería como un salvapantallas. Y con
+// ninguno —hoy— la galería no existe: es una galería de creativos.
+const MIN_CREATIVOS = 3
 const MAX_H_OFFSET = 8
 const MAX_V_OFFSET = 8
 
@@ -131,12 +143,16 @@ function ramp(value, start, end) {
 }
 
 /**
- * Textura de la creatividad. Sin `image` en el caso se PINTA una: el gradiente
- * del sistema con los datos del caso encima, en la tipografía de la marca.
- * Cero peticiones de red y cero stock genérico — cambiar la galería es editar
- * src/data/projects.js, igual que la card (projects.js §visual).
+ * Textura de respaldo, para cuando el creativo de un caso no carga: el oro del
+ * sistema con los datos del caso encima, en la tipografía de la marca. Cero
+ * peticiones de red y cero stock genérico. Solo se usa si falla la imagen: a la
+ * galería no entra ningún caso sin creativo (ver initProjectsGallery).
  */
-function paintCreative(project) {
+function paintCreative(sector, i, total) {
+  const caso = sector.caso
+  const en = getLang() === 'en' ? caso.en || {} : {}
+  const titulo = en.titulo || caso.titulo
+  const resultado = (en.resultados || caso.resultados).find((r) => r?.valor && r?.etiqueta)
   const W = 1024
   const H = 640
   const canvas = document.createElement('canvas')
@@ -144,10 +160,10 @@ function paintCreative(project) {
   canvas.height = H
   const ctx = canvas.getContext('2d')
 
-  // Gradiente a 135°, el mismo que el linear-gradient de la card.
+  // Gradiente a 135°: el oro profundo de la marca sobre su negro (tokens.css).
   const grad = ctx.createLinearGradient(0, 0, W, H)
-  grad.addColorStop(0, project.gradient[0])
-  grad.addColorStop(1, project.gradient[1])
+  grad.addColorStop(0, '#161616')
+  grad.addColorStop(1, '#6E5514')
   ctx.fillStyle = grad
   ctx.fillRect(0, 0, W, H)
 
@@ -161,34 +177,30 @@ function paintCreative(project) {
 
   ctx.textBaseline = 'alphabetic'
 
-  // Índice + formato arriba, como el chrome de la card.
+  // Índice arriba, como en la tarjeta.
   ctx.font = '500 22px "JetBrains Mono", monospace'
   ctx.fillStyle = 'rgba(243, 242, 242, 0.72)'
-  ctx.fillText(`${project.index}/06`, 56, 84)
-  const format = project.adFormat.toUpperCase()
-  ctx.textAlign = 'right'
-  ctx.fillText(format, W - 56, 84)
-  ctx.textAlign = 'left'
+  ctx.fillText(`${String(i + 1).padStart(2, '0')}/${String(total).padStart(2, '0')}`, 56, 84)
 
   // Título.
-  ctx.font = '600 76px "Clash Display", sans-serif'
+  ctx.font = '600 64px "Clash Display", sans-serif'
   ctx.fillStyle = '#F3F2F2'
-  ctx.fillText(project.title, 56, H - 168)
+  ctx.fillText(titulo, 56, H - 168)
 
-  // KPI: el dato es el argumento de venta, va grande y al lado del título.
+  // Resultado: el dato es el argumento, va grande y debajo del título.
   ctx.font = '600 58px "Clash Display", sans-serif'
-  ctx.fillText(project.kpi1.value, 56, H - 88)
+  ctx.fillText(resultado.valor, 56, H - 88)
 
   ctx.font = '500 22px "JetBrains Mono", monospace'
   ctx.fillStyle = 'rgba(243, 242, 242, 0.72)'
-  const kpiWidth = ctx.measureText(project.kpi1.value).width
-  ctx.fillText(project.kpi1.label.toUpperCase(), 56 + kpiWidth + 220, H - 88)
-  ctx.fillText(project.sector.toUpperCase(), 56, H - 46)
+  const valorWidth = ctx.measureText(resultado.valor).width
+  ctx.fillText(resultado.etiqueta.toUpperCase(), 56 + valorWidth + 220, H - 88)
+  ctx.fillText(t(`sectores.${sector.id}.nombre`).toUpperCase(), 56, H - 46)
 
   return canvas
 }
 
-async function buildTextures(THREE, renderer) {
+async function buildTextures(THREE, renderer, casos) {
   // Sin esperar a las fuentes, los rótulos salen en la fuente de sistema: el
   // canvas 2D no re-dibuja solo cuando la woff2 termina de cargar.
   if (document.fonts?.ready) {
@@ -203,21 +215,16 @@ async function buildTextures(THREE, renderer) {
   const loader = new THREE.TextureLoader()
 
   return Promise.all(
-    projects.map(async (project) => {
+    casos.map(async (sector, i) => {
       let texture
+      const src = sector.caso.creativo.src
 
-      // Misma bifurcación que la card (projects.js §visual): en cuanto un caso
-      // declare `image`, aquí entra la creatividad real sin tocar código.
-      //
-      // AVIF PRIMERO, y no por capricho: la card ya sirve el .avif con su
+      // AVIF PRIMERO, y no por capricho: la tarjeta ya sirve el .avif con su
       // <picture>, así que pedirlo aquí también da un acierto de caché y coste
-      // CERO. Forzando .webp —como estaba— cada creatividad se descargaba DOS
-      // veces, una por formato: 12 peticiones para 6 imágenes.
-      // El webp queda de red de seguridad para navegadores sin AVIF, y el
-      // gradiente pintado por si tampoco hubiera webp.
-      for (const url of project.image
-        ? [`/img/${project.image}.avif`, `/img/${project.image}.webp`]
-        : []) {
+      // CERO. Forzando .webp cada creativo se descargaba DOS veces.
+      // El webp queda de red de seguridad para navegadores sin AVIF, y la
+      // textura pintada por si tampoco hubiera webp.
+      for (const url of [`/img/${src}.avif`, `/img/${src}.webp`]) {
         try {
           texture = await loader.loadAsync(url)
           break
@@ -225,7 +232,7 @@ async function buildTextures(THREE, renderer) {
           /* siguiente formato */
         }
       }
-      if (!texture) texture = new THREE.CanvasTexture(paintCreative(project))
+      if (!texture) texture = new THREE.CanvasTexture(paintCreative(sector, i, casos.length))
 
       texture.colorSpace = THREE.SRGBColorSpace
       texture.anisotropy = anisotropy
@@ -262,7 +269,7 @@ function spatialPositions(count) {
  * galería todavía no ha entrado en pantalla, esta promesa se quedaría colgada
  * para siempre con su IntersectionObserver vivo.
  */
-async function mountProjectsGallery(container, canvas, signal) {
+async function mountProjectsGallery(container, canvas, signal, casos) {
   // Nada se monta hasta que la galería se acerca: el hero manda en el arranque.
   await new Promise((resolve, reject) => {
     const io = new IntersectionObserver(
@@ -301,7 +308,8 @@ async function mountProjectsGallery(container, canvas, signal) {
   const camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 100)
   camera.position.set(0, 0, 0)
 
-  const textures = await buildTextures(THREE, renderer)
+  const textures = await buildTextures(THREE, renderer, casos)
+  const avance = avanceCoprimo(textures.length)
 
   // Una geometría para los 12 planos. Segmentada 32×32 porque la curvatura de
   // tela se hace en el vértice: con un quad de 4 vértices no se comba nada.
@@ -369,7 +377,7 @@ async function mountProjectsGallery(container, canvas, signal) {
       const normalized = z / DEPTH_RANGE
 
       const index =
-        (((i + wraps * IMAGE_ADVANCE) % textures.length) + textures.length) % textures.length
+        (((i + wraps * avance) % textures.length) + textures.length) % textures.length
 
       if (index !== plane.textureIndex) {
         plane.textureIndex = index
@@ -504,8 +512,15 @@ export async function initProjectsGallery() {
   const container = document.querySelector('.projects__gallery')
   const canvas = document.getElementById('projects-gallery-canvas')
   if (!container || !canvas) return null
-  if (!projects.length) return null
+  // Solo casos publicables, y todos traen creativo: esCasoPublicable() lo exige.
+  const casos = conCaso()
+  if (casos.length < MIN_CREATIVOS) return null
   if (!document.createElement('canvas').getContext('webgl2')) return null
+  // Hay galería que enseñar: el contenedor nace `hidden` en index.html para no
+  // reservar 100svh vacíos mientras no la haya. Se destapa aquí, en el arranque
+  // y antes de que ScrollTrigger mida, así que no mueve nada después. (En móvil
+  // y con reduced-motion lo sigue ocultando el CSS.)
+  container.hidden = false
 
   const mm = window.matchMedia('(min-width: 1024px)')
   const puedeMontar = () => mm.matches && !shouldReduceMotion()
@@ -519,7 +534,7 @@ export async function initProjectsGallery() {
       abort = new AbortController()
       const mio = abort
       try {
-        const montada = await mountProjectsGallery(container, canvas, mio.signal)
+        const montada = await mountProjectsGallery(container, canvas, mio.signal, casos)
         if (mio.signal.aborted) montada?.dispose()
         else galeria = montada
       } catch {

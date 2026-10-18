@@ -223,12 +223,18 @@
   display: grid; grid-template-columns: repeat(4, 1fr);
   border-top: 1px solid var(--line);
 }
-.metric { padding: 2.5rem 2rem 2rem 0; border-right: 1px solid var(--line); }
+/* `container-type` para que la cifra se mida contra SU columna (ver abajo). */
+.metric { padding: 2.5rem 2rem 2rem 0; border-right: 1px solid var(--line); container-type: inline-size; }
 .metric:last-child { border-right: 0; }
+/* ⚠ El cuerpo tiene un techo relativo a la columna (20cqi), no solo al viewport.
+   Las cifras de plantilla tenían cuatro caracteres («4.2x», «120+»); «+US$1.1M»
+   tiene ocho, y a --fs-metric se montaba sobre la columna de al lado. Las
+   cuatro comparten el mismo techo, así que siguen saliendo del mismo cuerpo. */
 .metric__value {
   font-family: var(--font-mono); font-weight: 500;
-  font-size: var(--fs-metric); line-height: 1; letter-spacing: -0.04em;
+  font-size: min(var(--fs-metric), 20cqi); line-height: 1; letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 /* La gráfica. Alto de verdad, no un renglón: 24px de línea gris de 1px era el
    dato más persuasivo del sitio dibujado en el color del texto deshabilitado.
@@ -332,9 +338,77 @@
    misma cosa, no dos bloques. */
 .metric__range + .metric__label { margin-top: 0.5rem; }
 
+/* ===== DÓNDE SE HA INVERTIDO — la gráfica de la página 2 de la auditoría =====
+   Nueve filas, MISMA escala y base cero: el ancho de cada barra es su inversión
+   sobre la de la fila más larga, que es «otras». Y esa va la última aunque sea
+   la mayor, como en el informe: no es una industria, es lo que no se pudo
+   clasificar, y ordenarla primero contaría otra cosa.
+   Las filas las escribe vite.config.js (htmlSectores) desde src/data/sectores.js. */
+.sector-chart { margin-top: clamp(3rem, 7vw, 5rem); }
+.sector-chart__title { color: var(--muted); }
+.sector-bars {
+  list-style: none;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1.15rem;
+}
+.sector-bar {
+  display: grid;
+  grid-template-columns: 1fr auto 3.5ch;
+  align-items: baseline;
+  column-gap: 1.25rem;
+  row-gap: 0.55rem;
+}
+.sector-bar__name { font-size: 0.95rem; line-height: 1.3; }
+.sector-bar__value,
+.sector-bar__share { font-size: 0.8rem; font-variant-numeric: tabular-nums; text-align: right; }
+.sector-bar__share { color: var(--muted); }
+/* La pista es la escala, no un dato: un filete, sin relleno propio. */
+.sector-bar__track {
+  grid-column: 1 / -1;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+.sector-bar__track i {
+  display: block;
+  height: 100%;
+  width: var(--valor);
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--gold) 38%, transparent);
+  transform-origin: left center;
+}
+/* Los cuatro de las fichas, en el oro entero: son los que la sección siguiente
+   abre. El resto, en oro bajo; «otras», en gris, porque no es un sector. */
+.sector-bar.is-featured .sector-bar__track i { background: var(--gradient-gold); }
+.sector-bar.is-rest { color: var(--muted); }
+.sector-bar.is-rest .sector-bar__track i { background: color-mix(in srgb, var(--muted) 45%, transparent); }
+
+.sector-chart__source {
+  margin-top: 1.75rem;
+  max-width: 80ch;
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.6;
+}
+
+@media (min-width: 900px) {
+  /* En ancho, la gráfica clásica: nombre | barra | importe | %. Las cifras van
+     en columnas fijas para que se lean en vertical, como una tabla. */
+  .sector-bar { grid-template-columns: minmax(12rem, 17rem) 1fr 4.5rem 3.5ch; }
+  .sector-bar__name { grid-column: 1; grid-row: 1; }
+  .sector-bar__track { grid-column: 2; grid-row: 1; align-self: center; }
+  .sector-bar__value { grid-column: 3; grid-row: 1; }
+  .sector-bar__share { grid-column: 4; grid-row: 1; }
+}
+
 /* ===== PROYECTOS ===== */
 .projects { overflow: clip; }
-.projects__header { padding-top: var(--section-pad); position: relative; }
+/* El techo de 12vh es por el pin: esta cabecera viaja pineada con las fichas, y
+   el aire de arriba se come la ventana entera en un portátil de 800px. */
+.projects__header { padding-top: min(var(--section-pad), 12vh); position: relative; }
 .projects__hint { margin-top: 2rem; }
 .projects__progress {
   height: 2px; background: var(--line); margin-top: 2rem; overflow: hidden;
@@ -423,6 +497,61 @@
 
 .project-card__desc { margin-top: 1.25rem; color: var(--muted); font-size: 0.95rem; }
 
+/* FICHA DE SECTOR — la tarjeta sin caso. Tipográfica a propósito: donde la
+   tarjeta de caso lleva el creativo, aquí va el dato. Un creativo inventado sería
+   justo lo que se retiró el 2026-10-17. El fondo es el oro del sistema a ras de
+   suelo, sin imagen.
+   16:9 y no el 16:10 + cuerpo de la tarjeta de caso: la sección va pineada y lo
+   que no cabe en la ventana no se ve en todo el recorrido. Así entra entera,
+   con la cabecera, en un portátil de 800px de alto. */
+.sector-card {
+  aspect-ratio: 16 / 9;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1.25rem, 2.6vw, 1.75rem);
+  background:
+    radial-gradient(120% 90% at 0% 100%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 62%),
+    var(--surface);
+}
+.sector-card__name {
+  margin-top: 0.5rem;
+  font-size: var(--fs-h3);
+  line-height: 1.05;
+}
+.sector-card__amount {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 5.5vw, 4rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.sector-card__label { margin-top: 0.5rem; color: var(--muted); font-size: 0.72rem; }
+.sector-card__share { color: var(--gold); }
+/* Su parte del total, en la escala completa (100 % = toda la inversión). */
+.sector-card__bar {
+  display: block;
+  margin-top: 0.9rem;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+.sector-card__bar i {
+  display: block;
+  height: 100%;
+  width: var(--parte);
+  background: var(--gradient-gold);
+}
+.sector-card__conversion {
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+  color: var(--text);
+  font-size: 0.75rem;
+}
+
 /* ===== SERVICIOS ===== */
 /* La cabecera va en STICKY, y para que eso signifique algo necesita columna
    propia. Cuando cabecera y lista compartían la única columna a sangre, el
@@ -460,8 +589,13 @@
    columna del número: las etiquetas acababan bajo el índice, en una columna de
    50px, partidas en tres renglones. */
 .service__index { grid-column: 1; grid-row: 1; }
-.service__title { grid-column: 2; grid-row: 1; }
-.service__tags  { grid-column: 3; grid-row: 1; justify-self: end; white-space: nowrap; }
+/* El título ocupa el renglón ENTERO y las etiquetas bajan debajo de la
+   descripción. Con los nombres de la auditoría («CRM y automatizaciones en
+   GoHighLevel», «Medición: píxel, eventos y API de Conversiones») el título,
+   apretado contra unas etiquetas sin salto de línea, se partía en tres renglones
+   de cuerpo display. */
+.service__title { grid-column: 2 / -1; grid-row: 1; max-width: 24ch; }
+.service__tags  { grid-column: 2 / -1; grid-row: 3; justify-self: start; margin-top: 0.75rem; }
 /* La descripción baja a su propia línea: en la columna estrecha, compartir fila
    con título y etiquetas dejaba las tres cajas por debajo de su ancho legible. */
 .service__desc  { grid-column: 2 / -1; grid-row: 2; }

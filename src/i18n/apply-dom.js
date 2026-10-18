@@ -6,6 +6,14 @@
 // junto a elementos) sin ensuciar la plantilla.
 
 import { t } from './index.js'
+import { perfil } from '../data/perfil.js'
+import { destacados, totalInvertido } from '../data/sectores.js'
+
+// El «69 %» del titular de sectores: se calcula, no se escribe. Es el mismo
+// número que pone en el HTML el plugin de vite.config.js.
+const PCT_DESTACADOS = Math.round(
+  (destacados.reduce((suma, s) => suma + s.invertido, 0) / totalInvertido) * 100
+)
 
 // Nombre de sección por id. Es también el nombre accesible de la región (ver
 // abajo), así que toda sección con `.section-label` tiene que estar en el mapa.
@@ -60,6 +68,9 @@ export function applyStaticTranslations() {
 
   // --- Hero ---
   set('.hero__label', t('hero.label'))
+  // El subtítulo lo escribía el test A/B (core/ab-test.js, retirado el
+  // 2026-10-17); ahora es una sola frase y se traduce como cualquier otra.
+  setHTML('.hero__subtitle', t('hero.subtitle'))
   setEach('.hero__meta span', t('hero.meta'))
   // El texto "Scroll" convive con el <span> de la línea: se toca solo el nodo de texto.
   const scroll = document.querySelector('.hero__scroll')
@@ -84,11 +95,18 @@ export function applyStaticTranslations() {
     if (key) section.setAttribute('aria-label', t(`labels.${key}`))
   })
 
-  // --- Métricas ---
-  setEach('.metric__label', t('metrics'))
+  // --- Cifras ---
+  // Los VALORES no se traducen —son los mismos en los dos idiomas—; los rótulos sí.
+  setEach('.metric__label', t('metrics.labels'))
+  set('.sector-chart__title', t('metrics.sectoresTitulo'))
+  set('.sector-chart__source', t('metrics.fuente'))
+  // Por `data-sector` y no por índice: el nombre se busca por lo que la fila ES.
+  document.querySelectorAll('.sector-bar').forEach((li) => {
+    set('.sector-bar__name', t(`sectores.${li.dataset.sector}.nombre`), li)
+  })
 
-  // --- Proyectos (el track lo repinta renderProjects) ---
-  setHTML('#proyectos h2.section-title', t('projects.title'))
+  // --- Sectores (el track lo repinta renderProjects) ---
+  setHTML('#proyectos h2.section-title', t('projects.title', { pct: PCT_DESTACADOS }))
   set('.projects__hint', t('projects.hint'))
 
   // --- Servicios ---
@@ -124,22 +142,17 @@ export function applyStaticTranslations() {
 
   // --- Sobre mí ---
   set('#sobre-mi h2.section-title', t('about.title'))
-  const img = document.querySelector('.about__img')
-  if (img) img.setAttribute('aria-label', t('about.imgAlt'))
-  set('.about__img-label', t('about.imgLabel'))
+  // El retrato es un <img> del HTML estático (ver index.html §SOBRE MÍ): su
+  // nombre accesible es el `alt`, y ahora también cambia de idioma.
+  const foto = document.querySelector('.about__img img')
+  if (foto) foto.alt = t('about.imgAlt')
   const texts = document.querySelectorAll('.about__text')
   if (texts[0]) texts[0].textContent = t('about.p1')
   if (texts[1]) texts[1].textContent = t('about.p2')
   setEach('.about__cv li', t('about.cv'))
 
-  // --- Testimonios ---
-  const quotes = t('testimonials')
-  document.querySelectorAll('.testimonial').forEach((card, i) => {
-    const item = quotes[i]
-    if (!item) return
-    set('.testimonial__quote', item.quote, card)
-    set('.testimonial__author', item.author, card)
-  })
+  // Testimonios: no se traducen. Son citas literales de clientes y viven en
+  // src/data/testimonios.js (ver sections/testimonials.js).
 
   // --- Planes ---
   setHTML('#planes h2.section-title', t('plans.title'))
@@ -162,20 +175,18 @@ export function applyStaticTranslations() {
   // --- Calculadora (los VALORES los escribe calculator.js) ---
   setHTML('#calculadora h2.section-title', t('calc.title'))
   set('.calc__intro', t('calc.intro'))
-  const campos = ['spend', 'roas', 'ticket']
+  const campos = ['spend', 'cpl', 'agenda', 'cierre']
   document.querySelectorAll('.calc__label').forEach((el, i) => {
     if (campos[i]) el.textContent = t(`calc.fields.${campos[i]}`)
   })
-  const filas = ['revenue', 'profit', 'sales', 'cpa']
+  const filas = ['clientes', 'leads', 'citas', 'costoCita', 'costoCliente']
   document.querySelectorAll('.calc__row dt').forEach((dt, i) => {
     if (filas[i]) dt.textContent = t(`calc.rows.${filas[i]}`)
   })
-  // La leyenda de la barra «a escala». El segundo rótulo REUSA el del <dl>: es
-  // el mismo número con el mismo nombre a dos palmos, y llamarlo de dos maneras
-  // distintas en el mismo panel es peor que repetirlo.
-  // Los importes y el corte los escribe calculator.js, que ya se repinta solo al
-  // cambiar de idioma (el formato de los números depende del locale).
-  const leyenda = [t('calc.viz.spend'), t('calc.rows.profit')]
+  // La leyenda del embudo a escala, en el orden de la barra. Los números y los
+  // anchos los escribe calculator.js, que ya se repinta solo al cambiar de
+  // idioma (el formato de los números depende del locale).
+  const leyenda = [t('calc.viz.leads'), t('calc.viz.citas'), t('calc.viz.clientes')]
   document.querySelectorAll('.calc__viz-label').forEach((el, i) => {
     if (leyenda[i] !== undefined) el.textContent = leyenda[i]
   })
@@ -203,10 +214,11 @@ export function applyStaticTranslations() {
   // --- Contacto ---
   set('.contact__pre', t('contact.pre'))
   set('.contact__cta-text', t('contact.cta'))
-  // "Hora local — <span id="local-time">": solo el nodo de texto.
+  // "Hora en {ciudad} — <span id="local-time">": solo el nodo de texto. La
+  // ciudad es un dato (src/data/perfil.js); sin zona horaria la línea ni se ve.
   const time = document.querySelector('.contact__time')
   if (time && time.firstChild?.nodeType === Node.TEXT_NODE) {
-    time.firstChild.textContent = `${t('contact.time')} `
+    time.firstChild.textContent = `${t('contact.time', { ciudad: perfil.contacto.ciudad })} `
   }
 
   set('.mobile-cta__text', t('contact.mobileCta'))
@@ -220,8 +232,9 @@ export function applyStaticTranslations() {
     t('contact.form.name'), t('contact.form.email'),
     t('contact.form.plan'), t('contact.form.message'),
   ])
-  // Del <select> se traduce el rótulo, nunca el `value`: ese viaja a Netlify y
-  // es también la clave con la que sections/plans.js precualifica el desplegable.
+  // Del <select> se traduce el rótulo, nunca el `value`: ese viaja en el correo
+  // que recibe Paola (api/contacto.js) y es también la clave con la que
+  // sections/plans.js precualifica el desplegable.
   setEach('#cf-plan option', t('contact.form.planOptions'))
   set('.contact-form__submit', t('contact.form.submit'))
   // El honeypot está oculto, pero lo lee un lector de pantalla que ignore el CSS.

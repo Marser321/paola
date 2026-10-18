@@ -64,6 +64,12 @@ for (const [slot, portrait] of Object.entries(portraits || {})) {
   else checkBudget('portraits', size)
   if (!portrait.alt) problems.push(`Retrato «${slot}»: falta el texto alternativo (alt)`)
   if (portrait.placeholder) pending.push(`retrato «${slot}» (${portrait.src})`)
+  // El <img> del <picture> estático de index.html es un JPG: el respaldo para
+  // quien no lee AVIF ni WebP. Sin él, ese visitante ve el alt, que es justo lo
+  // que encontró la auditoría del 17 oct 2026 (scripts/media/build-media.py respaldos).
+  if (!existsSync(join(IMG, `${portrait.src}.jpg`))) {
+    problems.push(`Retrato «${slot}»: falta el respaldo /img/${portrait.src}.jpg (build-media.py respaldos)`)
+  }
 }
 
 // --- Figura del hero ---
@@ -78,6 +84,10 @@ if (figure?.src) {
   if (!figure.alt && figure.alt !== '') problems.push('Figura del hero: falta `alt` (usa "" si es decorativa)')
   if (!figure.width || !figure.height) {
     warnings.push('Figura del hero: sin `width`/`height` declarados — el <img> no reservará su caja y habrá salto de layout')
+  }
+  // Igual que el retrato, pero en PNG: el respaldo también necesita su alfa.
+  if (!existsSync(join(IMG, `${figure.src}.png`))) {
+    problems.push(`Figura del hero: falta el respaldo /img/${figure.src}.png (build-media.py respaldos)`)
   }
 }
 

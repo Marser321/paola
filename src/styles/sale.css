@@ -201,8 +201,8 @@
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
-/* El retorno es el número que se ha venido a ver: va en cuerpo de métrica, como
-   los cuatro KPIs de #metricas, para que sea el mismo gesto en las dos. */
+/* Los clientes son el número que se ha venido a ver: va en cuerpo de métrica,
+   como los cuatro KPIs de #metricas, para que sea el mismo gesto en las dos. */
 .calc__big {
   font-family: var(--font-mono);
   font-weight: 500;
@@ -211,26 +211,19 @@
   letter-spacing: -0.04em;
 }
 
-/* ===== A ESCALA — la calculadora, dibujada =====
-   UNA barra: el retorno entero, partido en el punto donde acaba lo invertido.
-   Las mismas cifras del <dl> de al lado puestas a proporción — y ese es el
-   argumento, porque «$5.000 → $21.000» es una proporción, y una proporción se
-   ve en una barra y no se ve en un número.
+/* ===== EL EMBUDO A ESCALA — la calculadora, dibujada =====
+   UNA barra. La pista son los leads —el 100 %, así que se pinta como
+   contenedor y no como dato— y dentro, desde el mismo origen, lo que agenda y lo
+   que se vuelve cliente. Las mismas cifras del <dl> de al lado puestas a
+   proporción: «120 → 36 → 9» es una proporción, y una proporción se ve en una
+   barra y no se ve en tres números.
 
-   ⚠ POR QUÉ UNA Y NO DOS. Hubo dos barras: «inviertes» (1/ROAS) y «recuperas»
-   (100%). La segunda era, por construcción, una CONSTANTE: no podía cambiar
-   nunca, y era el elemento más decorado del bloque —degradado, floración,
-   brillo, insignia— transportando cero información. Ahora la referencia es la
-   pista, que es un contenedor y se pinta como tal; lo que lleva relleno es lo
-   que mide algo.
+   ⚠ Hereda la regla de la versión anterior (la de ROAS, retirada el
+   2026-10-17): nada que mida una constante lleva relleno. Por eso los leads no
+   son una tercera barra al 100 %: son la pista.
 
-   ⚠ Y ANTES DE ESO HUBO UNA TERCERA, el reparto de UNA venta entre coste de
-   anuncio y resto. Se cayó al mirarla con números: `coste por venta ÷ ticket`
-   es `1 ÷ ROAS`, exactamente lo mismo que `inversión ÷ retorno`. Con estos tres
-   controles multiplicándose no hay más que UNA proporción que enseñar.
-
-   Regla que hereda del bloque entero: aquí no se estima nada. El corte de la
-   barra es una división entre dos números que ha escrito quien mira. */
+   Regla del bloque entero: aquí no se estima nada. Cada ancho es una división
+   entre números que ha escrito quien mira. */
 .calc__viz {
   grid-column: 1 / -1;
   display: grid;
@@ -239,16 +232,6 @@
   border-top: 1px solid var(--line);
 }
 
-/* ⚠ AQUÍ HUBO UN «4,2x». Primero dentro de la barra, donde las marcas le
-   cruzaban el texto —el `::after` que las dibuja se pinta por encima de todo lo
-   que hay en la pista, descendientes incluidos, y ningún `z-index` lo cambia—, y
-   después a su derecha. Se fue el 2026-08-19 porque era el mismo número que el
-   <output> del control de ROAS, tres renglones más arriba, en el mismo panel. Y
-   no hacía falta ni como clave de las marcas: la primera parte de la barra es lo
-   invertido y las marcas la repiten, así que el múltiplo se cuenta. */
-
-/* La pista es el retorno entero. No lleva relleno propio: las dos partes la
-   cubren siempre al 100%, así que cualquier color aquí sería decorado puro. */
 .calc__viz-track {
   position: relative;
   height: 2rem;
@@ -257,10 +240,9 @@
   overflow: hidden;
 }
 
-/* Las marcas. NO son cuartos arbitrarios: cada tramo es UNA VEZ lo invertido, y
-   por eso `--pitch` vale lo mismo que el corte de la barra (los dos son 1/ROAS).
-   Se pueden contar: con 4,2x hay cuatro marcas y un resto. Van por encima de los
-   dos rellenos —de ahí el ::after— o la mitad izquierda se quedaría sin ellas. */
+/* Las marcas: una cada 10 % de los leads, así que las proporciones se pueden
+   contar («tres marcas y pico» = algo más del 30 % agenda). Van por encima de
+   los dos rellenos —de ahí el ::after— o quedarían tapadas. */
 .calc__viz-track::after {
   content: '';
   position: absolute;
@@ -268,8 +250,8 @@
   pointer-events: none;
   background: repeating-linear-gradient(
     90deg,
-    transparent 0 calc(var(--pitch, 25%) - 1px),
-    color-mix(in srgb, var(--bg) 45%, transparent) calc(var(--pitch, 25%) - 1px) var(--pitch, 25%)
+    transparent 0 calc(10% - 1px),
+    color-mix(in srgb, var(--bg) 45%, transparent) calc(10% - 1px) 10%
   );
 }
 
@@ -277,36 +259,30 @@
   position: absolute;
   top: 0;
   bottom: 0;
+  left: 0;
   /* Corta, no lenta: el control de rango dispara decenas de eventos por segundo
      y `step` los agrupa en saltos. 0.18s convierte el salto en movimiento sin
      que la barra se quede persiguiendo al dedo. */
-  transition: width 0.18s var(--ease-out), left 0.18s var(--ease-out);
+  transition: width 0.18s var(--ease-out);
 }
 
-/* Lo invertido: el mismo dinero, en tono bajo. El filete de la derecha es el
-   corte, y cae exactamente sobre la primera marca. */
-.calc__viz-seg--spend {
-  left: 0;
-  width: 23.8%;
+/* Las citas: tono bajo y un filete donde acaban. */
+.calc__viz-seg--citas {
+  width: 30%;
   background: color-mix(in srgb, var(--gold) 20%, transparent);
   border-right: 2px solid var(--gold);
 }
 
-/* Lo que suma: de ahí al final. Su ancho no se escribe — lo define el corte. */
-.calc__viz-seg--profit {
-  left: 23.8%;
-  right: 0;
+/* Los clientes: el oro entero, encima de las citas. */
+.calc__viz-seg--clientes {
+  width: 7.5%;
   background: var(--gradient-gold);
   box-shadow: var(--glow-gold);
+  overflow: hidden;
 }
-/* El brillo que la recorre, UNA vez, cuando el bloque entra en pantalla.
-   ⚠ Iba en bucle infinito. Un destello permanente sobre la barra del dinero es
-   interfaz de tragaperras —lo escribí en este mismo archivo para justificar que
-   solo hubiera uno, como si uno no contase—, y además era lo único del sitio que
-   se movía sin parar: aquí todo revela una vez (`once: true` en todos los
-   ScrollTrigger) y se queda quieto. La clase la pone calculator.js con un
-   IntersectionObserver. */
-.calc__viz-seg--profit::after {
+/* El brillo que la recorre, UNA vez, cuando el bloque entra en pantalla. La
+   clase la pone calculator.js con un IntersectionObserver. */
+.calc__viz-seg--clientes::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -318,7 +294,7 @@
   );
   transform: translateX(-130%);
 }
-.calc__viz.is-in .calc__viz-seg--profit::after {
+.calc__viz.is-in .calc__viz-seg--clientes::after {
   animation: calc-sweep 1.8s var(--ease-out) 0.25s 1 both;
 }
 @keyframes calc-sweep {
@@ -326,10 +302,8 @@
   to { transform: translateX(130%); }
 }
 
-/* La leyenda. Los números van AQUÍ y no dentro de cada parte de la barra: con
-   un ROAS de 8 la parte invertida mide un 12,5% y no cabe un importe dentro.
-   En posición fija caben siempre, y son lo que hace que mover la inversión
-   cambie algo de la gráfica y no solo de la tabla. */
+/* La leyenda. Los números van AQUÍ y no dentro de la barra: con un 5 % de
+   cierre el tramo de clientes mide un par de píxeles y no cabe nada dentro. */
 .calc__viz-foot {
   display: flex;
   flex-wrap: wrap;
@@ -344,11 +318,12 @@
   border-radius: 3px;
   translate: 0 0.05rem;
 }
-.calc__viz-chip--spend {
+.calc__viz-chip--leads { border: 1px solid var(--line); }
+.calc__viz-chip--citas {
   background: color-mix(in srgb, var(--gold) 20%, transparent);
   border: 1px solid var(--gold);
 }
-.calc__viz-chip--profit { background: var(--gradient-gold); }
+.calc__viz-chip--clientes { background: var(--gradient-gold); }
 .calc__viz-label { color: var(--muted); font-size: 0.7rem; }
 .calc__viz-num {
   font-family: var(--font-mono);
@@ -356,6 +331,17 @@
   font-size: 0.85rem;
   color: var(--text);
   font-variant-numeric: tabular-nums;
+}
+
+/* La palanca. Debajo del panel y en el color del texto, no del acento: es una
+   cuenta más, no un anuncio. */
+.calc__lever {
+  max-width: 62ch;
+  margin-top: 2rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--gold);
+  color: var(--text);
+  line-height: 1.6;
 }
 
 .calc__note {

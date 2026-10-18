@@ -1,10 +1,13 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-US">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PAOLA — Meta Ads Specialist · Performance Marketing</title>
-    <meta name="description" content="Especialista en Meta Ads (Facebook e Instagram). Escala tu e-commerce o negocio digital con campañas de performance medibles: ROAS medio 4.2x, +$2M gestionados." />
+    <title>Paola Parra — Paid Media Manager · Meta Ads, embudos y CRM</title>
+    <meta name="description" content="Paid Media Manager para marcas hispanas en EE. UU.: Meta Ads, embudos y CRM en GoHighLevel que convierten inversión en citas y clientes. +US$1.1M invertidos." />
+    <!-- La URL absoluta la escribe el plugin `sitio` de vite.config.js con el
+         dominio de producción de Vercel: al conectar un dominio propio cambia sola. -->
+    <link rel="canonical" href="%SITE_URL%/" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
@@ -12,72 +15,32 @@
     <meta name="robots" content="index, follow" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="es_ES" />
-    <meta property="og:site_name" content="PAOLA PARRA" />
-    <meta property="og:title" content="PAOLA — Meta Ads Specialist · Performance Marketing" />
-    <meta property="og:description" content="Especialista en Meta Ads. Seis casos con su backstage, el método por dentro y tres formas de empezar. Sin cookies, sin píxel y sin humo." />
-    <!-- La imagen YA EXISTE en /og.jpg (1200×630, generada en la tarea 27), pero
-         og:image y og:url exigen URL absoluta: se activan en la tarea 26, cuando
-         haya dominio. Sustituir el placeholder por el dominio real y descomentar.
-    <meta property="og:url" content="https://DOMINIO/" />
-    <meta property="og:image" content="https://DOMINIO/og.jpg" />
+    <meta property="og:locale" content="es_US" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:site_name" content="Paola Parra" />
+    <meta property="og:title" content="Paola Parra — Paid Media Manager · Meta Ads, embudos y CRM" />
+    <meta property="og:description" content="Convierto inversión publicitaria en citas y clientes para marcas hispanas en EE. UU. +US$1.1M invertidos · +40 marcas · +9 años." />
+    <!-- Absolutas a propósito: quien las lee es WhatsApp o LinkedIn, no esta
+         página. Estuvieron comentadas hasta el 2026-10-17 —apuntaban a un
+         dominio de relleno— y por eso al compartir no salía imagen.
+         La imagen se genera con `npm run og` (scripts/og/build-og.mjs). -->
+    <meta property="og:url" content="%SITE_URL%/" />
+    <meta property="og:image" content="%SITE_URL%/og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="PAOLA — Meta Ads Specialist" />
-    <meta name="twitter:image" content="https://DOMINIO/og.jpg" />
-    -->
+    <meta property="og:image:alt" content="Paola Parra — Paid Media Manager · Meta Ads, embudos y CRM" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="PAOLA — Meta Ads Specialist" />
-    <meta name="twitter:description" content="Seis casos con su backstage, el método por dentro y tres formas de empezar. Sin cookies y sin píxel." />
+    <meta name="twitter:title" content="Paola Parra — Paid Media Manager" />
+    <meta name="twitter:description" content="Meta Ads, embudos y CRM en GoHighLevel para marcas hispanas en EE. UU. +US$1.1M invertidos." />
+    <meta name="twitter:image" content="%SITE_URL%/og.jpg" />
 
     <!-- Fuentes self-hosted (tarea 17 §5). Los <link> a api.fontshare.com y a
          fonts.googleapis.com se eliminaron a propósito: mientras existieran, la
          promesa de no hacer una sola petición a terceros era falsa.
          Los @font-face están en src/styles/tokens.css. -->
-    <!-- JSON-LD (tarea 18). Datos de CONTENT.md; el dominio de "url" y "sameAs" es
-         PROVISIONAL hasta la tarea 26. Solo se declara lo que el sitio afirma de verdad:
-         nada de reseñas, ratings ni cifras inventadas, que además Google penaliza. -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Person",
-          "@id": "https://paola-ads.com/#paola",
-          "name": "Paola Parra",
-          "jobTitle": "Meta Ads Specialist",
-          "email": "hola@paola-ads.com",
-          "url": "https://paola-ads.com/",
-          "knowsAbout": [
-            "Meta Ads", "Paid Social", "Performance Marketing",
-            "Media Buying", "CRO", "Facebook Ads", "Instagram Ads"
-          ]
-        },
-        {
-          "@type": "ProfessionalService",
-          "@id": "https://paola-ads.com/#servicio",
-          "name": "PAOLA — Meta Ads Specialist",
-          "description": "Gestión de campañas de performance en Facebook e Instagram: estrategia full-funnel, creatividades, tracking y escala.",
-          "url": "https://paola-ads.com/",
-          "provider": { "@id": "https://paola-ads.com/#paola" },
-          "areaServed": "ES",
-          "availableLanguage": "es",
-          "serviceType": [
-            "Meta Ads", "Paid Social", "Funnels y CRO",
-            "UGC y creatividades", "Auditorías y consultoría"
-          ]
-        },
-        {
-          "@type": "WebSite",
-          "@id": "https://paola-ads.com/#web",
-          "url": "https://paola-ads.com/",
-          "name": "PAOLA PARRA",
-          "inLanguage": "es-ES",
-          "publisher": { "@id": "https://paola-ads.com/#paola" }
-        }
-      ]
-    }
-    </script>
+    <!-- JSON-LD: lo construye vite.config.js desde src/data/perfil.js, así que no
+         puede declarar un email, una red o una URL que no existan. -->
+    <!-- perfil:jsonld -->
 
     <!-- TEMA — antes de la primera pintura, a propósito.
          Tiene que ser un script EN LÍNEA y SÍNCRONO: /src/main.js va como módulo
@@ -113,16 +76,18 @@
            y con reduced-motion. -->
       <div class="preloader__logo"></div>
       <p class="preloader__label mono">Iniciando campaña</p>
-      <p class="preloader__status mono">Campaña 2026 · Objetivo: conversión</p>
+      <p class="preloader__status mono">Campaña 2026 · Objetivo: clientes potenciales</p>
       <p class="preloader__counter">0%</p>
       <div class="preloader__bar"><span class="preloader__bar-fill"></span></div>
     </div>
 
     <!-- HEADER -->
     <header class="site-header">
-      <a href="#hero" class="site-header__logo" data-scroll data-hover>PAOLA<sup>®</sup></a>
+      <!-- Sin el símbolo de marca registrada: en EE. UU. usarlo sin registro es
+           un problema, no un adorno. -->
+      <a href="#hero" class="site-header__logo" data-scroll data-hover>PAOLA</a>
       <nav class="site-nav" aria-label="Navegación principal">
-        <a href="#proyectos" data-scroll data-hover>Proyectos</a>
+        <a href="#proyectos" data-scroll data-hover>Sectores</a>
         <a href="#servicios" data-scroll data-hover>Servicios</a>
         <a href="#proceso" data-scroll data-hover>Proceso</a>
         <a href="#planes" data-scroll data-hover>Planes</a>
@@ -136,12 +101,18 @@
       <section id="hero" class="hero">
         <canvas id="hero-canvas" aria-hidden="true"></canvas>
         <div class="hero__fallback" aria-hidden="true"></div>
-        <!-- La figura recortada la monta hero.js desde el manifiesto de medios.
-             Sin `figure` declarada en src/data/media.js este hueco se queda
-             vacío y el hero es el de siempre. -->
-        <div class="hero__figure" data-figure aria-hidden="true"></div>
+        <!-- La figura va ESCRITA en el HTML, no la monta el JS: es el LCP de la
+             página y hasta el 2026-10-17 solo existía si corría hero.js. El
+             <img> de respaldo es PNG (con alfa), para quien no lea AVIF ni WebP:
+             visores de enlaces y capturadores, que es justo quien la echaba de
+             menos. Ancho y alto: los de src/data/media.js §figure. -->
+        <div class="hero__figure" data-figure aria-hidden="true"><picture>
+            <source srcset="/img/paola-figura.avif" type="image/avif" />
+            <source srcset="/img/paola-figura.webp" type="image/webp" />
+            <img src="/img/paola-figura.png" alt="" width="660" height="1180" decoding="async" fetchpriority="high" />
+          </picture></div>
         <div class="hero__content container">
-          <p class="hero__label mono">Meta Ads Specialist — Performance Marketing</p>
+          <p class="hero__label mono">Paid Media Manager · Meta Ads, embudos y CRM</p>
           <!-- El apellido va en SU PROPIA línea y en contorno. Puesto en la misma
                línea, «PAOLA PARRA» obliga a bajar el cuerpo hasta perder el golpe
                tipográfico; apilado, el nombre se lee entero y el contorno da la
@@ -151,14 +122,18 @@
             <span class="hero__title-line">PAOLA</span>
             <span class="hero__title-line hero__title-line--outline">PARRA</span>
           </h1>
-          <p class="hero__subtitle" data-variant-slot="subtitle">
-            Convierto presupuesto publicitario en
-            <span class="accent-text">crecimiento medible</span>.
+          <!-- UNA frase: la de la auditoría. Aquí había un test A/B que nada medía
+               y que servía a la mitad de las visitas la versión de e-commerce. -->
+          <p class="hero__subtitle">
+            Convierto inversión publicitaria en
+            <span class="accent-text">citas y clientes</span> para marcas hispanas en EE. UU.
           </p>
+          <!-- Las tres cifras salen de src/data/perfil.js y las comprueba
+               scripts/check-contenido.mjs. -->
           <div class="hero__meta mono">
-            <span>ROAS medio 4.2x</span>
-            <span>+$2M gestionados</span>
-            <span>FB · IG</span>
+            <span>+US$1.1M invertidos</span>
+            <span>+40 marcas</span>
+            <span>+9 años</span>
           </div>
         </div>
         <p class="hero__scroll mono" aria-hidden="true">
@@ -166,85 +141,83 @@
         </p>
       </section>
 
-      <!-- MARQUEE -->
+      <!-- MARQUEE — los diferenciales, en la jerga del oficio (es lo que buscan
+           los clientes en los dos idiomas). Número PAR de términos: el contorno
+           alterna, y con uno impar se juntarían dos iguales al repetir. -->
       <section class="marquee" aria-hidden="true">
         <div class="marquee__track">
           <div class="marquee__inner">
-            <span>Meta Ads</span><i>✦</i><span class="is-outline">Paid Social</span><i>✦</i>
-            <span>Funnels</span><i>✦</i><span class="is-outline">CRO</span><i>✦</i>
-            <span>UGC Strategy</span><i>✦</i><span class="is-outline">Media Buying</span><i>✦</i>
+            <span>Meta Ads</span><i>✦</i><span class="is-outline">GoHighLevel</span><i>✦</i>
+            <span>CRM</span><i>✦</i><span class="is-outline">Conversions API</span><i>✦</i>
+            <span>Landing pages</span><i>✦</i><span class="is-outline">Funnels</span><i>✦</i>
+            <span>Automations</span><i>✦</i><span class="is-outline">AI Video</span><i>✦</i>
           </div>
           <div class="marquee__inner">
-            <span>Meta Ads</span><i>✦</i><span class="is-outline">Paid Social</span><i>✦</i>
-            <span>Funnels</span><i>✦</i><span class="is-outline">CRO</span><i>✦</i>
-            <span>UGC Strategy</span><i>✦</i><span class="is-outline">Media Buying</span><i>✦</i>
+            <span>Meta Ads</span><i>✦</i><span class="is-outline">GoHighLevel</span><i>✦</i>
+            <span>CRM</span><i>✦</i><span class="is-outline">Conversions API</span><i>✦</i>
+            <span>Landing pages</span><i>✦</i><span class="is-outline">Funnels</span><i>✦</i>
+            <span>Automations</span><i>✦</i><span class="is-outline">AI Video</span><i>✦</i>
           </div>
         </div>
       </section>
 
-      <!-- MÉTRICAS -->
+      <!-- EN CIFRAS — todo lo que aquí se afirma sale de src/data/perfil.js y de
+           src/data/sectores.js, y lo escribe el plugin `sitio` al construir.
+           Hasta el 2026-10-17 esta sección enseñaba cifras de plantilla con curvas
+           de seis puntos que no había medido nadie. Por eso no hay gráfica de
+           evolución: sin una serie real, la curva sería otra cifra inventada (el
+           código sigue en sections/metrics.js, latente, para el día que la haya). -->
       <section id="metricas" class="metrics section-pad" data-seam>
         <div class="container">
           <p class="section-label mono">
-            <span class="section-label__name">Resultados</span>
+            <span class="section-label__name">En cifras</span>
           </p>
           <div class="metrics__grid">
-            <div class="metric">
-              <p class="metric__value" data-count="4.2" data-decimals="1" data-suffix="x">0</p>
-              <span class="metric__spark" data-spark="2.1,2.8,3.3,3.6,4.0,4.2" aria-hidden="true"></span>
-              <p class="metric__label mono">ROAS medio</p>
-            </div>
-            <div class="metric">
-              <p class="metric__value" data-count="2" data-prefix="+$" data-suffix="M">0</p>
-              <span class="metric__spark" data-spark="0.3,0.7,1.0,1.4,1.7,2.0" aria-hidden="true"></span>
-              <p class="metric__label mono">Ad spend gestionado</p>
-            </div>
-            <div class="metric">
-              <p class="metric__value" data-count="98" data-suffix="%">0</p>
-              <span class="metric__spark" data-spark="88,91,93,95,97,98" aria-hidden="true"></span>
-              <p class="metric__label mono">Retención de clientes</p>
-            </div>
-            <div class="metric">
-              <p class="metric__value" data-count="120" data-suffix="+">0</p>
-              <span class="metric__spark" data-spark="20,45,68,84,103,120" aria-hidden="true"></span>
-              <p class="metric__label mono">Campañas lanzadas</p>
-            </div>
+            <!-- perfil:cifras -->
+          </div>
+
+          <div class="sector-chart">
+            <h3 class="sector-chart__title mono">Dónde se ha invertido, por industria</h3>
+            <ol class="sector-bars">
+              <!-- perfil:sectores -->
+            </ol>
+            <!-- La fuente, A LA VISTA y no en un pie de página: es lo que separa una
+                 cifra de una afirmación. Y avisa de que el total es un mínimo. -->
+            <p class="sector-chart__source mono">Fuente: Meta Ads, gasto por cuenta del 1 ene 2025 al 17 oct 2026 (cuentas en USD). No incluye cuentas en otras monedas ni deshabilitadas: la cifra real es mayor.</p>
           </div>
         </div>
       </section>
 
-      <!-- PROYECTOS / CREATIVIDADES -->
+      <!-- SECTORES (antes «Proyectos») -->
       <section id="proyectos" class="projects">
         <!-- Galería 3D: DECORACIÓN, y va PRIMERO y FUERA de .projects__cases.
-             Toda la información de los casos (títulos, KPIs, backstage y enlaces
-             a caso.html) vive en las cards de abajo, así que esto va aria-hidden
-             y sin texto: ni contenido duplicado para SEO ni un segundo recorrido
-             para el lector de pantalla.
+             Pinta CREATIVOS, así que nace `hidden` y solo la enseña
+             webgl/projects-gallery.js cuando hay al menos tres casos publicables
+             con su creativo real. Sin ellos no reserva sus 100svh de vacío.
              ⚠ No la metas dentro de .projects__cases: ese bloque lo PINEA
              ScrollTrigger para el scroll horizontal, y ahí dentro la galería se
              quedaría congelada y recortada bajo la cabecera.
-             Se monta en src/js/webgl/projects-gallery.js. En móvil y con
-             reduced-motion el CSS la oculta y el JS ni la monta. -->
-        <div class="projects__gallery" aria-hidden="true">
+             En móvil y con reduced-motion el CSS la oculta y el JS ni la monta. -->
+        <div class="projects__gallery" aria-hidden="true" hidden>
           <canvas id="projects-gallery-canvas"></canvas>
         </div>
         <!-- Lo que se pinea: cabecera (con su barra de progreso) + track. -->
         <div class="projects__cases">
           <div class="projects__header container">
             <p class="section-label mono">
-              <span class="section-label__name">Creatividades</span>
+              <span class="section-label__name">Sectores</span>
             </p>
-            <h2 class="section-title">Proyectos que <span class="accent-text">escalan</span></h2>
+            <h2 class="section-title">Cuatro sectores, <span class="accent-text">%PCT_DESTACADOS%%</span> de la inversión</h2>
             <p class="projects__hint mono">Arrastra el scroll →</p>
             <div class="projects__progress"><span class="projects__progress-fill"></span></div>
           </div>
           <div class="projects__viewport">
-            <div class="projects__track"><!-- Las cards se renderizan por JS (tarea 11) desde src/data/projects.js --></div>
+            <div class="projects__track"><!-- Las fichas las pinta sections/projects.js desde src/data/sectores.js --></div>
           </div>
         </div>
       </section>
 
-      <!-- SERVICIOS -->
+      <!-- SERVICIOS — los seis de la auditoría, en su orden. -->
       <section id="servicios" class="services section-pad">
         <!-- Dos columnas: la cabecera sticky necesita una para ella sola, o los
              renglones le pasan por debajo y se imprimen encima. Ver sections.css
@@ -259,33 +232,39 @@
           <ul class="services__list">
             <li class="service" data-hover data-service="meta-ads">
               <span class="service__index mono">01</span>
-              <h3 class="service__title">Meta Ads</h3>
-              <p class="service__desc">Campañas que no dependen de que una creatividad tenga suerte: estructura por fase, pujas revisadas y una escala que aguanta cuando sube el presupuesto.</p>
-              <span class="service__tags mono">FB · IG · Advantage+</span>
+              <h3 class="service__title">Estrategia y campañas en Meta Ads</h3>
+              <p class="service__desc">Campañas por etapa del embudo que se optimizan por citas y clientes, no por leads baratos.</p>
+              <span class="service__tags mono">Facebook · Instagram · TOFU-MOFU-BOFU</span>
             </li>
-            <li class="service" data-hover data-service="paid-social">
+            <li class="service" data-hover data-service="crm-ghl">
               <span class="service__index mono">02</span>
-              <h3 class="service__title">Paid Social</h3>
-              <p class="service__desc">Salir de Meta solo cuando los números lo piden, y hacerlo con piezas nativas de cada plataforma en vez de reciclar las mismas.</p>
-              <span class="service__tags mono">TikTok · Pinterest · LinkedIn</span>
+              <h3 class="service__title">CRM y automatizaciones en GoHighLevel</h3>
+              <p class="service__desc">Cada lead entra al CRM en su etapa y recibe seguimiento automático por SMS y correo, para que ninguno se quede sin respuesta.</p>
+              <span class="service__tags mono">GoHighLevel · Pipelines · SMS y correo</span>
             </li>
-            <li class="service" data-hover data-service="funnels-cro">
+            <li class="service" data-hover data-service="medicion">
               <span class="service__index mono">03</span>
-              <h3 class="service__title">Funnels &amp; CRO</h3>
-              <p class="service__desc">Que lo que pagas por traer no se caiga al llegar: medición sin agujeros, páginas probadas y el punto exacto donde se pierde la venta.</p>
-              <span class="service__tags mono">Landings · A/B · Tracking</span>
+              <h3 class="service__title">Medición: píxel, eventos y API de Conversiones</h3>
+              <p class="service__desc">Eventos que cuadran entre la web, el CRM y Meta; la API de Conversiones le devuelve a Meta qué leads se volvieron citas.</p>
+              <span class="service__tags mono">Píxel · Eventos · CAPI</span>
             </li>
-            <li class="service" data-hover data-service="ugc">
+            <li class="service" data-hover data-service="landings">
               <span class="service__index mono">04</span>
-              <h3 class="service__title">UGC &amp; Creatividades</h3>
-              <p class="service__desc">Creatividad nueva cada semana y con una hipótesis detrás, para que ganar deje de depender de haber acertado una vez.</p>
-              <span class="service__tags mono">Guiones · Hooks · Testing</span>
+              <h3 class="service__title">Landing pages y embudos</h3>
+              <p class="service__desc">Páginas hechas para una sola acción —agendar, llamar o cotizar— y conectadas al CRM desde el primer día.</p>
+              <span class="service__tags mono">GHL · WordPress · Shopify</span>
             </li>
-            <li class="service" data-hover data-service="auditorias">
+            <li class="service" data-hover data-service="ia-video">
               <span class="service__index mono">05</span>
-              <h3 class="service__title">Auditorías &amp; Consultoría</h3>
-              <p class="service__desc">Saber qué está fallando en tu cuenta y en qué orden arreglarlo, con un plan de 90 días que puedes ejecutar sin mí.</p>
-              <span class="service__tags mono">Audit · Roadmap · Mentoring</span>
+              <h3 class="service__title">Piezas con IA, guiones y edición de video</h3>
+              <p class="service__desc">Creativos con una hipótesis detrás: guion, gancho y edición, para probar ángulos sin esperar a una gran producción.</p>
+              <span class="service__tags mono">IA · Guiones · Premiere · Canva</span>
+            </li>
+            <li class="service" data-hover data-service="auditoria">
+              <span class="service__index mono">06</span>
+              <h3 class="service__title">Auditoría de cuenta</h3>
+              <p class="service__desc">Qué está fallando en tu cuenta y en qué orden arreglarlo, con un plan de 90 días que puedes ejecutar conmigo o sin mí.</p>
+              <span class="service__tags mono">Cuenta · Medición · Roadmap</span>
             </li>
           </ul>
         </div>
@@ -309,27 +288,27 @@
               <li class="step">
                 <span class="step__number mono">02</span>
                 <h3 class="step__title">Estrategia</h3>
-                <p class="step__desc">Sales sabiendo cuánto va a cada fase del embudo y qué hipótesis estamos comprando con ese dinero.</p>
+                <p class="step__desc">Sales sabiendo cuánto va a cada etapa del embudo y qué hipótesis estamos comprando con ese dinero.</p>
               </li>
               <li class="step">
                 <span class="step__number mono">03</span>
-                <h3 class="step__title">Creatividades</h3>
+                <h3 class="step__title">Creativos</h3>
                 <p class="step__desc">Cada anuncio nace de un ángulo concreto, no de una idea suelta: gancho, prueba y llamada, listos para medirse por separado.</p>
               </li>
               <li class="step">
                 <span class="step__number mono">04</span>
                 <h3 class="step__title">Lanzamiento</h3>
-                <p class="step__desc">Se publica con la medición limpia: eventos que cuadran, catálogo en orden y un test que se puede leer sin dudas.</p>
+                <p class="step__desc">Se publica con la medición limpia: eventos que cuadran, el CRM conectado y un test que se puede leer sin dudas.</p>
               </li>
               <li class="step">
                 <span class="step__number mono">05</span>
                 <h3 class="step__title">Optimización</h3>
-                <p class="step__desc">Cada semana se retira lo que no rinde y se refuerza lo que sí — y te llega dicho por qué, no solo qué.</p>
+                <p class="step__desc">Cada semana se retira lo que no rinde y se refuerza lo que sí, mirando el costo por cita y no solo el costo por lead — y te llega dicho por qué, no solo qué.</p>
               </li>
               <li class="step">
                 <span class="step__number mono">06</span>
                 <h3 class="step__title">Escala</h3>
-                <p class="step__desc">Subir el presupuesto sin que el retorno se caiga: más audiencias, más canales y más mercados, en ese orden.</p>
+                <p class="step__desc">Subir el presupuesto sin que se dispare el costo por cliente: más audiencias, más canales y más mercados, en ese orden.</p>
               </li>
             </ol>
           </div>
@@ -340,8 +319,19 @@
       <section id="sobre-mi" class="about section-pad" data-seam>
         <div class="container about__grid">
           <div class="about__media" data-hover>
-            <div class="about__img" role="img" aria-label="Retrato de Paola">
-              <span class="about__img-label mono">Foto — 4:5</span>
+            <!-- El retrato va ESCRITO en el HTML. La auditoría lo vio sin foto: el
+                 archivo existía, pero lo inyectaba about.js con carga diferida y
+                 un fundido que solo arrancaba al hacer scroll, y el <img> de
+                 respaldo era WebP. Una captura de página entera, un visor de
+                 enlaces o un navegador sin WebP veían el texto alternativo.
+                 Ahora: <picture> estático, respaldo JPG y carga normal (pide
+                 prioridad baja para no competir con el hero). -->
+            <div class="about__img has-photo">
+              <picture class="about__picture">
+                <source srcset="/img/paola-retrato-4x5.avif" type="image/avif" />
+                <source srcset="/img/paola-retrato-4x5.webp" type="image/webp" />
+                <img src="/img/paola-retrato-4x5.jpg" alt="Paola Parra, Paid Media Manager, con la mano apoyada en la mejilla y mirando a la cámara" width="1000" height="1250" decoding="async" fetchpriority="low" />
+              </picture>
             </div>
           </div>
           <div class="about__content">
@@ -349,38 +339,28 @@
               <span class="section-label__name">Quién lo opera</span>
             </p>
             <h2 class="section-title">Hola, soy Paola</h2>
-            <p class="about__text">Llevo más de 6 años gestionando campañas de paid social para marcas que quieren crecer con datos, no con intuición. Mi obsesión: que cada dólar invertido tenga un retorno medible.</p>
-            <p class="about__text">Trabajo con un número reducido de clientes para estar dentro de cada cuenta, cada semana. Sin humo: reporting claro, testing constante y decisiones basadas en números.</p>
+            <p class="about__text">Llevo más de 9 años en marketing digital. Hoy dirijo el Departamento de Publicidad de AD Media Solution, con un equipo de 4 personas y más de 40 marcas hispanas en EE. UU.</p>
+            <p class="about__text">Mi trabajo no termina en el anuncio: conecto la campaña con la landing, el CRM y el seguimiento, para que lo que se mida sean citas y clientes, no clics.</p>
             <ul class="about__cv mono">
-              <li>2019 — Media Buyer · Agencia Performance (BCN)</li>
-              <li>2021 — Senior Media Buyer · E-commerce Group</li>
-              <li>2023 — Freelance · Meta Ads Specialist</li>
-              <li>2026 — +40 marcas acompañadas</li>
+              <li>2017 — Community Manager</li>
+              <li>2020 — Trafficker Digital · Printex</li>
+              <li>2024 — Estratega Digital · Search Media</li>
+              <li>2025 — Directora de Publicidad · AD Media Solution</li>
             </ul>
           </div>
         </div>
       </section>
 
-      <!-- TESTIMONIOS -->
-      <section id="testimonios" class="testimonials section-pad" data-seam>
+      <!-- TESTIMONIOS — nacen OCULTOS y vacíos. Los pinta
+           sections/testimonials.js desde src/data/testimonios.js, y solo los que
+           traen permiso del cliente. Hasta el 2026-10-17 aquí había tres citas de
+           plantilla firmadas por clientes que no existen; mejor ninguna que esas. -->
+      <section id="testimonios" class="testimonials section-pad" data-seam hidden>
         <div class="container">
           <p class="section-label mono">
             <span class="section-label__name">Prueba social</span>
           </p>
-          <div class="testimonials__stack">
-            <blockquote class="testimonial">
-              <p class="testimonial__quote">«Paola duplicó nuestro ROAS en 90 días y por fin entendimos qué campañas funcionaban y por qué.»</p>
-              <footer class="testimonial__author mono">Marta G. — CEO · Atelier Nord</footer>
-            </blockquote>
-            <blockquote class="testimonial">
-              <p class="testimonial__quote">«Reporting impecable y una velocidad de testing que no habíamos visto en ninguna agencia.»</p>
-              <footer class="testimonial__author mono">Daniel R. — CMO · Flowstack</footer>
-            </blockquote>
-            <blockquote class="testimonial">
-              <p class="testimonial__quote">«Pasamos de quemar presupuesto a escalar con control total. La mejor inversión del año.»</p>
-              <footer class="testimonial__author mono">Lucía P. — Fundadora · Glow Skin</footer>
-            </blockquote>
-          </div>
+          <div class="testimonials__stack"></div>
         </div>
       </section>
 
@@ -403,8 +383,8 @@
               <p class="plan-card__who">Tienes campañas en marcha y sospechas que se te está yendo presupuesto, pero no sabes por dónde.</p>
               <ul class="plan-card__list">
                 <li>Revisión completa de la cuenta publicitaria</li>
-                <li>Diagnóstico de medición: píxel, CAPI y eventos duplicados</li>
-                <li>Análisis de creatividades, audiencias y estructura</li>
+                <li>Diagnóstico de medición: píxel, eventos y API de Conversiones</li>
+                <li>Revisión del embudo: anuncio → landing → CRM → cita</li>
                 <li>Roadmap priorizado a 90 días</li>
               </ul>
               <p class="plan-card__take"><strong>Te llevas</strong> un documento con lo que hay que arreglar, en orden y con cuánto pesa cada cosa. Es tuyo, lo apliques conmigo o sin mí.</p>
@@ -414,11 +394,11 @@
             <li class="plan-card" data-featured>
               <p class="plan-card__tag mono">Continuo · mínimo 3 meses</p>
               <h3 class="plan-card__title">Gestión mensual</h3>
-              <p class="plan-card__who">Ya inviertes cada mes y quieres a alguien dentro de la cuenta, no un informe cuando el mes ya ha pasado.</p>
+              <p class="plan-card__who">Ya inviertes cada mes y quieres a alguien dentro de la cuenta, no un informe cuando el mes ya pasó.</p>
               <ul class="plan-card__list">
-                <li>Estrategia y estructura de campañas por fase del funnel</li>
-                <li>Sistema de testing creativo con tanda nueva cada semana</li>
-                <li>Optimización y escala protegiendo el ROAS</li>
+                <li>Estrategia y campañas por etapa del embudo</li>
+                <li>Creativos nuevos con una hipótesis detrás: IA, guiones y video</li>
+                <li>Optimización por costo por cita y por cliente, no por lead barato</li>
                 <li>Revisión quincenal en llamada, no en PDF</li>
               </ul>
               <p class="plan-card__take"><strong>Te llevas</strong> una cuenta que crece con decisiones explicadas: qué se cambió, por qué y qué pasó después.</p>
@@ -426,120 +406,134 @@
             </li>
 
             <li class="plan-card">
-              <p class="plan-card__tag mono">Puntual · 6 semanas</p>
-              <h3 class="plan-card__title">Sprint de escala</h3>
-              <p class="plan-card__who">La cuenta ya funciona y quieres subir el presupuesto sin que el ROAS se caiga por el camino.</p>
+              <p class="plan-card__tag mono">Puntual · por proyecto</p>
+              <h3 class="plan-card__title">Sistema de captación</h3>
+              <p class="plan-card__who">Tienes anuncios funcionando, pero los leads se enfrían antes de que alguien los llame.</p>
               <ul class="plan-card__list">
-                <li>Plan de escalado por fases, con su techo calculado</li>
-                <li>Apertura de audiencias, mercados y canales</li>
-                <li>Sistema de refresco creativo que aguante el ritmo</li>
-                <li>Traspaso documentado a tu equipo interno</li>
+                <li>Landing page o embudo (GoHighLevel, WordPress o Shopify)</li>
+                <li>CRM y automatizaciones en GoHighLevel: seguimiento por SMS y correo</li>
+                <li>Eventos y API de Conversiones conectados al CRM</li>
+                <li>Traspaso documentado a tu equipo</li>
               </ul>
-              <p class="plan-card__take"><strong>Te llevas</strong> un método de escalado que tu equipo sigue usando cuando yo ya no estoy.</p>
-              <a class="plan-card__cta mono" href="#contacto" data-scroll data-hover data-plan="Sprint de escala">Pedir propuesta</a>
+              <p class="plan-card__take"><strong>Te llevas</strong> un sistema que convierte el lead en cita sin depender de que alguien se acuerde de llamar.</p>
+              <a class="plan-card__cta mono" href="#contacto" data-scroll data-hover data-plan="Sistema de captación">Pedir propuesta</a>
             </li>
           </ul>
         </div>
       </section>
 
       <!-- CALCULADORA — aritmética pura, en el navegador. Los valores arrancan
-           escritos en el HTML para que la sección se lea entera sin JS. -->
+           escritos en el HTML para que la sección se lea entera sin JS, y son los
+           mismos que calcula calculator.js con los controles en su sitio. -->
       <section id="calculadora" class="calc section-pad">
         <div class="container">
           <p class="section-label mono">
             <span class="section-label__name">Calculadora</span>
           </p>
-          <h2 class="section-title">Echa la cuenta <span class="accent-text">antes</span> de invertir</h2>
-          <p class="calc__intro">Mueve los controles con tus propios números. Esto no predice nada: es la misma aritmética que vas a ver en cada reporte, y sirve para saber si lo que te propones se sostiene.</p>
+          <h2 class="section-title">Haz la cuenta <span class="accent-text">antes</span> de invertir</h2>
+          <p class="calc__intro">Mueve los controles con tus propios números; los de partida son solo un ejemplo. Esto no predice nada: es la misma aritmética que vas a ver en cada reporte, y sirve para saber si lo que te propones se sostiene.</p>
 
           <div class="calc__panel">
             <div class="calc__controls">
               <div class="calc__field">
                 <label class="calc__label mono" for="calc-spend">Inversión publicitaria al mes</label>
-                <output class="calc__field-value" for="calc-spend" data-calc="spend">$5.000</output>
-                <input class="calc__range" id="calc-spend" type="range" min="1000" max="50000" step="500" value="5000" />
+                <output class="calc__field-value" for="calc-spend" data-calc="spend">$3,000</output>
+                <input class="calc__range" id="calc-spend" type="range" min="300" max="30000" step="100" value="3000" />
               </div>
               <div class="calc__field">
-                <label class="calc__label mono" for="calc-roas">ROAS objetivo</label>
-                <output class="calc__field-value" for="calc-roas" data-calc="roas">4,2x</output>
-                <input class="calc__range" id="calc-roas" type="range" min="1.5" max="8" step="0.1" value="4.2" />
+                <label class="calc__label mono" for="calc-cpl">Costo por lead</label>
+                <output class="calc__field-value" for="calc-cpl" data-calc="cpl">$25</output>
+                <input class="calc__range" id="calc-cpl" type="range" min="5" max="150" step="1" value="25" />
               </div>
               <div class="calc__field">
-                <label class="calc__label mono" for="calc-ticket">Ticket medio</label>
-                <output class="calc__field-value" for="calc-ticket" data-calc="ticket">$80</output>
-                <input class="calc__range" id="calc-ticket" type="range" min="20" max="600" step="10" value="80" />
+                <label class="calc__label mono" for="calc-agenda">Leads que agendan cita</label>
+                <output class="calc__field-value" for="calc-agenda" data-calc="agenda">30%</output>
+                <input class="calc__range" id="calc-agenda" type="range" min="5" max="80" step="1" value="30" />
+              </div>
+              <div class="calc__field">
+                <label class="calc__label mono" for="calc-cierre">Citas que se vuelven clientes</label>
+                <output class="calc__field-value" for="calc-cierre" data-calc="cierre">25%</output>
+                <input class="calc__range" id="calc-cierre" type="range" min="5" max="80" step="1" value="25" />
               </div>
             </div>
 
             <dl class="calc__out">
               <div class="calc__row">
-                <dt class="mono">Retorno estimado</dt>
-                <dd class="calc__big" data-calc="revenue">$21.000</dd>
+                <dt class="mono">Clientes al mes</dt>
+                <dd class="calc__big" data-calc="clientes">9</dd>
               </div>
               <div class="calc__row">
-                <dt class="mono">Sobre lo invertido</dt>
-                <dd class="mono" data-calc="profit">+$16.000</dd>
+                <dt class="mono">Leads al mes</dt>
+                <dd class="mono" data-calc="leads">120</dd>
               </div>
               <div class="calc__row">
-                <dt class="mono">Ventas al mes</dt>
-                <dd class="mono" data-calc="sales">263</dd>
+                <dt class="mono">Citas al mes</dt>
+                <dd class="mono" data-calc="citas">36</dd>
               </div>
               <div class="calc__row">
-                <dt class="mono">Coste máximo por venta</dt>
-                <dd class="mono" data-calc="cpa">$19</dd>
+                <dt class="mono">Costo por cita</dt>
+                <dd class="mono" data-calc="costoCita">$83</dd>
+              </div>
+              <div class="calc__row">
+                <dt class="mono">Costo por cliente</dt>
+                <dd class="mono" data-calc="costoCliente">$333</dd>
               </div>
             </dl>
 
-            <!-- A ESCALA — la misma aritmética de arriba, dibujada.
-                 UNA barra: el retorno entero, partido donde acaba lo que se
-                 invirtió. Las dos partes miden algo; la pista es un contenedor
-                 y no se pinta como si fuese un dato. Cada marca es una vez lo
-                 invertido, así que se pueden contar.
+            <!-- EL EMBUDO A ESCALA — la misma aritmética de arriba, dibujada.
+                 UNA barra: la pista son los leads (el 100 %, y por eso no lleva
+                 relleno: es el contenedor, no un dato), y dentro, desde el mismo
+                 origen, lo que agenda y lo que se vuelve cliente. Cada marca de la
+                 pista es un 10 % de los leads, así que las proporciones se pueden
+                 contar.
 
                  ⚠ POR QUÉ `aria-hidden`, y qué lo convertiría en un fallo.
-                 Esto NO es decoración —para quien ve, convierte una
-                 multiplicación en una proporción que se lee de un vistazo— pero
-                 sí es una codificación REDUNDANTE: no hay aquí ni una cifra que
-                 no esté ya en texto a un palmo. Auditado, uno por uno:
+                 No es decoración —convierte tres divisiones en una proporción que
+                 se lee de un vistazo— pero sí una codificación REDUNDANTE: no hay
+                 aquí ni una cifra que no esté ya en texto a un palmo. Auditado:
 
-                   · el corte de la barra (1/ROAS) → el <output> del control de
-                     ROAS, «4,2x»;
-                   · lo invertido → el <output> del control de inversión;
-                   · lo que suma → la fila «Sobre lo invertido» del <dl>;
-                   · el total → la fila «Retorno estimado» del <dl>;
-                   · y el resumen hablado de calculator.js dice la frase entera:
-                     de cuánto sales, con qué múltiplo y a dónde llegas.
+                   · la pista (los leads) → la fila «Leads al mes» del <dl>;
+                   · el primer relleno (las citas) → «Citas al mes»;
+                   · el segundo (los clientes) → «Clientes al mes»;
+                   · y el resumen hablado de calculator.js dice la frase entera.
 
-                 Anunciar otra vez las mismas cinco cifras en forma de barras
-                 sería ruido, no acceso. Pero la regla va en las dos direcciones:
-                 el día que aquí aparezca un dato que NO esté en esa lista, este
+                 El día que aquí aparezca un dato que NO esté en esa lista, este
                  `aria-hidden` deja de estar justificado y pasa a esconder
                  información.
 
-                 Los anchos y los importes los escribe calculator.js; el texto lo
+                 Los anchos y los números los escribe calculator.js; el texto lo
                  traduce i18n/apply-dom.js. -->
             <div class="calc__viz" aria-hidden="true">
               <div class="calc__viz-track" data-viz="pista">
-                <span class="calc__viz-seg calc__viz-seg--spend" data-viz="spend"></span>
-                <span class="calc__viz-seg calc__viz-seg--profit" data-viz="profit"></span>
+                <span class="calc__viz-seg calc__viz-seg--citas" data-viz="citas"></span>
+                <span class="calc__viz-seg calc__viz-seg--clientes" data-viz="clientes"></span>
               </div>
               <p class="calc__viz-foot">
                 <span class="calc__viz-key">
-                  <i class="calc__viz-chip calc__viz-chip--spend"></i>
-                  <span class="calc__viz-label mono">Inviertes</span>
-                  <b class="calc__viz-num" data-calc="vizSpend">$5.000</b>
+                  <i class="calc__viz-chip calc__viz-chip--leads"></i>
+                  <span class="calc__viz-label mono">Leads</span>
+                  <b class="calc__viz-num" data-calc="vizLeads">120</b>
                 </span>
                 <span class="calc__viz-key">
-                  <i class="calc__viz-chip calc__viz-chip--profit"></i>
-                  <span class="calc__viz-label mono">Sobre lo invertido</span>
-                  <b class="calc__viz-num" data-calc="vizProfit">+$16.000</b>
+                  <i class="calc__viz-chip calc__viz-chip--citas"></i>
+                  <span class="calc__viz-label mono">Citas</span>
+                  <b class="calc__viz-num" data-calc="vizCitas">36</b>
+                </span>
+                <span class="calc__viz-key">
+                  <i class="calc__viz-chip calc__viz-chip--clientes"></i>
+                  <span class="calc__viz-label mono">Clientes</span>
+                  <b class="calc__viz-num" data-calc="vizClientes">9</b>
                 </span>
               </p>
             </div>
           </div>
 
+          <!-- La palanca: la misma cuenta con el agendamiento diez puntos más
+               arriba. No promete que un CRM los consiga; dice cuánto vale cada
+               punto, con los números de quien mira. -->
+          <p class="calc__lever" data-calc="lever">Con los mismos 120 leads, si agendan 10 puntos más (40%), llegan 3 clientes más al mes sin invertir un dólar más.</p>
           <p class="calc__note">
-            <strong>Multiplicar es la parte fácil.</strong> Llegar a ese ROAS con ese ticket es todo lo demás de esta página: la estructura, las creatividades y las semanas de testing. Y el cálculo se hace en tu navegador — no se envía a ninguna parte.
+            <strong>Dividir es la parte fácil.</strong> Que esos leads contesten, agenden y lleguen a la cita es todo lo demás de esta página: el embudo, el CRM y el seguimiento. Y el cálculo se hace en tu navegador — no se envía a ninguna parte.
           </p>
         </div>
       </section>
@@ -555,17 +549,17 @@
             <li class="faq__item">
               <h3 class="faq__q">¿Cuánto hay que invertir para que esto tenga sentido?</h3>
               <div class="faq__a">
-                <p>Por debajo de unos $3.000 al mes de inversión publicitaria, el algoritmo no reúne datos suficientes para optimizar y cualquier test tarda semanas en concluir. Si estás por debajo, te lo digo en la primera llamada y te propongo qué hacer antes de empezar.</p>
+                <p>No hay un mínimo fijo. Con poco presupuesto, el trabajo se concentra en una sola campaña y en que el seguimiento no deje escapar ningún lead; cuando el costo por cita se sostiene, se sube. En la primera llamada vemos qué tiene sentido con lo que quieres invertir.</p>
               </div>
             </li>
             <li class="faq__item">
               <h3 class="faq__q">¿Cuánto tarda en verse algo?</h3>
               <div class="faq__a">
-                <p>Las primeras señales, entre dos y tres semanas: es lo que tarda una tanda de creatividades en dar datos concluyentes. Un cambio de tendencia sostenido, entre 60 y 90 días. Cualquiera que te prometa resultados la primera semana está hablando de suerte, no de método.</p>
+                <p>Las primeras señales, entre dos y tres semanas: es lo que tarda una ronda de creativos en dar datos concluyentes. Un cambio de tendencia sostenido, entre 60 y 90 días. Cualquiera que te prometa resultados la primera semana está hablando de suerte, no de método.</p>
               </div>
             </li>
             <li class="faq__item">
-              <h3 class="faq__q">¿Hay permanencia?</h3>
+              <h3 class="faq__q">¿Hay un plazo mínimo?</h3>
               <div class="faq__a">
                 <p>La gestión mensual pide tres meses de compromiso inicial, y no es para atarte: en menos tiempo no da tiempo a auditar, corregir y medir el efecto de lo corregido. A partir del cuarto mes es mes a mes, sin preaviso.</p>
               </div>
@@ -573,19 +567,19 @@
             <li class="faq__item">
               <h3 class="faq__q">¿Trabajas con mi sector?</h3>
               <div class="faq__a">
-                <p>Sobre todo e-commerce, formación e infoproductos y servicios con venta digital. Si vendes offline o con ciclos de decisión de meses, el trabajo cambia bastante y hay perfiles mejores que el mío: te lo diré antes de aceptar el proyecto, no después.</p>
+                <p>Sobre todo seguros, reparación de crédito, salud y estética, bienes raíces, finanzas y e-commerce para la comunidad hispana en EE. UU.</p>
               </div>
             </li>
             <li class="faq__item">
-              <h3 class="faq__q">¿Quién produce las creatividades?</h3>
+              <h3 class="faq__q">¿Quién produce los creativos?</h3>
               <div class="faq__a">
-                <p>El sistema, los ángulos y los guiones, yo. La producción depende del caso: tu equipo, creadores UGC o producción externa. Lo que no cambia es el criterio — cada pieza sale con una hipótesis detrás y se mide por separado.</p>
+                <p>Los ángulos, los guiones y el sistema de pruebas, yo. Las piezas con IA y la edición de video (Premiere, Canva) salen del equipo o de tu propio material. Lo que no cambia es el criterio: cada pieza sale con una hipótesis detrás y se mide por separado.</p>
               </div>
             </li>
             <li class="faq__item">
-              <h3 class="faq__q">¿Qué necesito tener montado antes de empezar?</h3>
+              <h3 class="faq__q">¿Qué necesito tener listo antes de empezar?</h3>
               <div class="faq__a">
-                <p>Píxel y API de conversiones funcionando, catálogo si vendes producto y acceso de administrador a tu cuenta publicitaria. Si falta algo, no es un problema: la auditoría empieza justo ahí.</p>
+                <p>Solo acceso de administrador a tu cuenta publicitaria. Si no tienes píxel, eventos, API de Conversiones o CRM, se configuran como parte del trabajo: la auditoría empieza justo ahí.</p>
               </div>
             </li>
           </ul>
@@ -595,11 +589,12 @@
                saber antes de escribir— y una sección entera le daría un peso que
                no le toca.
 
-               Los cinco renglones NO son material nuevo: cuatro salen de respuestas
-               que ya están ahí arriba (la inversión mínima, los sectores que no
-               encajan, los plazos, la llamada que también sirve para decir que no)
-               y aquí se dicen de frente en vez de dentro de una respuesta. El
-               quinto —SEO, email y orgánico— es el complemento de `#servicios`.
+               Quedan TRES renglones. El de SEO y orgánico es el complemento de
+               `#servicios`; los otros dos dicen de frente lo que la llamada de 30
+               minutos ya hace. Salieron el mínimo de inversión (varias cuentas
+               reales invierten menos) y el de la venta offline, que negaba el
+               trabajo de verdad: seguros, crédito y salud venden por cita y por
+               llamada.
 
                No lleva acordeón: son afirmaciones, no preguntas. Esconderlas
                detrás de un clic sería justo lo contrario de lo que hacen. -->
@@ -607,10 +602,8 @@
             <h3 class="limits__title mono">Lo que no hago</h3>
             <p class="limits__intro">Decirlo por delante filtra los malos encajes y hace creíble todo lo demás. Si algo de esta lista es tu caso, te lo digo en la primera llamada — no en el segundo mes.</p>
             <ul class="limits__list">
-              <li class="limits__item">No trabajo por debajo de unos $3.000 al mes de inversión publicitaria. Por debajo de ahí el algoritmo no reúne datos para optimizar y cualquier test tarda semanas en concluir.</li>
-              <li class="limits__item">No llevo cuentas de venta offline ni ciclos de decisión de meses. El trabajo cambia bastante y hay perfiles mejores que el mío para eso.</li>
-              <li class="limits__item">No hago SEO, email marketing ni redes orgánicas. Lo que hago está en la lista de más arriba, y prefiero decirlo a venderte un paquete de todo.</li>
-              <li class="limits__item">No prometo una cifra antes de haber visto tu cuenta. Un ROAS prometido de entrada es una cifra inventada; el primer número serio sale de la auditoría.</li>
+              <li class="limits__item">No hago SEO ni manejo de redes orgánicas. Lo que hago está en la lista de más arriba, y prefiero decirlo a venderte un paquete de todo.</li>
+              <li class="limits__item">No prometo una cifra antes de haber visto tu cuenta. Un costo por lead prometido de entrada es una cifra inventada; el primer número serio sale de la auditoría.</li>
               <li class="limits__item">No acepto el proyecto si no encaja. La llamada de 30 minutos también sirve para eso, y no cuesta nada.</li>
             </ul>
           </div>
@@ -635,36 +628,33 @@
                encabezados saltaba del informe al pie sin pasar por contacto.
                SIN la clase .section-title a propósito: esa clase la usa
                fx/split-titles.js para partir los H2 en palabras, y este lleva su
-               propio cuerpo (--fs-cta) y su gradiente. -->
+               propio cuerpo (--fs-cta) y su gradiente.
+               El destino lo escribe vite.config.js: el correo de perfil.js si lo
+               hay, y si no, el formulario de aquí abajo. -->
           <h2 class="contact__cta-heading">
-            <a href="mailto:hola@paola-ads.com" class="contact__cta" data-hover data-magnetic>
+            <a %CTA_CONTACTO% class="contact__cta" data-hover data-magnetic>
               <span class="contact__cta-text">¿Escalamos?</span>
             </a>
           </h2>
-          <a class="contact__email" href="mailto:hola@paola-ads.com" data-hover>hola@paola-ads.com</a>
+          <!-- perfil:correo -->
 
-          <!-- Formulario (tarea 24). Netlify Forms: `data-netlify` + el input oculto
-               `form-name` + honeypot. Hasta el deploy (t.26) el envío falla y el JS
-               muestra el aviso de fallback con el mailto: nunca se pierde el mensaje. -->
-          <form
-            class="contact-form"
-            name="contacto"
-            method="POST"
-            data-netlify="true"
-            netlify-honeypot="bot-field"
-          >
-            <input type="hidden" name="form-name" value="contacto" />
+          <!-- Formulario. Lo entrega api/contacto.js (función de Vercel → correo
+               con Resend). Hasta el 2026-10-17 dependía de un servicio que no corre
+               en Vercel: no llegaba ni un mensaje, y el aviso de fallo mandaba a un
+               correo que no existía. Sin JS también funciona: el POST nativo va a
+               la misma función, que responde redirigiendo aquí. -->
+          <form class="contact-form" id="contacto-form" name="contacto" method="POST" action="/api/contacto">
             <p class="contact-form__hp">
-              <label>No rellenar: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+              <label>No completar: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
             </p>
 
             <div class="contact-form__row">
               <label class="contact-form__label mono" for="cf-nombre">Nombre</label>
-              <input class="contact-form__input" id="cf-nombre" name="nombre" type="text" required autocomplete="name" />
+              <input class="contact-form__input" id="cf-nombre" name="nombre" type="text" required autocomplete="name" maxlength="120" />
             </div>
             <div class="contact-form__row">
               <label class="contact-form__label mono" for="cf-email">Email</label>
-              <input class="contact-form__input" id="cf-email" name="email" type="email" required autocomplete="email" />
+              <input class="contact-form__input" id="cf-email" name="email" type="email" required autocomplete="email" maxlength="200" />
             </div>
             <!-- Lo rellena el CTA de cada plan (sections/plans.js) al traerte
                  hasta aquí. Se puede cambiar a mano, y «Todavía no lo sé» es una
@@ -676,16 +666,16 @@
                 <option value="Todavía no lo sé">Todavía no lo sé</option>
                 <option value="Auditoría">Auditoría</option>
                 <option value="Gestión mensual">Gestión mensual</option>
-                <option value="Sprint de escala">Sprint de escala</option>
+                <option value="Sistema de captación">Sistema de captación</option>
               </select>
             </div>
             <div class="contact-form__row">
               <label class="contact-form__label mono" for="cf-mensaje">Cuéntame el proyecto</label>
-              <textarea class="contact-form__input" id="cf-mensaje" name="mensaje" rows="4" required></textarea>
+              <textarea class="contact-form__input" id="cf-mensaje" name="mensaje" rows="4" required maxlength="5000"></textarea>
             </div>
 
             <label class="contact-form__consent mono">
-              <input type="checkbox" name="privacidad" required />
+              <input type="checkbox" name="privacidad" value="si" required />
               <span>He leído y acepto la <a href="./legal/privacidad.html" data-hover>política de privacidad</a>.</span>
             </label>
 
@@ -693,7 +683,10 @@
             <p class="contact-form__status mono" role="status" aria-live="polite"></p>
           </form>
 
-          <p class="contact__time mono">Hora local — <span id="local-time">00:00:00</span></p>
+          <!-- El reloj nace oculto: lo enciende sections/contact.js solo si
+               src/data/perfil.js trae la zona horaria de Paola. Antes enseñaba la
+               hora del VISITANTE, que no le dice nada a nadie. -->
+          <p class="contact__time mono" hidden>Hora en — <span id="local-time"></span></p>
         </div>
       </section>
     </main>
@@ -730,12 +723,10 @@
         </div>
       </div>
       <div class="footer__bottom container mono">
-        <span>© 2026 Paola — Todos los derechos reservados</span>
-        <div class="footer__social">
-          <a href="#" data-hover>LinkedIn</a>
-          <a href="#" data-hover>Instagram</a>
-          <a href="#" data-hover>X</a>
-        </div>
+        <span>© 2026 Paola Parra — Todos los derechos reservados</span>
+        <!-- Las redes las escribe vite.config.js desde src/data/perfil.js: solo
+             las que tengan URL. Hasta el 2026-10-17 eran tres enlaces a «#». -->
+        <!-- perfil:redes -->
         <div class="footer__legal">
           <a href="./legal/aviso-legal.html" data-hover>Aviso legal</a>
           <a href="./legal/privacidad.html" data-hover>Privacidad</a>

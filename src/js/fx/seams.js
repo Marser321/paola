@@ -52,9 +52,20 @@ function montarFilete(seccion) {
   return filete
 }
 
+/**
+ * La sección visible que queda justo encima. No basta `previousElementSibling`:
+ * #testimonios puede estar oculta (sections/testimonials.js) y entonces la que
+ * sale al entrar #planes es #sobre-mi, no un bloque que no se ve.
+ */
+function anteriorVisible(seccion) {
+  let prev = seccion.previousElementSibling
+  while (prev?.hidden) prev = prev.previousElementSibling
+  return prev
+}
+
 function animarCostura(seccion, filete) {
   const entra = movible(seccion)
-  const sale = movible(seccion.previousElementSibling)
+  const sale = movible(anteriorVisible(seccion))
 
   // UNA línea de tiempo por costura. La ventana va desde que el borde de la
   // sección asoma por abajo hasta que toca el techo: es exactamente el tramo en
@@ -94,7 +105,8 @@ function animarCostura(seccion, filete) {
 }
 
 export function initSeams() {
-  const secciones = [...document.querySelectorAll('main section[data-seam]')]
+  // `:not([hidden])`: una sección oculta no tiene borde que coser.
+  const secciones = [...document.querySelectorAll('main section[data-seam]:not([hidden])')]
   if (!secciones.length) return
 
   // El filete se monta SIEMPRE, en todos los tamaños y también con

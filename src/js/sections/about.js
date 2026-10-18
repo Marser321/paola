@@ -4,15 +4,18 @@ import { shouldReduceMotion } from '../core/lenis.js'
 import { portraits } from '../../data/media.js'
 
 /**
- * Sustituye el gradiente placeholder del retrato por la foto real, si está
- * declarada en el manifiesto (tarea 38). Sin foto declarada no hace nada y se
- * queda el gradiente: el layout es idéntico en los dos casos (mismo 4:5), así
- * que la llegada de la foto no mueve nada.
+ * Respaldo: monta el retrato solo si el HTML no lo trae ya.
+ *
+ * Desde el 2026-10-17 el retrato va ESCRITO en index.html (con respaldo JPG): la
+ * auditoría lo vio sin foto porque solo existía si este módulo corría y el
+ * visitante hacía scroll. Esto queda para el caso de que alguien lo quite del
+ * HTML: entonces vuelve a montarse desde el manifiesto (tarea 38), igual que
+ * antes.
  */
 function mountPortrait() {
   const holder = document.querySelector('.about__img')
   const portrait = portraits?.about
-  if (!holder || !portrait?.src) return
+  if (!holder || !portrait?.src || holder.querySelector('picture')) return
 
   holder.insertAdjacentHTML(
     'afterbegin',
@@ -45,9 +48,12 @@ export function initAbout() {
     scrollTrigger: { trigger: about, start: 'top 70%', once: true },
   })
 
+  // ⚠ Solo `y`, NUNCA la opacidad. Con `opacity: 0` de salida, el retrato no
+  // existía para nadie que no hiciera scroll hasta aquí: ni para una captura de
+  // página entera, ni para un visor de enlaces. Que se mueva al entrar, sí; que
+  // se esconda hasta entonces, no.
   gsap.from('.about__media', {
     y: 60,
-    opacity: 0,
     duration: 1.2,
     ease: 'power3.out',
     scrollTrigger: { trigger: about, start: 'top 75%', once: true },

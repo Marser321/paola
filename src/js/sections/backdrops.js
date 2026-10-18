@@ -28,7 +28,9 @@ export function initBackdrops() {
 
   entries.forEach(([sectionId, config]) => {
     const section = document.getElementById(sectionId)
-    if (!section || !config?.layers?.length) return
+    // Una sección oculta (#testimonios sin testimonios publicables) no lleva
+    // fondo: sería una foto descargada para nadie.
+    if (!section || section.hidden || !config?.layers?.length) return
 
     const wrap = document.createElement('div')
     wrap.className = 'backdrop'

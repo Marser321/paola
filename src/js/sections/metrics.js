@@ -1,7 +1,7 @@
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { shouldReduceMotion } from '../core/lenis.js'
-import { getLang } from '../../i18n/index.js'
+import { formatLocale } from '../../i18n/index.js'
 
 // MÉTRICAS — el contador y su gráfica.
 //
@@ -237,7 +237,7 @@ function crearSparkline(el) {
  */
 function pintarRango(nodo, valores) {
   const decimales = valores.some((v) => !Number.isInteger(v)) ? 1 : 0
-  const nf = new Intl.NumberFormat(getLang() === 'en' ? 'en-US' : 'es-ES', {
+  const nf = new Intl.NumberFormat(formatLocale(), {
     minimumFractionDigits: decimales,
     maximumFractionDigits: decimales,
   })
@@ -305,12 +305,14 @@ export function initMetrics() {
       scrollTrigger: { trigger: metric || el, start: 'top 85%', once: true },
     })
 
-    // back.out overshoot: el número se pasa y se asienta. 1.1 es deliberadamente
-    // contenido — por encima de ~1.4 se lee como rebote de juguete, no como dato.
+    // ⚠ SIN rebote. Hubo un back.out(1.1): el número se pasaba y se asentaba.
+    // Con cifras de plantilla daba igual; con las reales, durante medio segundo
+    // la web decía «61 cuentas» y «+41 marcas», que no es verdad. El contador
+    // sube hasta la cifra y se para en ella, nunca encima.
     tl.to(state, {
       value: target,
       duration: 2,
-      ease: 'back.out(1.1)',
+      ease: 'power3.out',
       onUpdate: () => {
         el.textContent = format(el, state.value)
       },
@@ -360,11 +362,13 @@ export function initMetrics() {
     })
   }
 
-  // Reveal suave de las tarjetas de métrica
+  // Reveal suave de las tarjetas de métrica.
+  // ⚠ Solo `y`: las cifras son la prueba de toda la página y tienen que estar a
+  // la vista también para quien no llega a hacer scroll (una captura de página
+  // entera, un visor de enlaces). Con `opacity: 0` de salida, no existían.
   if (!reduced) {
     gsap.from('.metric', {
       y: 60,
-      opacity: 0,
       duration: 1,
       ease: 'power3.out',
       stagger: 0.1,
@@ -375,4 +379,33 @@ export function initMetrics() {
       },
     })
   }
+
+  initSectorBars(reduced)
 }
+
+/**
+ * Las barras de «Dónde se ha invertido». Las escribe el plugin de vite.config.js
+ * con su ancho FINAL (`--valor`), así que sin JS —o sin movimiento— ya están
+ * enteras. Aquí solo crecen desde cero, y solo cuando la gráfica entra: el
+ * `fromTo` va DENTRO de `onEnter`, de modo que hasta ese momento nada las
+ * esconde. Escalan en X desde la izquierda: se anima `transform`, no el ancho.
+ */
+function initSectorBars(reduced) {
+  const chart = document.querySelector('.sector-chart')
+  const fills = chart ? [...chart.querySelectorAll('.sector-bar__track i')] : []
+  if (!fills.length || reduced) return
+
+  ScrollTrigger.create({
+    trigger: chart,
+    start: 'top 85%',
+    once: true,
+    onEnter: () => {
+      gsap.fromTo(
+        fills,
+        { scaleX: 0 },
+        { scaleX: 1, duration: 1.2, ease: 'power3.out', stagger: 0.06, clearProps: 'transform' }
+      )
+    },
+  })
+}
+

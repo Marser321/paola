@@ -1,6 +1,8 @@
 import gsap from 'gsap'
 import { shouldReduceMotion } from '../core/lenis.js'
 import { getLenis } from '../core/lenis.js'
+import { formatLocale } from '../../i18n/index.js'
+import { perfil } from '../../data/perfil.js'
 
 export function initContact() {
   // --- Reloj local ---
@@ -12,11 +14,19 @@ export function initContact() {
   //
   // El ticker corre a la tasa de refresco, así que se escribe como mucho una vez
   // por segundo — y aun así solo cuando el string cambia.
+  //
+  // ⚠ Es la hora de PAOLA, no la del visitante. Hasta el 2026-10-17 el reloj no
+  // llevaba zona horaria y enseñaba la del navegador que lo miraba —que no le
+  // dice nada a nadie— con el formato de España. Sin `zonaHoraria` en
+  // src/data/perfil.js la línea sigue `hidden` (index.html) y aquí no se arranca.
   const timeEl = document.getElementById('local-time')
-  if (timeEl) {
+  const { zonaHoraria } = perfil.contacto
+  if (timeEl && zonaHoraria) {
+    timeEl.closest('.contact__time').hidden = false
     let last = ''
     const paint = () => {
-      const now = new Date().toLocaleTimeString('es-ES', {
+      const now = new Date().toLocaleTimeString(formatLocale(), {
+        timeZone: zonaHoraria,
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',

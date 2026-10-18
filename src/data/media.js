@@ -28,7 +28,9 @@ export const portraits = {
   // de la derecha — que ya era el oro del sitio.
   about: {
     src: 'paola-retrato-4x5',
-    alt: 'Retrato de Paola Parra, especialista en Meta Ads, apoyando la mano en la mejilla y mirando a cámara',
+    // El mismo texto que `about.imgAlt` de i18n/es.js: desde el 2026-10-17 el
+    // retrato va escrito en index.html y su alt lo traduce apply-dom.js.
+    alt: 'Paola Parra, Paid Media Manager, con la mano apoyada en la mejilla y mirando a la cámara',
   },
 }
 
@@ -176,48 +178,22 @@ export const sequences = {
  * está en `services.items[i].samples` de i18n/es.js y i18n/en.js, porque es texto
  * visible y el sitio es bilingüe. Aquí solo vive el medio.
  */
-export const galleries = {
-  'meta-ads': {
-    placeholder: true,
-    items: [
-      { src: 'sample-meta-ads-1', gradient: ['#8A6A1F', '#D4AF37'] },
-      { src: 'sample-meta-ads-2', gradient: ['#6E5514', '#C9A227'] },
-      { src: 'sample-meta-ads-3', gradient: ['#D4AF37', '#F2DFA6'] },
-    ],
-  },
-  'paid-social': {
-    placeholder: true,
-    items: [
-      { src: 'sample-paid-social-1', gradient: ['#6E5514', '#D4AF37'] },
-      { src: 'sample-paid-social-2', gradient: ['#8A6A1F', '#F2DFA6'] },
-      { src: 'sample-paid-social-3', gradient: ['#A8905A', '#D4AF37'] },
-    ],
-  },
-  'funnels-cro': {
-    placeholder: true,
-    items: [
-      { src: 'sample-funnels-cro-1', gradient: ['#D4AF37', '#8A6A1F'] },
-      { src: 'sample-funnels-cro-2', gradient: ['#F2DFA6', '#A8905A'] },
-      { src: 'sample-funnels-cro-3', gradient: ['#8A6A1F', '#C9A227'] },
-    ],
-  },
-  ugc: {
-    placeholder: true,
-    items: [
-      { src: 'sample-ugc-1', gradient: ['#C9A227', '#F2DFA6'] },
-      { src: 'sample-ugc-2', gradient: ['#8A6A1F', '#D4AF37'] },
-      { src: 'sample-ugc-3', gradient: ['#A8905A', '#EBD48A'] },
-    ],
-  },
-  auditorias: {
-    placeholder: true,
-    items: [
-      { src: 'sample-auditorias-1', gradient: ['#6E5514', '#A8905A'] },
-      { src: 'sample-auditorias-2', gradient: ['#D4AF37', '#6E5514'] },
-      { src: 'sample-auditorias-3', gradient: ['#F2DFA6', '#8A6A1F'] },
-    ],
-  },
-}
+// ⚠ VACÍO desde el 2026-10-17. Las quince muestras que había eran ilustraciones
+// generadas con IA presentadas como «muestras de este trabajo», y varias
+// enseñaban los casos de plantilla (el abrigo de «Atelier Nord», la app de
+// «Zenfit»…). Una muestra de trabajo tiene que ser trabajo: capturas reales de
+// campañas, pipelines de GoHighLevel, landings, creativos. Sin galería declarada
+// para un servicio, su botón «Ver muestras» no se monta (sections/services.js).
+//
+// Para añadir una, con la clave `data-service` de index.html (meta-ads, crm-ghl,
+// medicion, landings, ia-video, auditoria):
+//
+//   'crm-ghl': {
+//     items: [{ src: 'muestra-crm-ghl-1', gradient: ['#8A6A1F', '#D4AF37'] }],
+//   },
+//
+// y su pie (que es también el `alt`) en `services.items[i].samples` de es.js y en.js.
+export const galleries = {}
 
 /**
  * PRESUPUESTO DE PESO POR SECCIÓN (KB) — lo comprueba `npm run check:media`.
@@ -266,9 +242,9 @@ export const process = {
     {
       // 03 · Creatividades — la producción. Es la etapa más física de las seis y
       // la que mejor admite una foto con manos dentro.
-      src: 'proceso-03-creatividades',
+      src: 'proceso-03-creativos',
       gradient: ['#8A6A1F', '#D4AF37'],
-      alt: 'Producción de anuncios: grabación y montaje de piezas UGC, estáticas y de vídeo',
+      alt: 'Producción de anuncios: grabación y montaje de piezas UGC, estáticas y de video',
     },
     {
       // 04 · Lanzamiento — el momento de publicar. Tensión, no celebración: lo

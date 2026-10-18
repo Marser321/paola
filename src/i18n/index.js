@@ -55,6 +55,19 @@ export function getLang() {
   return current
 }
 
+/**
+ * Locale de FORMATO: números, fechas y horas.
+ *
+ * es-US y no es-ES, a propósito. El sitio le habla a negocios hispanos en
+ * EE. UU., que leen «$5,000» y «1.1», no «$5.000» y «1,1»; con es-ES la misma
+ * calculadora escribía cifras con la puntuación de Madrid. Y un solo sitio para
+ * decidirlo: hasta el 2026-10-17 cada módulo elegía el suyo y convivían es-ES,
+ * en-US y en-GB en la misma página.
+ */
+export function formatLocale() {
+  return current === 'en' ? 'en-US' : 'es-US'
+}
+
 export function initI18n() {
   current = readStored() || DEFAULT
   return current

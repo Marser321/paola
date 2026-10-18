@@ -51,14 +51,19 @@ const PAREJAS = [
   ['step__desc', (D.process?.steps || []).map((s) => s.desc)],
   ['service__title', (D.services?.items || []).map((s) => s.title)],
   ['service__desc', (D.services?.items || []).map((s) => s.desc)],
-  ['metric__label', D.metrics || []],
+  ['service__tags', (D.services?.items || []).map((s) => s.tags)],
+  // Las cuatro cifras y las nueve filas de sectores NO entran: no están escritas
+  // en index.html, las genera vite.config.js desde es.js y los datos, así que no
+  // pueden separarse. Lo que sí está escrito en el HTML es su título y su fuente.
+  ['sector-chart__title', [D.metrics?.sectoresTitulo]],
+  ['sector-chart__source', [D.metrics?.fuente]],
   ['plan-card__tag', (D.plans?.items || []).map((p) => p.tag)],
   ['plan-card__title', (D.plans?.items || []).map((p) => p.title)],
   ['plan-card__who', (D.plans?.items || []).map((p) => p.who)],
   ['plans__intro', [D.plans?.intro]],
   ['calc__intro', [D.calc?.intro]],
-  ['calc__label', ['spend', 'roas', 'ticket'].map((k) => D.calc?.fields?.[k])],
-  ['calc__viz-label', [D.calc?.viz?.spend, D.calc?.rows?.profit]],
+  ['calc__label', ['spend', 'cpl', 'agenda', 'cierre'].map((k) => D.calc?.fields?.[k])],
+  ['calc__viz-label', ['leads', 'citas', 'clientes'].map((k) => D.calc?.viz?.[k])],
   ['faq__q', (D.faq?.items || []).map((f) => f.q)],
   ['limits__title', [D.limits?.title]],
   ['limits__intro', [D.limits?.intro]],

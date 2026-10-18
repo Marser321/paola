@@ -15,12 +15,13 @@ import '../../styles/caso.css'
 import '../../styles/neon.css' // el borde de foco del marco de la creatividad
 import '../../styles/pill-nav.css'
 
-import { projects } from '../../data/projects.js'
-import { initI18n, t } from '../../i18n/index.js'
+import { sectores, esCasoPublicable } from '../../data/sectores.js'
+import { initI18n, getLang, t } from '../../i18n/index.js'
 import { initPillNav } from '../ui/pill-nav.js'
 import { initTheme } from '../ui/theme.js'
 
 initI18n()
+document.documentElement.lang = t('htmlLang')
 // Mismo menú que la portada. Antes del conmutador de tema: los dos se cuelgan de
 // .site-nav y el orden decide si el botón entra dentro de la lista o al lado.
 initPillNav()
@@ -29,92 +30,109 @@ initTheme(() => t('theme'))
 const esc = (s) =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
 
-function render(project) {
-  const cs = project.caseStudy
-  const winner = project.abTest.winner
-  const variant = (key) => `
-    <div class="backstage__variant${winner === key ? ' is-winner' : ''}">
-      <span class="backstage__variant-key mono">${key.toUpperCase()}</span>
-      <p class="backstage__variant-text">${esc(project.abTest[key])}</p>
-      ${winner === key ? `<span class="backstage__badge mono">${t('backstage.winner')}</span>` : ''}
-    </div>`
+/** Campo de un caso en el idioma actual: `caso.en.<campo>` si existe; si no, el español. */
+function campo(caso, clave) {
+  if (getLang() === 'en' && caso.en?.[clave] != null) return caso.en[clave]
+  return caso[clave]
+}
 
-  const visual = project.image
-    ? `<picture class="caso__picture">
-         <source srcset="/img/${project.image}.avif" type="image/avif" />
-         <source srcset="/img/${project.image}.webp" type="image/webp" />
-         <img src="/img/${project.image}.webp" alt="${esc(project.imageAlt || '')}"
-              width="1200" height="750" loading="eager" decoding="async" />
-       </picture>`
-    : `<div class="caso__visual-gradient"
-           style="background: linear-gradient(135deg, ${project.gradient[0]}, ${project.gradient[1]})"></div>`
+// Solo los casos que pasan esCasoPublicable() (src/data/sectores.js). Hasta el
+// 2026-10-17 esta página servía seis casos de plantilla; los enlaces viejos
+// (?id=atelier-nord…) caen ahora en el aviso de «Caso no encontrado» del HTML.
+const publicables = sectores.filter((s) => esCasoPublicable(s.caso))
+
+function render(sector) {
+  const caso = sector.caso
+  const titulo = campo(caso, 'titulo')
+  const resultados = (campo(caso, 'resultados') || []).filter((r) => r?.valor && r?.etiqueta)
+  const pasos = (campo(caso, 'queHicimos') || []).filter(Boolean)
+  const alt = (getLang() === 'en' && caso.en?.alt) || caso.creativo.alt
+  const ad = caso.antesDespues
+
+  // La ficha lleva solo lo que el caso trae: nada de filas con un guion.
+  const ficha = [
+    [t('caso.periodo'), caso.periodo],
+    [t('caso.inversion'), caso.inversion],
+    [t('caso.stack'), caso.stack],
+    [t('caso.cta'), caso.cta],
+  ].filter(([, v]) => v)
 
   return `
     <article class="container caso__body">
       <p class="section-label mono">
-        <span class="section-label__stage">${esc(project.sector)}</span>
-        <span class="section-label__name">${esc(project.year)}</span>
+        <span class="section-label__stage">${esc(t(`sectores.${sector.id}.nombre`))}</span>
+        <span class="section-label__name">${esc(caso.periodo)}</span>
       </p>
-      <h1 class="caso__title">${esc(project.title)}</h1>
-      <p class="caso__lead">${esc(project.desc)}</p>
+      <h1 class="caso__title">${esc(titulo)}</h1>
 
       <div class="caso__kpis">
-        <div><p class="caso__kpi-value">${esc(project.kpi1.value)}</p><p class="caso__kpi-label mono">${esc(project.kpi1.label)}</p></div>
-        <div><p class="caso__kpi-value">${esc(project.kpi2.value)}</p><p class="caso__kpi-label mono">${esc(project.kpi2.label)}</p></div>
-        <div><p class="caso__kpi-value">${esc(project.beforeAfter.before)} → ${esc(project.beforeAfter.after)}</p><p class="caso__kpi-label mono">Antes / después</p></div>
+        ${resultados
+          .map((r) => `<div><p class="caso__kpi-value">${esc(r.valor)}</p><p class="caso__kpi-label mono">${esc(r.etiqueta)}</p></div>`)
+          .join('')}
+        ${
+          ad?.antes && ad?.despues
+            ? `<div><p class="caso__kpi-value">${esc(ad.antes)} → ${esc(ad.despues)}</p><p class="caso__kpi-label mono">${esc(t('caso.antesDespues'))}</p></div>`
+            : ''
+        }
       </div>
 
-      <div class="caso__visual">${visual}</div>
+      <div class="caso__visual">
+        <picture class="caso__picture">
+          <source srcset="/img/${esc(caso.creativo.src)}.avif" type="image/avif" />
+          <source srcset="/img/${esc(caso.creativo.src)}.webp" type="image/webp" />
+          <img src="/img/${esc(caso.creativo.src)}.webp" alt="${esc(alt)}"
+               width="1200" height="750" loading="eager" decoding="async" />
+        </picture>
+      </div>
 
-      ${cs ? `
       <section class="caso__section">
-        <h2 class="caso__h2">El reto</h2>
-        <p class="caso__text">${esc(cs.challenge)}</p>
+        <h2 class="caso__h2">${esc(t('caso.reto'))}</h2>
+        <p class="caso__text">${esc(campo(caso, 'reto'))}</p>
       </section>
       <section class="caso__section">
-        <h2 class="caso__h2">Qué hicimos</h2>
+        <h2 class="caso__h2">${esc(t('caso.queHicimos'))}</h2>
         <ol class="caso__steps">
-          ${cs.approach.map((s) => `<li>${esc(s)}</li>`).join('')}
+          ${pasos.map((paso) => `<li>${esc(paso)}</li>`).join('')}
         </ol>
       </section>
       <section class="caso__section">
-        <h2 class="caso__h2">Resultado</h2>
-        <p class="caso__text">${esc(cs.outcome)}</p>
-        ${cs.quote ? `<blockquote class="caso__quote">${esc(cs.quote)}</blockquote>` : ''}
-      </section>` : ''}
-
-      <!-- El backstage va COMPLETO Y ABIERTO: en la página de detalle no hay
-           nada que ocultar, así que aquí no existe el botón de la tarea 34. -->
-      <section class="caso__section caso__backstage">
-        <h2 class="caso__h2">${t('backstage.title')}</h2>
+        <h2 class="caso__h2">${esc(t('caso.resultado'))}</h2>
         <dl class="backstage__rows mono">
-          <div><dt>Formato</dt><dd>${esc(project.adFormat)}</dd></div>
-          <div><dt>${t('backstage.audience')}</dt><dd>${esc(project.audience)}</dd></div>
-          <div><dt>${t('backstage.budget')}</dt><dd>${esc(project.budget)}</dd></div>
-          <div><dt>${t('backstage.objective')}</dt><dd>${esc(project.objective)}</dd></div>
-          <div><dt>CTA</dt><dd>${esc(project.cta)}</dd></div>
+          ${resultados.map((r) => `<div><dt>${esc(r.etiqueta)}</dt><dd>${esc(r.valor)}</dd></div>`).join('')}
         </dl>
-        <p class="backstage__test-title mono">${t('backstage.test')}</p>
-        <div class="backstage__variants">${variant('a')}${variant('b')}</div>
-        <p class="backstage__result mono">${esc(project.abTest.result)}</p>
       </section>
 
-      <nav class="caso__nav mono" aria-label="Otros casos">
-        ${projects
-          .filter((p) => p.id !== project.id)
-          .map((p) => `<a href="caso.html?id=${p.id}" data-hover>${esc(p.title)}</a>`)
+      ${
+        ficha.length
+          ? `<section class="caso__section caso__backstage">
+        <h2 class="caso__h2">${esc(t('caso.ficha'))}</h2>
+        <dl class="backstage__rows mono">
+          ${ficha.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
+        </dl>
+      </section>`
+          : ''
+      }
+
+      ${
+        publicables.length > 1
+          ? `<nav class="caso__nav mono" aria-label="${esc(t('caso.otros'))}">
+        ${publicables
+          .filter((s) => s.id !== sector.id)
+          .map((s) => `<a href="caso.html?id=${s.id}" data-hover>${esc(campo(s.caso, 'titulo'))}</a>`)
           .join('')}
-      </nav>
+      </nav>`
+          : ''
+      }
     </article>`
 }
 
 const id = new URLSearchParams(location.search).get('id')
-const project = projects.find((p) => p.id === id)
+const sector = publicables.find((s) => s.id === id)
 
-if (project) {
-  document.title = `${project.title} — Caso · PAOLA`
+if (sector) {
+  document.title = t('caso.title', { titulo: campo(sector.caso, 'titulo') })
   const root = document.getElementById('caso')
-  root.innerHTML = render(project)
+  root.innerHTML = render(sector)
   litBorders()
 } // si no, se queda el fallback que ya está en el HTML
 
